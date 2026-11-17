@@ -1,0 +1,129 @@
+/**
+ * Flaberry Design Tokens
+ * Source of Truth: reference/Flaberry_Design1_Classic.html
+ * Scope: Strictly namespaced (--fl-*) for zero collision with Shopify Horizon
+ */
+
+:root {
+  /* ==========================================================================
+     1. Brand & UI Colors (Extracted from prototype :root, lines 11-23)
+     ========================================================================== */
+  --fl-color-ink: #151312;         /* Primary text, dark announcement bar, primary buttons */
+  --fl-color-paper: #ffffff;       /* Pure white page card & surface */
+  --fl-color-mist: #f5f2f0;        /* Soft surfaces, card fills, search bar */
+  --fl-color-line: #e7e1dd;        /* Hairlines, borders, dividers */
+  --fl-color-muted: #6f6763;       /* Secondary neutral text */
+  --fl-color-flora: #e2522c;       /* Original Flaberry Brand Red / Terracotta */
+  --fl-color-flora-deep: #c23e1b;  /* Button hover & active state */
+  --fl-color-blush: #fde8e6;       /* Gifting tint, badges, sale tags */
+  --fl-color-leaf: #1f7a4d;        /* Success green: available, freshness guarantee */
+  --fl-color-warn: #b4540a;        /* Warning amber: cutoffs, low stock, hold */
+  --fl-color-bad: #b42318;         /* Error red: unavailable pincode, form error */
+  --fl-color-gold: #f0a722;        /* Rating star color */
+
+  /* Third-party Branding */
+  --fl-color-wa: #25d366;          /* WhatsApp floating button */
+  --fl-color-wa-bg: #e9f8ef;       /* WhatsApp chat bubble background */
+
+  /* ==========================================================================
+     2. Typography Families & Metrics
+     ========================================================================== */
+  /* Display font: Inter Tight with fallbacks to Horizon's heading font and Inter */
+  --fl-font-display: "Inter Tight", var(--font-heading--family), "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Body font: Reuses Horizon's native Inter body font with safe fallbacks */
+  --fl-font-body: var(--font-body--family), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --fl-font-serif: Georgia, "Times New Roman", serif; /* Vendor packing slips (.slip) */
+
+  /* Font Weights */
+  --fl-font-weight-regular: 400;
+  --fl-font-weight-medium: 500;
+  --fl-font-weight-semibold: 600;
+  --fl-font-weight-bold: 700;
+  --fl-font-weight-black: 800;
+
+  /* Line Heights */
+  --fl-line-height-body: 1.55;
+  --fl-line-height-heading: 1.1;
+  --fl-line-height-hero: 1.05;
+  --fl-line-height-card: 1.35;
+  --fl-line-height-tight: 1.2;
+
+  /* Letter Spacing (Tracking) */
+  --fl-letter-spacing-heading: -0.02em;
+  --fl-letter-spacing-hero: -0.035em;
+  --fl-letter-spacing-stats: -0.03em;
+  --fl-letter-spacing-huge: -0.04em;
+  --fl-letter-spacing-404: -0.06em;
+  --fl-letter-spacing-eyebrow: 0.08em;
+
+  /* Font Sizes */
+  --fl-font-size-hero: clamp(34px, 4.4vw, 62px);
+  --fl-font-size-h2: clamp(26px, 3.2vw, 40px);
+  --fl-font-size-h3: clamp(20px, 2.2vw, 26px);
+  --fl-font-size-card: 14.5px;
+  --fl-font-size-body: 15px;
+  --fl-font-size-caption: 13px;
+  --fl-font-size-micro: 11px;
+
+  /* ==========================================================================
+     3. Border Radii
+     ========================================================================== */
+  --fl-radius-lg: 24px;      /* Page card top corners, modals, large cards (--r-lg) */
+  --fl-radius-md: 16px;      /* Category cards, blog cards, search suggest (--r-md) */
+  --fl-radius-sm: 10px;      /* Small chips, inputs, express checkout (--r-sm) */
+  --fl-radius-card: 12px;    /* Date buttons, city link cards, thumbnails */
+  --fl-radius-pill: 999px;   /* Pill buttons, search inputs, badges */
+  --fl-radius-full: 50%;     /* Circular category tiles, arrow buttons, WhatsApp */
+
+  /* ==========================================================================
+     4. Elevation & Box Shadows
+     ========================================================================== */
+  --fl-shadow-suggest: 0 18px 40px rgba(21, 19, 18, 0.14);
+  --fl-shadow-mega: 0 30px 50px rgba(21, 19, 18, 0.12);
+  --fl-shadow-modal: 0 30px 70px rgba(0, 0, 0, 0.25);
+  --fl-shadow-wa: 0 10px 24px rgba(0, 0, 0, 0.2);
+  --fl-shadow-guide: 0 10px 24px rgba(226, 82, 44, 0.35);
+  --fl-shadow-dock: 0 -6px 20px rgba(34, 35, 92, 0.07);
+  --fl-shadow-sticky-buy: 0 -6px 16px rgba(34, 35, 92, 0.06);
+  --fl-shadow-search-active: 0 12px 30px rgba(34, 35, 92, 0.18);
+
+  /* ==========================================================================
+     5. Layout Containers & Gutters
+     ========================================================================== */
+  --fl-max-width-page: 1440px;
+  --fl-max-width-narrow: 860px;
+  --fl-max-width-search: 560px;
+  --fl-gutter: max(16px, env(safe-area-inset-left, 0px));
+  --fl-gutter-r: max(16px, env(safe-area-inset-right, 0px));
+
+  /* ==========================================================================
+     6. Recurring Spacing Scale (Extracted from prototype rules)
+     ========================================================================== */
+  --fl-space-4: 4px;
+  --fl-space-6: 6px;
+  --fl-space-8: 8px;
+  --fl-space-10: 10px;
+  --fl-space-12: 12px;
+  --fl-space-14: 14px;
+  --fl-space-16: 16px;
+  --fl-space-20: 20px;
+  --fl-space-24: 24px;
+  --fl-space-32: 32px;
+  --fl-space-44: 44px;
+  --fl-space-48: 48px;
+
+  /* ==========================================================================
+     7. Component & Button Metrics (Prototype line 93 & line 112)
+     ========================================================================== */
+  --fl-btn-height: 44px;
+  --fl-btn-padding: 12px 22px;
+  --fl-btn-padding-sm: 8px 14px;
+  --fl-btn-font-size: 14.5px;
+  --fl-btn-font-weight: 600;
+  --fl-btn-active-scale: scale(0.98);
+
+  /* Circular Dimensions */
+  --fl-btn-circle-carousel: 42px;    /* Carousel arrows & pagination buttons (.arrow-btns button) */
+  --fl-btn-circle-wa: 54px;          /* WhatsApp floating button (.wa) */
+  --fl-tile-circle-category: 84px;   /* Circular category tiles (.rail.tilerail) */
+}

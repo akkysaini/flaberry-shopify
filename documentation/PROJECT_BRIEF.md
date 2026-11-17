@@ -2,7 +2,7 @@
 
 **Project:** Flaberry Shopify Storefront + Multi-Vendor Marketplace  
 **Document Type:** Business and Product Requirements Overview  
-**Market:** India Only  
+**Market:** Global (Clarified by client; detailed workflow pending)  
 **Platform:** Shopify  
 **Project Status:** Planning and foundation setup  
 **Primary Design Reference:** `reference/Flaberry_Design1_Classic.html`  
@@ -18,7 +18,7 @@ The platform brings together Flaberry-owned inventory and products fulfilled by 
 
 Customers should experience Flaberry as a single, consistent brand regardless of which vendor ultimately fulfils their order.
 
-The platform will operate in India and use Shopify as its primary commerce platform.
+The platform will operate globally and use Shopify as its primary commerce platform.
 
 ## Main product categories
 
@@ -89,7 +89,7 @@ The following decisions have already been confirmed by the project owner.
 
 | Business area | Confirmed decision |
 |---|---|
-| Target market | India only |
+| Target market | Global (Shopify Markets architecture; detailed workflow pending) |
 | Platform | Shopify |
 | Marketplace model | Central products + vendor-listed products |
 | Catalogue | One central product catalogue |

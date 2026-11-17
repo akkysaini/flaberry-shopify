@@ -4,7 +4,7 @@
 **Document Type:** Business and Technical Decision Register  
 **Version:** 1.0  
 **Status:** Active  
-**Market:** India
+**Market:** Global (Clarified by client; detailed workflow pending)
 
 ---
 
@@ -48,22 +48,35 @@ An implemented decision must have evidence of successful testing.
 
 # 3. CONFIRMED BUSINESS DECISIONS
 
-## D-001 — Target Market
+## D-001 — Target Market: Global Scope (Clarified)
 
-**Status:** APPROVED
+**Status:** APPROVED (Updated)
 
-Flaberry will initially operate in India.
+The client has clarified that Flaberry's website traffic and target market are **global**, not India-only.
 
-Implementation implications:
+A complete documented business workflow is expected from the client shortly. Until received, frontend design and theme development must support a global storefront architecture without assuming unconfirmed business rules.
 
-- Indian pincodes.
-- Indian delivery locations.
-- INR currency.
-- India-supported payment methods.
-- India-specific delivery operations.
-- Appropriate Indian business and tax requirements.
+Implementation principles:
 
-Do not introduce international storefront functionality unless separately approved.
+- Design and frontend development must support a global storefront architecture.
+- Do not hardcode India as the only target country.
+- Do not hardcode INR as the only currency.
+- Use Shopify Markets and native localization functionality (`localization.available_countries`, `localization.available_currencies`).
+- Currency, country and market information must come from Shopify's actual configuration.
+- Product, collection, navigation and content data must remain Shopify Admin-controlled.
+- Keep country-specific and market-specific functionality configurable.
+- Do not invent international shipping, payment, tax or delivery rules.
+- Do not implement vendor routing, settlement or fulfilment logic until the client's complete workflow is received and approved.
+
+Pending decisions associated with global market scope (awaiting client workflow document):
+- Supported countries and markets.
+- Supported currencies and languages.
+- Country-specific delivery coverage.
+- International shipping rules.
+- Vendor availability and routing across regions.
+- Payment providers and supported international payment methods.
+- Taxes and duties.
+- Country-specific product availability.
 
 ## D-002 — Commerce Platform
 
@@ -558,7 +571,7 @@ Whenever an important decision changes:
 
 | Decision ID | Subject | Status |
 |---|---|---|
-| D-001 | India-only target market | APPROVED |
+| D-001 | Global target market (Shopify Markets architecture) | APPROVED (Updated) |
 | D-002 | Shopify commerce platform | APPROVED |
 | D-003 | Hybrid vendor model | APPROVED |
 | D-004 | Automatic order routing | APPROVED |

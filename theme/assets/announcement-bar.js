@@ -26,9 +26,24 @@ export class AnnouncementBar extends Component {
 
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
+    this.addEventListener('focusin', this.suspend);
+    this.addEventListener('focusout', this.resume);
     document.addEventListener('visibilitychange', this.#handleVisibilityChange);
 
-    this.play();
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion) {
+      this.play();
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback?.();
+    this.removeEventListener('mouseenter', this.suspend);
+    this.removeEventListener('mouseleave', this.resume);
+    this.removeEventListener('focusin', this.suspend);
+    this.removeEventListener('focusout', this.resume);
+    document.removeEventListener('visibilitychange', this.#handleVisibilityChange);
+    this.suspend();
   }
 
   next() {

@@ -2,7 +2,7 @@
 
 **Shopify Storefront + Multi-Vendor Marketplace**
 
-Flaberry is an India-focused gifting and e-commerce platform built on Shopify, with a multi-vendor fulfilment architecture and automatic vendor allocation.
+Flaberry is a global gifting and e-commerce platform built on Shopify, with a multi-vendor fulfilment architecture and automatic vendor allocation.
 
 The project aims to transform an existing fully interactive HTML prototype into a production-ready Shopify storefront while preserving its original visual design and customer experience.
 
@@ -32,7 +32,7 @@ The platform supports:
 
 | Requirement | Decision |
 |---|---|
-| Target market | India |
+| Target market | Global (Shopify Markets architecture) |
 | Commerce platform | Shopify |
 | Vendor model | Central + vendor-listed products |
 | Product catalogue | Central and vendor-listed products |
