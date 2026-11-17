@@ -23,7 +23,7 @@ The platform supports:
 - Multiple fulfilment locations.
 - Automatic order allocation.
 - Pincode-based serviceability.
-- Distance-based vendor selection.
+- Delivery eligibility and distance-based vendor selection.
 - Scheduled and time-sensitive delivery.
 - Central customer payment collection.
 - Separate vendor settlements.
@@ -35,12 +35,14 @@ The platform supports:
 | Target market | India |
 | Commerce platform | Shopify |
 | Vendor model | Central + vendor-listed products |
-| Product catalogue | One central catalogue |
+| Product catalogue | Central and vendor-listed products |
 | Order allocation | Automatic |
-| Routing criteria | Availability + distance |
+| Routing criteria | Product availability + vendor inventory + delivery eligibility + distance |
 | Customer payment | Collected by Flaberry |
 | Vendor settlement | Managed separately by Flaberry |
 | Storefront design | Existing HTML prototype |
+
+**Important routing principle:** Vendor availability, inventory and delivery eligibility must be checked before distance is considered. Distance alone must never determine vendor selection. Manual allocation is reserved for exception or fallback situations. Specific routing tie-breakers remain pending approval.
 
 ---
 
@@ -71,6 +73,8 @@ The platform supports:
 
 **Important:** Shopify Horizon is the selected starting theme. Dawn is not the project foundation.
 
+Horizon has been selected but has not yet been integrated into the project.
+
 ### Backend
 
 Backend framework, database and hosting are pending technical approval.
@@ -95,6 +99,9 @@ Flaberry-Shopify/
 │   └── PROTOTYPE_ANALYSIS.md
 │
 ├── interaction-reference/
+│   ├── homepage-interactions.md
+│   ├── navigation.md
+│   └── responsive-behaviour.md
 │
 ├── reference/
 │   └── Flaberry_Design1_Classic.html
@@ -104,18 +111,21 @@ Flaberry-Shopify/
 │   └── mobile/
 │
 ├── theme/
-│   └── Shopify Horizon theme files
+│   └── Shopify Horizon theme files (after integration)
 │
 ├── GEMINI.md
 ├── README.md
 └── .gitignore
 ```
 
-The `PROTOTYPE_ANALYSIS.md` file will be generated after the original HTML prototype has been thoroughly inspected.
+**Structure notes:**
 
-The `theme/` directory will contain the Shopify Horizon-based theme after integration.
-
-A backend directory will be introduced after backend architecture approval.
+- `PROTOTYPE_ANALYSIS.md` contains the completed source-based technical analysis of the original HTML prototype.
+- `interaction-reference/` contains detailed interaction, navigation and responsive behaviour documentation.
+- `reference/` preserves the original HTML design and interaction reference.
+- `screenshots/` contains desktop and mobile visual references.
+- `theme/` is reserved for the Shopify Horizon-based theme after authorised integration.
+- A backend directory will be introduced after backend architecture approval.
 
 ---
 
@@ -133,6 +143,14 @@ All major project requirements and decisions are documented in the `documentatio
 | TECH_STACK.md | Development technologies and tools |
 | DECISIONS.md | Approved and pending decisions |
 | PROTOTYPE_ANALYSIS.md | Detailed HTML prototype analysis |
+
+### Interaction Reference Documents
+
+| Document | Purpose |
+|---|---|
+| homepage-interactions.md | Homepage components and interaction behaviour |
+| navigation.md | Navigation, menus, drawers and routing |
+| responsive-behaviour.md | Desktop, tablet and mobile layout behaviour |
 
 ### AI Instructions
 
@@ -154,9 +172,9 @@ reference/Flaberry_Design1_Classic.html
 
 The prototype includes interactive navigation, links, tabs, screen changes and other customer-facing interactions.
 
-The implementation must analyse the complete source code rather than relying exclusively on screenshots.
+The implementation must follow the complete source analysis rather than relying exclusively on screenshots.
 
-### Design preservation requirements
+### Design Preservation Requirements
 
 - Preserve the existing visual identity.
 - Preserve the original section order.
@@ -168,13 +186,21 @@ The implementation must analyse the complete source code rather than relying exc
 
 The objective is accurate Shopify implementation, not visual reinterpretation.
 
+### Prototype Verification Status
+
+The prototype has been inspected through static source-code and screenshot analysis.
+
+The analysis is source-verified, but live browser execution and runtime testing have not been performed as part of that analysis.
+
+Refer to `documentation/PROTOTYPE_ANALYSIS.md` for detailed findings and verification limitations.
+
 ---
 
 ## 6. DEVELOPMENT SETUP
 
 ### Prerequisites
 
-Install and configure:
+The development environment includes:
 
 - Node.js.
 - npm.
@@ -200,23 +226,25 @@ https://github.com/Shopify/horizon
 
 Horizon is the selected theme foundation.
 
-It must be integrated into the existing `theme/` directory without replacing the project root or existing documentation.
+It must be integrated into the existing `theme/` directory without replacing the project root, existing documentation or Git history.
 
-### Initial development workflow
+### Development Workflow
 
-After project documentation and technical architecture have been approved:
+The immediate priority is to complete and commit project documentation before starting theme integration.
+
+After the documentation-only commit:
 
 1. Open the Flaberry project in Antigravity.
 2. Read `GEMINI.md`.
-3. Review all project documentation.
-4. Analyse the original HTML prototype.
-5. Generate `PROTOTYPE_ANALYSIS.md`.
-6. Review the analysis.
-7. Integrate Shopify Horizon.
-8. Configure the development store.
+3. Review the approved project documentation.
+4. Review the completed prototype analysis.
+5. Validate the technical architecture and pending integrations.
+6. Obtain approval to begin Shopify theme integration.
+7. Integrate Shopify Horizon into the existing `theme/` directory.
+8. Configure the Shopify development store.
 9. Begin incremental theme implementation.
 
-Do not begin full theme development before prototype analysis and architecture review.
+Do not begin full theme development before prototype analysis, architecture review and the documentation commit are complete.
 
 ---
 
@@ -238,6 +266,8 @@ All contributors and AI agents must follow these rules.
 12. Maintain documentation alongside code changes.
 13. Never overwrite the original HTML reference.
 14. Preserve existing Git history.
+15. Do not treat prototype simulations as production-ready functionality.
+16. Do not integrate the Shopify theme before the documentation-only commit and explicit approval.
 
 ---
 
@@ -249,17 +279,17 @@ Repository:
 
 https://github.com/akkysaini/flaberry-shopify
 
-### Recommended workflow
+### Recommended Workflow
 
 1. Review current project status.
 2. Make a focused change.
-3. Test the change.
+3. Test the change where applicable.
 4. Review modified files.
 5. Commit the completed work.
 6. Push to GitHub.
 7. Continue with the next milestone.
 
-### Example commands
+### Example Commands
 
 Check project status:
 
@@ -271,6 +301,13 @@ Stage approved documentation:
 
 ```powershell
 git add README.md GEMINI.md documentation/ interaction-reference/
+```
+
+Review staged changes:
+
+```powershell
+git diff --cached --stat
+git diff --cached
 ```
 
 Commit:
@@ -286,6 +323,8 @@ git push origin main
 ```
 
 Always inspect staged changes before committing.
+
+The commands above are examples for the documentation commit. Confirm the actual branch and repository status before executing them.
 
 Never commit API keys, passwords, private access tokens or sensitive customer information.
 
@@ -330,18 +369,29 @@ Refer to `documentation/IMPLEMENTATION_PLAN.md` for detailed execution requireme
 - [x] Antigravity CLI installation.
 - [x] Shopify AI Toolkit installation.
 - [x] Initial project documentation drafts.
+- [x] Static source analysis of the original HTML prototype.
+- [x] Prototype page and route inventory.
+- [x] Homepage interaction documentation.
+- [x] Navigation and routing documentation.
+- [x] Responsive behaviour documentation.
+- [x] Route-counting and Cart Drawer classification correction.
 
 ### Pending
 
-- [ ] Final documentation review.
+- [ ] Save and verify the final root-level GEMINI.md.
+- [ ] Final documentation consistency audit.
 - [ ] Documentation-only GitHub commit.
-- [ ] Complete prototype analysis.
+- [ ] Technical and integration validation.
 - [ ] Marketplace application selection.
 - [ ] Backend architecture approval.
 - [ ] Shopify Horizon integration.
 - [ ] Shopify storefront implementation.
 - [ ] Marketplace and routing implementation.
 - [ ] End-to-end testing.
+
+**Current milestone:** Documentation finalisation and GitHub commit.
+
+**Theme integration status:** Not started. Horizon is selected but has not been integrated.
 
 ---
 

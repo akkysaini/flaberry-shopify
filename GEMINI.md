@@ -1,388 +1,270 @@
 # GEMINI.md — Flaberry Shopify Project Instructions
 
-## 1. Project Overview
+## 1. Project Identity
 
-You are working on **Flaberry**, an India-focused Shopify storefront and multi-vendor marketplace.
+**Project:** Flaberry Shopify Storefront + Multi-Vendor Marketplace  
+**Market:** India only  
+**Platform:** Shopify  
+**Base Theme:** Shopify Horizon (selected, not yet integrated)  
+**Primary Design Reference:** `reference/Flaberry_Design1_Classic.html`
 
-The project aims to convert the supplied, fully functional HTML prototype into a production-ready Shopify storefront while supporting both centrally managed products and vendor-listed products.
+The objective is to build a production-ready Shopify storefront and multi-vendor marketplace that faithfully reproduces the existing Flaberry prototype's design, layout, user experience and intended interactions.
 
-The supplied HTML prototype is the primary source of truth for the storefront's visual design, layout, content presentation, navigation, and interactions.
+This is an implementation project, not a redesign project.
 
-Your role is to inspect, understand, plan, implement, test, and document the project carefully.
+## 2. Read Before Making Changes
 
-Do not make assumptions when the source files can be inspected.
+Before starting any development task, inspect the relevant project documentation.
 
----
+Priority order:
 
-## 2. Mandatory Working Rules
+1. `DECISIONS.md` — approved business and technical decisions.
+2. `README.md` — project overview, setup and current status.
+3. `documentation/PROJECT_BRIEF.md` — project scope and objectives.
+4. `documentation/PROTOTYPE_ANALYSIS.md` — master technical analysis of the original prototype.
+5. `documentation/DESIGN_REFERENCE.md` — visual design requirements.
+6. `documentation/ARCHITECTURE.md` — planned application architecture.
+7. `documentation/IMPLEMENTATION_PLAN.md` — development phases and sequence.
+8. `documentation/INTEGRATIONS.md` — integration options and their approval status.
+9. `documentation/TECH_STACK.md` — selected and proposed technologies.
+10. `interaction-reference/` — detailed navigation, interaction and responsive behaviour.
 
-Follow these rules throughout the project:
+If a document is missing, do not invent its contents. Report the missing file.
 
-1. Read the relevant files in the `documentation/` folder before starting any task.
-2. Treat `DECISIONS.md` as the decision register. Follow approved decisions.
-3. Treat the supplied HTML prototype as the primary design and interaction reference.
-4. Inspect the actual HTML, CSS, JavaScript, images, links, tabs, and interactive states before implementation.
-5. Do not redesign, simplify, or reinterpret the approved prototype without explicit permission.
-6. Do not remove working interactions simply because a Shopify implementation requires a different technical approach.
-7. Do not invent missing business rules, API credentials, provider configurations, or integration behaviour.
-8. Clearly identify assumptions, technical limitations, dependencies, and unresolved decisions.
-9. Prefer small, controlled, testable implementation steps over large rewrites.
-10. Do not overwrite or delete existing project files without checking their contents and explaining the impact.
-11. Do not install additional packages, apps, or dependencies without explaining why they are needed.
-12. Never expose API keys, passwords, access tokens, private credentials, or customer data in source code or Git commits.
+## 3. Source of Truth
 
-If a required decision is missing, document the question and ask for approval rather than silently choosing an approach.
+Use these references according to their purpose:
 
----
+- **Original HTML prototype:** Primary source for design, layout, content, product presentation, navigation and frontend interaction behaviour.
+- **Screenshots:** Visual reference for desktop and mobile appearance.
+- **Approved documentation:** Source of truth for project requirements, business rules and technical decisions.
+- **Horizon theme:** Selected Shopify theme foundation once integration is explicitly authorised.
 
-## 3. Source-of-Truth Priority
+Do not treat the prototype's simulated backend behaviour as an approved production architecture.
 
-When information conflicts, follow this priority:
+If the prototype, screenshots and approved documentation appear inconsistent, identify the difference and ask for clarification rather than silently choosing one.
 
-1. Explicit instructions and decisions confirmed by the project owner.
-2. Approved entries in `documentation/DECISIONS.md`.
-3. Existing HTML prototype and its actual working behaviour for design and interactions.
-4. Other project documentation.
-5. Official Shopify documentation and verified integration documentation.
-6. Your own technical recommendations, clearly labelled as recommendations.
+## 4. Design Preservation Rules
 
-Do not treat a proposed technology, app, provider, or architecture as approved unless the decision register says so.
+The existing Flaberry design must be reproduced faithfully.
 
-If two sources conflict, report the conflict before making a change.
+- Do not redesign the storefront.
+- Do not introduce a different visual identity.
+- Do not arbitrarily change colours, typography, spacing, layouts, card styles, imagery or section order.
+- Preserve the original desktop and mobile design behaviour.
+- Preserve navigation labels, menu hierarchy and relevant content.
+- Reproduce the original interactions wherever technically feasible.
+- Use the supplied screenshots to compare visual output.
+- Do not replace original assets with unrelated stock images or generated alternatives.
+- Do not remove sections simply because they seem unnecessary.
 
----
+If Shopify requires a structural adjustment, make the smallest practical change while preserving the original appearance and experience.
 
-## 4. Business Requirements
+## 5. Prototype Analysis Rules
 
-The following requirements are approved:
+The prototype is a functional client-side SPA, but it is not a production-ready Shopify application.
 
-- Target market: India only.
-- Platform: Shopify.
-- Product model: central Flaberry products and vendor-listed products.
-- Customer payments: customers pay Flaberry.
-- Vendor payments: Flaberry settles vendors separately.
-- Order routing: automatic.
-- Routing must consider product availability and delivery distance, along with relevant delivery eligibility and fulfilment constraints.
-- Multi-vendor orders must support appropriate order splitting and fulfilment.
-- The original prototype's design and intended user experience must be preserved.
+Keep these distinctions clear:
 
-### Important business constraints
+- Frontend interactions in the prototype are references for intended user experience.
+- `localStorage`, static credentials, hardcoded data and simulated payment actions are demonstrations only.
+- Vendor and Admin interfaces are prototype demonstrations, not secure production systems.
+- Real authentication, payments, order management, inventory, vendor access and notifications require appropriate production services.
+- Never copy prototype-only security or payment logic into production.
 
-Do not assume:
+The prototype analysis is source-verified through static code and screenshot inspection. It has not been confirmed through live browser testing. Do not describe its behaviour as browser-tested unless actual testing has been performed.
+
+## 6. Approved Business Rules
+
+The following decisions are approved:
+
+### Market
+- India only.
+
+### Product Model
+- Support both centrally managed Flaberry products and vendor-listed products.
+
+### Order Routing
+- Automatic vendor allocation is the primary production workflow.
+- Check product availability, vendor inventory and delivery eligibility before considering distance.
+- Distance alone must never determine vendor selection.
+- Manual allocation is an exception/fallback workflow, not the normal process.
+- Do not invent tie-breaker rules.
+
+### Payments and Vendor Settlements
+- Customers pay Flaberry.
+- Flaberry settles vendor payments separately.
+- Commission percentages, settlement schedules and related financial rules remain pending approval.
+
+### Order Fulfilment
+- Support orders involving multiple vendors.
+- Preserve the customer's overall order experience while handling vendor-level fulfilment appropriately.
+
+Refer to `DECISIONS.md` for the latest approval status. If a decision changes, update the relevant documentation only after approval.
+
+## 7. Pending Decisions — Do Not Assume
+
+Do not independently finalise or invent:
 
 - Vendor commission percentages.
-- Vendor settlement frequency or payment schedule.
-- Vendor onboarding and approval rules.
-- Inventory reservation expiry.
-- Order cancellation and refund responsibility.
-- Delivery fees and shipping rules.
-- Vendor serviceability or delivery radius.
-- Routing fallback rules.
-- Priority rules when multiple vendors can fulfil an order.
+- Vendor settlement frequency or payout conditions.
+- Automatic routing tie-breakers.
+- Inventory reservation and expiry rules.
+- Vendor rejection and reassignment rules.
+- Delivery capacity and slot allocation rules.
+- Currency selector behaviour.
+- Payment gateway selection.
+- Marketplace application selection.
+- Backend framework and hosting provider.
+- Database selection.
+- Maps, pincode and distance calculation providers.
+- Delivery partner integrations.
+- WhatsApp, SMS and email providers.
+- Analytics and monitoring services.
 
-These details must be confirmed before implementing the relevant production workflows.
+A technology mentioned as a candidate in the documentation is not automatically approved.
 
-Distance alone must never be treated as sufficient to select a vendor. Availability and delivery eligibility must also be validated.
+Clearly distinguish between **Approved**, **Selected**, **Proposed** and **Pending**.
 
----
+## 8. Shopify Theme Development Rules
 
-## 5. Design and Prototype Instructions
+Horizon is the selected starting theme, but it must not be integrated until the project owner authorises that phase after the documentation has been committed.
 
-The supplied HTML prototype is the primary design reference.
+When authorised:
 
-Before writing storefront code:
+- Inspect the complete Horizon structure before editing.
+- Follow the existing theme architecture and coding conventions.
+- Use Shopify Liquid, JSON templates, sections, snippets, CSS, JavaScript and theme assets appropriately.
+- Prefer reusable sections and snippets over duplicated code.
+- Use section schema settings where useful.
+- Preserve Shopify's native theme functionality unless a documented requirement needs a change.
+- Do not blindly overwrite Horizon files.
+- Do not introduce a second nested Git repository into the project.
+- Keep the original prototype and documentation separate from the production theme.
 
-1. Locate the actual prototype file.
-2. Read the complete HTML structure.
-3. Inspect all CSS and JavaScript.
-4. Identify all external assets and image URLs.
-5. Identify all pages, tabs, navigation links, buttons, forms, menus, and interactive elements.
-6. Test or trace the interaction behaviour wherever possible.
-7. Inspect desktop and mobile screenshots.
-8. Record the design system, layouts, responsive behaviour, and interaction requirements.
-9. Create `documentation/PROTOTYPE_ANALYSIS.md` with the findings.
+Do not modify the `theme/` folder before explicit approval.
 
-### Preserve the existing design
+## 9. Shopify Platform and API Rules
 
-Pay attention to:
+Prefer official Shopify capabilities wherever they satisfy the requirement.
 
-- Page structure and section order.
-- Header and navigation.
-- Typography and font weights.
-- Colours and backgrounds.
-- Spacing and alignment.
-- Container widths.
-- Borders, shadows, and radii.
-- Product cards and image proportions.
-- Buttons and hover states.
-- Icons and other visual assets.
-- Mobile layouts and responsive breakpoints.
-- Tabs, links, menus, and other interactive states.
+Use appropriate Shopify services and APIs for products, collections, customers, cart, checkout, orders, inventory and webhooks.
 
-Do not replace actual prototype assets with generated placeholders unless explicitly instructed.
+Security requirements:
 
-Do not assume that an element is decorative just because it looks like a static element. Inspect its behaviour.
+- Never expose Shopify Admin API access tokens in frontend code.
+- Never hardcode private API credentials in Liquid, JavaScript, HTML or public repositories.
+- Keep privileged operations and secrets on a secure backend.
+- Validate incoming webhook requests.
+- Apply appropriate authentication and authorisation to vendor and admin operations.
+- Do not assume a frontend-only implementation is sufficient for marketplace security.
 
-### Asset handling
+Do not select or implement a third-party integration without checking its actual capabilities, compatibility, costs and approval status.
 
-Preserve the existing asset URLs initially.
+## 10. India-First Storefront Requirements
 
-If an asset needs to be downloaded, relocated, optimised, or uploaded to Shopify, document the reason and verify that the replacement preserves its appearance.
+Keep the implementation aligned with the India-only business scope.
 
-Do not change image URLs or asset references without checking their impact.
+Consider Indian pincodes, delivery locations, address formats, phone numbers, payment methods and INR pricing where relevant.
 
----
+However, do not assume that every international or multi-currency feature in the prototype must be removed. Currency selector behaviour is a pending business decision and must be resolved before implementation.
 
-## 6. Shopify Theme Development
+Do not invent delivery coverage, serviceability data, vendor locations or delivery guarantees.
 
-The selected theme foundation is **Shopify Horizon**.
+## 11. Development Workflow
 
-Horizon has been selected but must not be considered integrated until its source files are actually present in the project's `theme/` directory and verified.
+Work in small, controlled steps.
 
-Use Shopify's native theme architecture wherever practical:
+For every task:
 
-- Liquid
-- HTML
-- CSS
-- JavaScript
-- Shopify JSON templates
-- Shopify sections and blocks
-- Shopify snippets
-- Shopify configuration and schema
+1. Understand the requirement.
+2. Inspect the relevant documentation and existing code.
+3. Identify the exact files that need changes.
+4. Explain the intended approach when the change is substantial.
+5. Make only the changes required for the current task.
+6. Preserve existing working functionality.
+7. Verify the changes using appropriate tools.
+8. Report the exact files created, modified or removed.
+9. Clearly mention anything that remains untested or unresolved.
 
-Follow the existing Horizon architecture and conventions after inspecting its source code.
+Do not make unrelated improvements during a focused task.
 
-Do not blindly copy code from Dawn or another theme into Horizon.
+Do not create duplicate files or alternative implementations without a clear reason.
 
-Do not introduce a separate frontend framework unless the project owner approves the architectural change.
+## 12. Testing and Verification
 
-### Theme implementation rules
+Use appropriate checks for the type of work being performed.
 
-- Build reusable sections and snippets.
-- Keep CSS organised and avoid unnecessary duplication.
-- Keep JavaScript modular and scoped.
-- Use Shopify-native objects and features where suitable.
-- Preserve accessibility and responsive behaviour.
-- Avoid unnecessary dependencies.
-- Do not hardcode product data that should come from Shopify.
-- Do not put secrets or private API credentials in theme code.
-- Test changes in the development environment before treating them as complete.
+Examples include:
 
----
+- Shopify theme checks.
+- JavaScript and CSS validation.
+- Liquid syntax checks.
+- Responsive viewport inspection.
+- Navigation and interaction testing.
+- Cart and checkout flow testing.
+- Product and collection rendering checks.
+- Accessibility checks.
+- API and webhook validation.
+- Security and permission checks.
 
-## 7. Multi-Vendor Marketplace Architecture
+Never claim that something has been tested unless the test was actually performed.
 
-The project requires both central and vendor-listed products.
+Report separately:
+- Passed checks.
+- Failed checks.
+- Not tested.
+- Blocked or pending verification.
 
-Do not assume that a Shopify theme alone can implement the marketplace backend.
+## 13. Git and File Safety
 
-Evaluate and document the appropriate responsibilities of:
+- Inspect Git status before making changes.
+- Review diffs before committing.
+- Do not overwrite user work without permission.
+- Do not delete files unless explicitly authorised or clearly required and approved.
+- Never force-push.
+- Never commit credentials, API keys, tokens, passwords or private environment files.
+- Keep commits focused and meaningful.
+- Do not commit unfinished or unrelated work.
+- Preserve the existing Git repository and project history.
 
-- Shopify.
-- Marketplace/vendor management application.
-- Custom backend services, if required.
-- Database and order-routing services.
-- Inventory and availability management.
-- Vendor fulfilment.
-- Payment and settlement integrations.
-- Delivery and serviceability integrations.
+## 14. Documentation Maintenance
 
-The selected marketplace app and backend architecture are not yet approved.
+When an approved project decision changes, update the relevant documentation.
 
-Before implementation, validate the proposed architecture through a proof of concept.
+Keep these files consistent:
 
-### Automatic order routing
+- `README.md`
+- `DECISIONS.md`
+- `documentation/ARCHITECTURE.md`
+- `documentation/IMPLEMENTATION_PLAN.md`
+- `documentation/INTEGRATIONS.md`
+- `documentation/TECH_STACK.md`
 
-The routing system must be designed to consider:
+Do not mark a proposed integration, technology or business rule as approved without confirmation.
 
-1. Product availability.
-2. Vendor inventory.
-3. Delivery serviceability.
-4. Vendor fulfilment capability.
-5. Distance and delivery feasibility.
-6. Multi-item and multi-vendor order requirements.
-7. Fallback behaviour when the preferred vendor cannot fulfil the order.
+Document important implementation changes so future development work can follow them.
 
-Do not implement a simplistic nearest-vendor-only algorithm.
+## 15. Communication Style
 
-Document the routing logic, failure cases, and order lifecycle before building the production workflow.
+The project owner prefers clear, practical, step-by-step guidance.
 
-### Payments and vendor settlements
+- Communicate in Hinglish by default unless English is requested.
+- Explain technical decisions in simple language.
+- Avoid unnecessary technical jargon.
+- Do not overwhelm the project owner with too many unrelated tasks.
+- Give precise file paths and commands.
+- When a decision is needed, ask a direct question.
+- Do not assume the project owner has approved an action just because it was discussed.
 
-The approved payment model is:
+## 16. Current Project Boundary
 
-- Customer pays Flaberry.
-- Flaberry settles vendors separately.
+The immediate priority is to complete, review and commit the project documentation.
 
-Do not assume that a marketplace app or payment gateway automatically supports the required settlement model.
+**Do not begin Horizon integration or modify the Shopify theme until the project owner explicitly authorises it after the documentation commit.**
 
-Verify the actual capabilities, limitations, fees, and India-specific compatibility before recommending or integrating a provider.
-
----
-
-## 8. API and Integration Rules
-
-Use official documentation wherever possible.
-
-Potential integrations are not automatically approved.
-
-Before integrating any provider:
-
-1. Identify the exact requirement.
-2. Verify the provider's current capabilities.
-3. Check Shopify compatibility.
-4. Check India-specific availability and restrictions.
-5. Check pricing and transaction fees where relevant.
-6. Identify API permissions and required credentials.
-7. Document limitations and fallback options.
-8. Obtain approval for the selected provider.
-
-Never fabricate API endpoints, webhook payloads, app capabilities, or configuration values.
-
-Keep credentials in secure environment variables or the provider's recommended secret-management system.
-
-Never commit `.env` files, API tokens, private keys, or production credentials.
+Until then, focus only on documentation review, consistency, project setup instructions and preparation for the next approved phase.
 
 ---
 
-## 9. Documentation Rules
-
-Keep project documentation updated as implementation progresses.
-
-Important documents:
-
-- `README.md` — project overview and setup.
-- `GEMINI.md` — AI working instructions.
-- `documentation/PROJECT_BRIEF.md` — business and project scope.
-- `documentation/DESIGN_REFERENCE.md` — visual reference requirements.
-- `documentation/ARCHITECTURE.md` — system architecture.
-- `documentation/IMPLEMENTATION_PLAN.md` — implementation phases.
-- `documentation/INTEGRATIONS.md` — integration research and status.
-- `documentation/TECH_STACK.md` — technologies and tools.
-- `documentation/DECISIONS.md` — approved and pending decisions.
-- `documentation/PROTOTYPE_ANALYSIS.md` — actual prototype findings.
-
-When a decision changes, update `DECISIONS.md` and the affected documentation.
-
-Clearly distinguish:
-
-- Approved
-- Proposed
-- Under evaluation
-- Pending confirmation
-- Implemented
-- Tested
-- Blocked
-
-Do not mark a feature as complete merely because code has been written. It must be tested against its requirements.
-
----
-
-## 10. Git and Project Safety
-
-The project uses Git and an existing GitHub repository.
-
-Before making substantial changes:
-
-1. Inspect the current Git status.
-2. Check the current branch.
-3. Review relevant existing files.
-4. Avoid overwriting unrelated work.
-5. Keep changes focused and easy to review.
-
-Never run destructive Git commands without explicit permission.
-
-Do not force-push, reset, clean, delete branches, or rewrite Git history without approval.
-
-Never commit secrets or sensitive customer/vendor information.
-
-Use meaningful commit messages that describe the actual changes.
-
----
-
-## 11. How to Work on Each Task
-
-For every significant task, follow this workflow:
-
-### Step 1 — Inspect
-
-Read the relevant documentation and source files.
-
-### Step 2 — Understand
-
-Explain what currently exists and what needs to change.
-
-### Step 3 — Plan
-
-List the files that need to be created or modified and describe the intended changes.
-
-### Step 4 — Identify risks
-
-Mention dependencies, unresolved decisions, compatibility issues, and possible regressions.
-
-### Step 5 — Implement
-
-Make the smallest complete change that achieves the approved requirement.
-
-### Step 6 — Verify
-
-Run appropriate checks and test the relevant desktop, mobile, and interactive behaviour.
-
-### Step 7 — Report
-
-Summarise:
-
-- What changed.
-- Which files changed.
-- What was tested.
-- What passed.
-- What failed or remains incomplete.
-- What requires project-owner approval.
-- The recommended next step.
-
-Do not claim that something was tested if it was not actually tested.
-
----
-
-## 12. Communication Style
-
-Communicate with the project owner in clear, straightforward language.
-
-Prefer concise explanations and practical steps.
-
-For technical decisions:
-
-- Explain what the decision means.
-- Explain why it matters.
-- Identify the available options.
-- Recommend an option only when sufficient evidence exists.
-- Clearly state what still needs approval.
-
-Do not overwhelm the project owner with unrelated technical details.
-
-Ask one focused question at a time when clarification is necessary.
-
----
-
-## 13. Current Project Boundary
-
-The immediate priority is to complete and verify the project documentation.
-
-Until the project owner explicitly approves moving to theme setup:
-
-- Do not integrate Horizon.
-- Do not modify the `theme/` directory.
-- Do not start storefront implementation.
-- Do not install marketplace applications.
-- Do not create production backend services.
-- Do not configure live payment or delivery integrations.
-
-The next approved stage is to audit the documentation, inspect the actual prototype, and prepare the implementation foundation.
-
----
-
-## Final Instruction
-
-**Understand first. Document second. Implement third. Verify everything.**
-
-The objective is not merely to make the Shopify store look similar to the prototype. The objective is to reproduce its intended user experience faithfully while building a reliable, maintainable Shopify storefront and multi-vendor marketplace for Flaberry.
+**Core principle:** Preserve the Flaberry experience, follow approved decisions, build securely for production, and never invent missing requirements.
