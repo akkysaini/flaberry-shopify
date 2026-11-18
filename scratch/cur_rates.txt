@@ -1,0 +1,41 @@
+﻿const addD=(d,n)=>new Date(d.getTime()+n*DAY);
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const fmtD=s=>{const d=fromIso(s);return `${WD[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`};
+const fmtShort=s=>{const d=fromIso(s);return `${d.getDate()} ${MON[d.getMonth()]}`};
+const nowTime=()=>{const n=new Date();return `${n.getDate()} ${MON[n.getMonth()]}, ${n.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}`};
+
+/* ---------- Money ---------- */
+const inr=n=>"â‚¹"+Math.round(n).toLocaleString("en-IN");
+function money(n){const [sym,r]=CUR[S.cur];if(S.cur==="INR")return inr(n);const v=n*r;return sym+(v>=100?Math.round(v).toLocaleString("en-US"):v.toFixed(2));}
+const round9=n=>Math.max(9,Math.round(n/10)*10-1);
+
+/* ---------- Availability & routing ---------- */
+function eligible(pk,pin){
+  const p=P[pk],PIN=PINS[pin]; if(!PIN) return [];
+  const need=new Set([p.group,...p.cats.map(c=>CATS[c]?.group).filter(g=>g&&g!=="occasions")]);
+  return PIN.v.filter(v=>{const V=VENDORS[v];return V&&[...need].every(g=>V.groups.includes(g))&&!p.cats.some(c=>V.ex.includes(c));});
+}
+function avail(pk,pin=S.pin){ if(!pin) return {known:false,ok:true,v:[]}; if(!PINS[pin]) return {known:true,ok:false,v:[],nopin:true}; const v=eligible(pk,pin); return {known:true,ok:v.length>0,v}; }
+const visible=keys=>S.pin&&PINS[S.pin]?keys.filter(k=>avail(k).ok):keys;
+
+/* ---------- Pricing ---------- */
+const WEIGHTS=[["1/2 kg",1],["1 kg",1.85],["1.5 kg",2.7],["2 kg",3.5]];
+function basePrice(p,opt={}){let b=p.price;if(isCake(p)){const w=WEIGHTS.find(w=>w[0]===opt.weight)||WEIGHTS[0];b=round9(b*w[1]);if(opt.egg==="Eggless")b+=50;}return b;}
+function ruleFor(p,date){ if(!date) return null; return RULES.find(r=>r.active&&date>=r.from&&date<=r.to&&r.groups.some(g=>g===p.group||p.cats.some(c=>CATS[c]?.group===g))); }
+function priceOn(p,opt,date){const b=basePrice(p,opt);const r=ruleFor(p,date);if(!r)return {price:b,base:b,rule:null};let v;if(r.useSaved&&p.vprice&&!isCake(p))v=Math.round(p.vprice*b/p.price);else v=round9(b*(1+r.uplift/100));return {price:Math.max(v,b),base:b,rule:r};}
+
+/* ---------- Seed orders & enquiries ---------- */
+function seedBase(){
+  const t=today0(),d=n=>iso(addD(t,n));
+  const pick=(cat,i)=>CATS[cat].items[i%CATS[cat].items.length];
+  const mk=(id,pk,pin,date,slot,status,vendor,rec,msg,extra={})=>({id,seed:true,placed:extra.placed||d(-1),items:[{pk,qty:1,opt:extra.opt||{},price:P[pk].price}],pin,date,slot,status,vendor,
+    receiver:{name:rec[0],phone:rec[1],addr:rec[2]},sender:{name:extra.from||"Aarav Sharma",email:extra.email||"aarav.sharma@example.com",phone:"+1 713 555 0142"},msg,cakeMsg:extra.cakeMsg||"",total:P[pk].price+(SLOTS[slot]?.fee||0),cur:extra.cur||"USD",
+    log:[{t:"Order placed",at:fmtShort(extra.placed||d(-1))+", 10:12 AM",ch:"Email Â· WhatsApp"}]});
+  const o=[
+    mk("FB260931",pick("roses",0),"110001",d(0),"evening","accepted","FLW",["Neha Kapoor","+91 98111 2xxxx","B-14, Connaught Place, New Delhi"],"Happy Birthday Neha! Have the best day. Love, Aarav"),
+    mk("FB260932",pick("truffle",1),"110017",d(0),"midnight","assigned","FLW",["Kabir Malhotra","+91 98990 4xxxx","C-22, Saket, New Delhi"],"Happy Birthday bro! Party tonight.",{opt:{weight:"1 kg",egg:"With Egg"},cakeMsg:"Happy B'day Kabir",from:"Riya Malhotra",email:"riya.m@example.com",cur:"GBP"}),
+    mk("FB260933",pick("lilies",2),"560001",d(1),"morning","assigned","V-BLR-01",["Lakshmi Iyer","+91 98450 1xxxx","12, MG Road, Bengaluru"],"Thank you for everything, Amma.",{from:"Karthik Iyer",email:"karthik@example.com",cur:"AUD"}),
+    mk("FB260934",pick("cake-and-flowers",3),"400001",d(2),"standard","hold",null,["Sanjay Desai","+91 98200 5xxxx","4th Floor, Horniman Circle, Fort, Mumbai"],"Congratulations on the promotion!",{opt:{},from:"Mehul Shah",email:"mehul@example.com",cur:"INR"}),
+    mk("FB260935",pick("orchids",1),"700016",d(3),"fixed","hold",null,["Ritika Sen","+91 98300 3xxxx","18 Park Street, Kolkata"],"Happy Anniversary to my favourite couple.",{from:"Ishaan Sen",email:"ishaan@example.com",cur:"CAD"}),
+    mk("FB260936",pick("chocolate-cakes",2),"411001",d(1),"evening","hold",null,["Pooja Kulkarni","+91 98220 7xxxx","Main Street, Camp, Pune"],"Happy Birthday Pooja!",{opt:{weight:"1/2 kg",egg:"Eggless"},cakeMsg:"Happy Birthday Pooja",from:"Anil K.",email:"anil.k@example.com"}),
+    mk("FB260937",pick("premium-flowers",4),"110092",d(12),"standard","assigned","FLW",["Sunita Verma","+91 98100 8xxxx","Preet Vihar, New Delhi"],"Happy 60th Birthday Mummy! See you soon.",{from:"Rohan Verma",email:"rohan.v@example.com",cur:"USD",placed:d(-2)}),

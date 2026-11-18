@@ -1,0 +1,91 @@
+﻿}
+@media (max-width:960px){
+  .slide{display:flex;flex-direction:column}
+  .slide .pic{order:-1;aspect-ratio:4/3}
+  .slide .pic img{object-position:94% center}
+  .slide .txt{padding-top:18px}
+}
+
+/* ===== Flaberry global shell ===== */
+.ubar{display:none!important}
+.hdr.fbhdr,.hdr.fbhdr.scrolled{border-radius:0}
+.fbhdr .hdr-main{gap:16px;padding-block:14px}
+.mk .cur-sel{color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 12px;font-size:13px;font-weight:500;max-width:190px;cursor:pointer}
+.mk .cur-sel:hover{border-color:var(--ink)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+
+/* desktop navigation / mega menu */
+.nav{gap:2px}
+.nav .nl{display:flex;align-items:center;gap:4px;padding:8px 11px;border-radius:999px;font-size:14.5px;font-weight:500;white-space:nowrap}
+.nav .nl:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.nav>div.has:has(:focus-visible) .mega{display:block}
+.nav>div:has(:focus-visible) .nl{background:var(--mist)}
+.mega .wrap.wp{grid-template-columns:repeat(var(--n),minmax(150px,230px)) minmax(0,1fr);column-gap:36px}
+.mega .wrap.wp .promo{justify-self:end;align-self:start;width:min(320px,100%)}
+#upf .tbl .inp{padding:8px 10px;font-size:13.5px}
+#upf .tbl td{white-space:nowrap}
+.mega .wrap.np{grid-template-columns:repeat(var(--n),minmax(0,1fr))}
+.mega .wrap.up{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.mega .upcard .upimg{display:block;border-radius:12px;overflow:hidden;margin-bottom:12px;background:var(--mist)}
+.mega .upcard .upimg img{width:100%;aspect-ratio:16/10;object-fit:cover;transition:transform .3s}
+.mega .upcard .upimg:hover img{transform:scale(1.04)}
+.mega .upcard h6{color:var(--flora-deep)}
+.mega .va{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-weight:600;font-size:13.5px;color:var(--flora-deep)}
+@media (max-width:1180px){
+  .mega .wrap.wp,.mega .wrap.np{grid-template-columns:repeat(var(--n),minmax(0,1fr));column-gap:24px}
+  .mega .promo{display:none}
+  .nav .nl{padding:8px 8px;font-size:14px}
+}
+
+/* mobile header: Menu | logo | Country/Currency */
+.dock{display:none}
+@media (max-width:960px){
+  .fbhdr .hdr-main{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:8px;padding-block:10px}
+  .fbhdr .burger{display:block;padding:6px 0}
+  .fbhdr .logo{justify-self:center}
+  .fbhdr .search,.fbhdr .pinchip,.fbhdr .hicons{display:none}
+  .mk .cur-sel{padding:7px 8px;font-size:12px;max-width:128px}
+  body.msearch .hdr{z-index:96}
+  body.msearch .fbhdr .search{display:block;position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));max-width:none;z-index:96}
+  body.msearch .fbhdr .search input{background:#fff;padding-block:14px;font-size:16px;box-shadow:0 12px 30px rgba(34,35,92,.18)}
+
+  /* fixed mobile dock: Home | Menu | Search | Cart | Account */
+  .dock{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line);
+    padding:4px max(6px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));box-shadow:0 -6px 20px rgba(34,35,92,.07)}
+  .dock a,.dock button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:500;color:var(--muted);background:none;border:0;padding:4px 0;min-height:52px;position:relative}
+  .dock .on{color:var(--flora)}
+  .dock .badge{position:absolute;top:3px;left:calc(50% + 5px);background:var(--flora);color:#fff;font-size:10px;min-width:17px;height:17px;border-radius:9px;display:grid;place-items:center;padding:0 4px;font-weight:600}
+  body[data-mode="checkout"] .dock,body[data-mode="panel"] .dock{display:none}
+  body[data-mode="store"]{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+  body[data-mode="store"].has-sticky{padding-bottom:calc(138px + env(safe-area-inset-bottom,0px))}
+  .wa{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .has-sticky .wa{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+  .sticky-buy{bottom:calc(60px + env(safe-area-inset-bottom,0px));padding-bottom:10px;box-shadow:0 -6px 16px rgba(34,35,92,.06)}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+
+/* mobile menu: progressive levels */
+.mm-list{display:grid;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mm-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#fff;border:0;border-bottom:1px solid var(--line);font-size:16px;font-weight:600;text-align:left;width:100%;color:var(--ink);min-height:50px}
+.mm-row:last-child{border-bottom:0}
+.mm-row.hot{color:var(--flora-deep)}
+.mm-quick{display:grid;gap:14px;padding:8px 4px 16px;font-size:14.5px}
+.mm-back{background:none;border:0;font-weight:600;color:var(--flora-deep);text-align:left;padding:4px 0;font-size:14.5px;justify-self:start}
+.mm-lvl h4{font-size:26px;margin-top:2px;letter-spacing:-.02em}
+.mm-links{display:grid;gap:13px;padding:12px 0 6px;font-size:15px}
+
+/* footer: Information | Help Services | Support | Policies */
+.foot .cols{grid-template-columns:1.5fr repeat(4,minmax(0,1fr))}
+.foot h6{color:#a9acd3}
+.foot .base{border-top-color:rgba(255,255,255,.14);color:#b9bbdb}
+.flogo{height:42px;background:#fff;border-radius:10px;padding:5px 10px}
+.ftag,.fcontact{margin-top:14px;color:#cfd1ea;max-width:36ch}
+.fcontact{font-size:13px}
+.social{display:flex;gap:8px;margin-top:14px}
+.social a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.28);display:grid;place-items:center;color:#fff}
+.social a:hover{background:rgba(255,255,255,.12);text-decoration:none}
+.paywrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.paytxt{font-size:12px;color:#cfd1ea}
+.fm{display:none}
+@media (max-width:960px){.foot .cols{grid-template-columns:repeat(2,minmax(0,1fr))}.foot .cols>div:first-child{grid-column:1/-1}}
+@media (max-width:640px){

@@ -1,0 +1,221 @@
+﻿function thanks(id){return thanksBase(id);}
+HERO.splice(0,HERO.length,
+  {img:"bv1_1",bg:"#d6e6ec",h:"Fresh flowers, delivered today",p:"Hand-arranged by local florists and delivered the same day in 500+ cities. Order by 4 PM.",cta:["Shop flowers","c-flowers"]},
+  {img:"bv1_5",bg:"#9ee2f0",h:"Cakes baked fresh on order",p:"Eggless, photo and designer cakes â€” with midnight delivery for the big moment.",cta:["Order a cake","c-cakes"]},
+  {img:"bv1_3",bg:"#e2eef3",h:"Flowers & chocolates, together",p:"Lilies, carnations and Ferrero Rocher in one delivery, with your message printed.",cta:["Shop combos","c-flowers-and-chocolates"]},
+  {img:"bv1_4",bg:"#d5e2e9",h:"Brighten someone's day",p:"Sunny gerberas for birthdays, thank-yous and get-wells.",cta:["Shop gerberas","c-gerberas"]},
+  {img:"bv1_2",bg:"#cde1ed",h:"Fresh fruit baskets",p:"Seasonal fruit, packed the morning of delivery.",cta:["Shop fruit baskets","c-fruits"]});
+function renderFooter(){
+  const col=(h,l)=>`<div><h6>${h}</h6><ul>${l.map(x=>`<li><a href="#${x[1]}">${x[0]}</a></li>`).join("")}</ul></div>`;
+  $("#footer").innerHTML=`<div class="wrap"><div class="cols">
+   <div><img src="${IMGS.logo}" alt="Flaberry" style="height:40px;background:#fff;border-radius:10px;padding:4px 10px"><p style="margin-top:14px;color:#cfc7c2;max-width:36ch">India's leading brand for flowers, cakes, plants and gifts. Same-day, midnight and advance-date delivery to 500+ cities.</p>
+    <form class="news" id="newsf" onsubmit="event.preventDefault();this.innerHTML='<span>Subscribed. Watch your inbox for offers.</span>'"><label class="sr" for="newsin">Email</label><input id="newsin" type="email" placeholder="Email for offers" required><button class="btn white sm">Subscribe</button></form>
+    <p style="margin-top:14px;color:#cfc7c2;font-size:13px">Help 8 AM â€“ midnight IST<br><span style="user-select:all">+91 76685 23752</span> Â· <span style="user-select:all">customerservice@flaberry.com</span></p></div>
+   ${col("Shop",[["Flowers","c-flowers"],["Cakes","c-cakes"],["Combos","c-combos"],["Gifts","c-gifts"],["Same day delivery","c-same-day"],["Midnight delivery","c-midnight"],["Flower delivery cities","page-cities"]])}
+   ${col("Help",[["Track order","track"],["Support / Contact us","page-contact"],["FAQ","page-faq"],["Serviceable pincodes","page-pincodes"],["Advance orders","page-advance"],["Care tips","page-care"]])}
+   ${col("Company",[["About us","page-about"],["Career with us","page-careers"],["Corporate flowers","page-corporate"],["Become a partner","page-partner"],["Partner login","vendor"],["Blog","page-blog"]])}
+   ${col("Policies",[["Terms of service","page-terms"],["Delivery information","page-delivery"],["Substitution policy","page-substitution"],["Refund & cancellation","page-refund"],["Privacy policy","page-privacy"]])}</div>
+   <div class="base"><span>Â© 2026 Flaberry. All rights reserved.</span><img class="pay" src="${IMGS.payments}" alt="Accepted payment methods"><span>Website by <a href="https://www.probeyservices.com" target="_blank" rel="noopener" style="text-decoration:underline">Probey Services</a></span></div></div>`;
+}
+
+/* Flaberry global shell: header, navigation taxonomy, mobile dock, footer, markets & payment visibility */
+const MARKET={INR:["India"],USD:["United States"],GBP:["United Kingdom"],AUD:["Australia"],CAD:["Canada"],EUR:["Europe"],NZD:["New Zealand"],SGD:["Singapore"],AED:["UAE"],SAR:["Saudi Arabia"],RUB:["Russia"]};
+let INTENT={};
+
+/* ---------- product kind, used to keep intent-led collections accurate ---------- */
+const FLW_RX=/rose|lil(y|ies)|orchid|carnation|gerbera|sunflower|bouquet|flower|bunch|bloom|petal|tulip|anthurium|daisy|vase|floral|blossom|posy/i;
+function kindOf(k){const p=P[k];if(p.group==="cakes")return "cake";if(p.group==="combos")return "combo";if(p.group==="flowers")return "flower";if(p.group==="gifts")return "gift";
+  const n=p.name,fl=FLW_RX.test(n),ck=/cake/i.test(n);if(fl&&(ck||/choco|ferrero|teddy|dry ?fruit|sweet|fruit|kaju|ladoo/i.test(n)))return "combo";if(ck)return "cake";if(fl)return "flower";return "gift";}
+
+function collectionItems(key){
+  if(key==="upcoming")refreshUpcoming();
+  if(CATS[key]) return CATS[key].items.slice();
+  if(GROUPS[key]){const s=new Set();GROUPS[key].sub.forEach(c=>CATS[c]?.items.forEach(i=>s.add(i)));return [...s];}
+  const v=VIRTUAL[key]; if(!v) return null;
+  let keys;
+  if(v.base){const s=new Set();v.base.forEach(b=>(collectionItems(b)||[]).forEach(i=>s.add(i)));keys=[...s];}
+  else if(v.cats){const s=new Set();v.cats.forEach(c=>CATS[c]?.items.forEach(i=>s.add(i)));keys=[...s];}
+  else if(v.groups) keys=PK.filter(k=>v.groups.includes(P[k].group));
+  else keys=PK.slice();
+  if(v.kind){const ks=[].concat(v.kind);keys=keys.filter(k=>ks.includes(kindOf(k)));}
+  if(v.match){const m=keys.filter(k=>v.match.test(P[k].name));keys=(v.strict===false&&m.length<4)?keys:m;}
+  if(v.not) keys=keys.filter(k=>!v.not.test(P[k].name));
+  return keys;
+}
+
+/* ---------- Navigation taxonomy (Upcoming | Birthday | Anniversary | Flowers | Cakes | Combos | Gifts | Fresh Fruits | Same Day | Occasions) ---------- */
+const OCC_OF={bday:"Birthday",anniv:"Anniversary",congrats:"Congratulations",sorry:"Sorry",getwell:"Get Well Soon",thanks:"Thank You",sympathy:"Sympathy",romantic:"Love & Romance",love:"Love & Romance",missyou:"Love & Romance",christmas:"Christmas","new-year":"New Year",birthday:"Birthday",anniversary:"Anniversary",romance:"Love & Romance",congratulations:"Congratulations","thank-you":"Thank You","get-well-soon":"Get Well Soon"};
+const FX=n=>new RegExp(`^(?=.*(${n}))(?=.*(rose|lil|orchid|carnation|gerbera|sunflower|flower|bouquet|bloom|bunch))`,"i");
+const REL={her:"Her",him:"Him",wife:"Wife",husband:"Husband",kids:"Kids",mother:"Mother",father:"Father",friends:"Friends",girlfriend:"Girlfriend",boyfriend:"Boyfriend",parents:"Parents",teacher:"Teacher",couples:"Couples","mom-to-be":"Mom-to-Be"};
+Object.assign(VIRTUAL,{
+  "for-girlfriend":{title:"Gifts for Girlfriend",cats:["roses","heart-shape","romance","flowers-and-teddies","flowers-and-chocolates","red-velvet"]},
+  "for-boyfriend":{title:"Gifts for Boyfriend",cats:["chocolate-cakes","truffle","hampers","dry-fruits","plants"]},
+  "for-parents":{title:"Gifts for Parents",cats:["lilies","carnations","orchids","sweets","plants","vase","dry-fruits","hampers"]},
+  "for-teacher":{title:"Gifts for Teacher",cats:["thank-you","carnations","gerberas","plants","sweets"]},
+  "for-couples":{title:"Gifts for Couples",cats:["anniversary","romance","cake-and-flowers","heart-shape"]},
+  "for-mom-to-be":{title:"Gifts for Mom-to-Be",cats:["lilies","carnations","flowers-and-teddies","fruits","plants"]}
+});
+const R=(label,key,spec)=>{if(spec){spec.title=spec.title||label;const pre=key.split("-")[0];if(!spec.occ&&OCC_OF[pre])spec.occ=OCC_OF[pre];VIRTUAL[key]=Object.assign(VIRTUAL[key]||{},spec);}return [label,"c-"+key];};
+const relLinks=(pfx,occTitle,extra={})=>["her","wife","husband","kids","mother","father","friends","him","girlfriend","boyfriend","parents"].filter(r=>!extra.only||extra.only.includes(r)).map(r=>R(REL[r],`${pfx}-for-${r}`,{title:`${occTitle} Gifts for ${REL[r]}`,base:[`for-${r}`],...(extra.spec||{})}));
+
+const MENU_FB=[
+  {label:"Upcoming",href:"c-upcoming",hot:true,upcoming:true},
+  {label:"Birthday",href:"c-birthday",cols:[
+    ["Signature Gifts",[R("Birthday Flowers","bday-flowers",{base:["birthday","bouquets","gerberas","roses","carnations"],kind:"flower",lead:"birthday"}),
+      R("Birthday Cakes","bday-cakes",{base:["birthday","chocolate-cakes","truffle","photo-cakes","designer-cakes","kids-cakes"],kind:"cake",lead:"birthday"}),
+      R("Birthday Hampers","bday-hampers",{base:["hampers","birthday","dry-fruits","sweets"],kind:"gift",lead:"birthday"}),
+      R("Chocolates","bday-chocolates",{title:"Birthday Chocolates",base:["flowers-and-chocolates","birthday","hampers"],match:/choco|ferrero|truffle/i,not:/cake/i}),
+      R("Birthday Combos","bday-combos",{base:["combos","birthday"],kind:"combo",lead:"birthday"}),
+      R("Plants","bday-plants",{title:"Birthday Plants",base:["plants"]})]],
+    ["Relation",relLinks("bday","Birthday",{only:["her","wife","husband","kids","mother","father","friends","him","girlfriend","boyfriend"]})]
+  ],promo:["t_birthday","Birthday gifts, delivered today","c-birthday"]},
+  {label:"Anniversary",href:"c-anniversary",cols:[
+    ["Gift Collection",[R("Flowers","anniv-flowers",{title:"Anniversary Flowers",base:["anniversary","roses","romance","heart-shape","premium-flowers"],kind:"flower",lead:"anniversary"}),
+      R("Red Roses","red-roses",{base:["roses","romance","anniversary","heart-shape","bouquets"],match:/red/i,kind:["flower","combo"],occ:"Love & Romance"}),
+      R("Heart Shaped","anniv-heart",{title:"Heart Shaped Anniversary Gifts",base:["heart-shape","anniversary","romance","red-velvet","chocolate-cakes"],match:/heart/i}),
+      R("Cakes","anniv-cakes",{title:"Anniversary Cakes",base:["anniversary","red-velvet","truffle","chocolate-cakes","photo-cakes","designer-cakes"],kind:"cake",lead:"anniversary"}),
+      R("Gifts","anniv-gifts",{title:"Anniversary Gifts",base:["anniversary","hampers","romance","plants"],kind:["gift","combo"],lead:"anniversary"}),
+      R("Plants","anniv-plants",{title:"Anniversary Plants",base:["plants"]}),
+      R("Combos","anniv-combos",{title:"Anniversary Combos",base:["combos","anniversary"],kind:"combo",lead:"anniversary"}),
+      R("Chocolates","anniv-chocolates",{title:"Anniversary Chocolates",base:["flowers-and-chocolates","anniversary","romance","hampers"],match:/choco|ferrero|truffle/i,not:/cake/i})]],
+    ["Relation",relLinks("anniv","Anniversary",{only:["her","him","friends","wife","husband","parents"]})]
+  ],promo:["t_anniv","Celebrate like the first time","c-anniversary"]},
+  {label:"Flowers",href:"c-flowers",cols:[
+    ["Flower Type",[["Red Roses","c-red-roses"],["Orchids","c-orchids"],["Lilies","c-lilies"],["Carnations","c-carnations"],["Gerberas","c-gerberas"],["Sunflowers","c-sunflowers"],
+      R("Exotic","exotic-flowers",{title:"Exotic Flowers",base:["premium-flowers","orchids"],match:/orchid|exotic|anthurium|bird|tulip|hydrangea|lil/i,strict:false}),
+      ["Premium","c-premium-flowers"],["Mixed","c-mixed-flowers"],["All Roses","c-roses"],["All Flowers","c-flowers"]]],
+    ["Floral Collection",[["Bouquets","c-bouquets"],["Vase","c-vase"],["Box","c-box"],["Heart Shape","c-heart-shape"],["Wreaths","c-sympathy"],["Baskets","c-baskets"],
+      R("Floral Arrangements","arrangements",{base:["vase","baskets","box","premium-flowers"]}),
+      R("Chocolate Bouquet","choco-bouquet",{title:"Chocolate Bouquets",base:["flowers-and-chocolates","bouquets"],match:/choco|ferrero/i}),
+      R("Romantic Flowers","romantic-flowers",{base:["romance","roses","heart-shape"],kind:"flower",lead:"romance"})]],
+    ["By Occasion",[["Birthday","c-bday-flowers"],["Anniversary","c-anniv-flowers"],
+      R("Congratulations","congrats-flowers",{title:"Congratulations Flowers",base:["congratulations","gerberas","sunflowers","bouquets"],kind:"flower",lead:"congratulations"}),
+      R("Wedding","wedding-flowers",{title:"Wedding Flowers",base:["premium-flowers","vase","orchids","lilies"],kind:"flower"}),
+      R("Sorry","sorry-flowers",{title:"Sorry Flowers",base:["roses","lilies","carnations"],match:/pink|white|lil|pastel|pure|peach/i,strict:false,occ:"Sorry"}),
+      R("Miss You","missyou-flowers",{title:"Miss You Flowers",base:["romance","roses","heart-shape"],kind:"flower"}),
+      R("Get Well Soon","getwell-flowers",{title:"Get Well Soon Flowers",base:["get-well-soon","sunflowers","gerberas","lilies"],kind:"flower",lead:"get-well-soon"}),
+      ["Sympathy","c-sympathy"],
+      R("Thank You","thanks-flowers",{title:"Thank You Flowers",base:["thank-you","carnations","gerberas","lilies"],kind:"flower",lead:"thank-you"}),
+      R("Midnight","midnight-flowers",{title:"Midnight Flower Delivery",base:["midnight"],kind:"flower"}),
+      R("Same Day","sameday-flowers",{title:"Same Day Flower Delivery",base:["same-day"],kind:"flower",sameDay:true})]],
+    ["By Relation",["her","him","girlfriend","wife","husband","boyfriend","mother","father","parents"].map(r=>R(REL[r],`flowers-for-${r}`,{title:`Flowers for ${REL[r]}`,base:[`for-${r}`,"bouquets","vase","carnations"],kind:"flower",lead:`for-${r}`}))],
+    ["By Colour",[["Red","c-red-flowers"],["Pink","c-pink-flowers"],["Yellow","c-yellow-flowers"],["White","c-white-flowers"],["Mixed","c-mixed-flowers"]]]
+  ]},
+  {label:"Cakes",href:"c-cakes",cols:[
+    ["Flavours",[["Chocolate","c-chocolate-cakes"],["Black Forest","c-black-forest"],["Red Velvet","c-red-velvet"],["Chocolate Truffle","c-truffle"],
+      R("Fresh Fruit","fruit-cakes",{title:"Fresh Fruit Cakes",base:["cakes"],match:/fruit/i}),["Butterscotch","c-butterscotch"],["Pineapple","c-pineapple"],
+      R("Vanilla","vanilla-cakes",{title:"Vanilla Cakes",base:["cakes"],match:/vanilla/i}),R("Strawberry","strawberry-cakes",{title:"Strawberry Cakes",base:["cakes"],match:/strawberr/i}),
+      R("Cheese Cakes","cheese-cakes",{title:"Cheese Cakes",base:["cakes"],match:/cheese/i})]],
+    ["Cake Types",[R("Heart Shapes","heart-cakes",{title:"Heart Shaped Cakes",base:["cakes","anniversary","birthday"],kind:"cake",match:/heart/i}),["Eggless","c-eggless"],
+      R("Premium","premium-cakes",{title:"Premium Cakes",base:["designer-cakes","truffle","red-velvet"]}),["Photo","c-photo-cakes"],
+      R("Jungle Theme","jungle-cakes",{title:"Jungle Theme Cakes",base:["cakes"],match:/jungle|safari|mowgli/i}),R("Barbie Doll","barbie-cakes",{title:"Barbie Doll Cakes",base:["cakes"],match:/barbie|doll|princess/i}),
+      R("Spiderman","spiderman-cakes",{title:"Spiderman Cakes",base:["cakes"],match:/spider/i}),R("Doraemon","doraemon-cakes",{title:"Doraemon Cakes",base:["cakes"],match:/doraemon/i}),
+      R("Tier","tier-cakes",{title:"Tier Cakes",base:["cakes"],match:/tier/i}),["Designer","c-designer-cakes"]]],
+    ["By Occasion / Delivery",[["Birthday","c-bday-cakes"],["Anniversary","c-anniv-cakes"],R("Wedding","wedding-cakes",{title:"Wedding Cakes",base:["designer-cakes","red-velvet"],kind:"cake"}),["Kids","c-kids-cakes"],
+      R("First Birthday","first-bday-cakes",{title:"First Birthday Cakes",base:["kids-cakes","photo-cakes"],occ:"Birthday"}),R("First Anniversary","first-anniv-cakes",{title:"First Anniversary Cakes",base:["heart-cakes","red-velvet","photo-cakes"],occ:"Anniversary"}),
+      R("Same Day","sameday-cakes",{title:"Same Day Cake Delivery",base:["same-day"],kind:"cake",sameDay:true}),R("Midnight","midnight-cakes",{title:"Midnight Cake Delivery",base:["midnight"],kind:"cake"}),
+      R("Fixed Time","fixedtime-cakes",{title:"Fixed Time Cake Delivery",base:["cakes"],blurb:"Choose a one-hour window at checkout â€” perfect for office surprises and parties."})]]
+  ],promo:["t_photocake","Photo cakes, personalised","c-photo-cakes"]},
+  {label:"Combos",href:"c-combos",cols:[
+    ["Curated Gift Sets",[["Cake & Flowers","c-cake-and-flowers"],["Flowers & Chocolate","c-flowers-and-chocolates"],
+      R("Fruits & Flowers","fruits-and-flowers",{base:["flowers","combos","gifts","occasions"],match:FX("fruit"),not:/dry ?fruit|fruit cake/i}),
+      R("Flowers & Sweets","flowers-and-sweets",{base:["flowers","combos","gifts","occasions"],match:FX("sweets|mithai|ladoo|laddu|kaju|rasgulla|soan|barfi|peda"),not:/cake/i}),
+      ["Flowers & Teddies","c-flowers-and-teddies"],
+      R("Flowers & Dry Fruits","flowers-and-dryfruits",{base:["flowers","combos","gifts","occasions"],match:FX("dry ?fruit")})]],
+    ["Occasions",[["Birthday","c-bday-combos"],["Anniversary","c-anniv-combos"],
+      R("New Born","newborn-combos",{title:"New Born Gift Combos",base:["flowers-and-teddies","combos"],lead:"flowers-and-teddies",kind:"combo"}),
+      R("Congratulations","congrats-combos",{title:"Congratulations Combos",base:["combos","congratulations"],kind:"combo",lead:"congratulations"}),
+      R("Love","love-combos",{title:"Love Combos",base:["combos","romance"],kind:"combo",lead:"romance"})]]
+  ],promo:["t_cakeflower2","Cakes and flowers together","c-cake-and-flowers"]},
+  {label:"Gifts",href:"c-gifts",cols:[
+    ["Unique Surprises",[["Hampers","c-hampers"],["Fresh Fruit Baskets","c-fruits"],
+      R("Premium Chocolates","premium-chocolates",{base:["flowers-and-chocolates","hampers","gifts","occasions"],match:/choco|ferrero|truffle/i,not:/cake/i}),
+      ["Sweets / Mithai","c-sweets"],["Dry Fruit Hampers","c-dry-fruits"],R("Teddy Bears","teddy-gifts",{title:"Teddy Bear Gifts",base:["flowers-and-teddies","occasions","gifts"],match:/teddy/i}),["Chocolate Bouquet","c-choco-bouquet"]]],
+    ["By Relation",["friends","teacher","her","him","kids","father","mother","girlfriend","couples","parents","mom-to-be"].map(r=>[REL[r],"c-for-"+r])],
+    ["By Occasion",[R("Birthday","gifts-birthday",{title:"Birthday Gifts",base:["birthday","hampers","gifts"],kind:["gift","combo"],lead:"birthday"}),["Anniversary","c-anniv-gifts"],
+      R("Love","love-gifts",{title:"Love Gifts",base:["romance","hampers","flowers-and-teddies"],kind:["gift","combo"],lead:"romance"}),
+      R("Wedding","wedding-gifts",{title:"Wedding Gifts",base:["hampers","dry-fruits","sweets","premium-flowers"]}),
+      R("House Warming","housewarming-gifts",{title:"House Warming Gifts",base:["plants","hampers","dry-fruits","sweets"]}),
+      R("New Born","newborn-gifts",{title:"New Born Gifts",base:["flowers-and-teddies","fruits","hampers"]}),
+      R("Congratulations","congrats-gifts",{title:"Congratulations Gifts",base:["congratulations","hampers","sweets"],lead:"congratulations"}),
+      R("Umrah Gift","umrah-gifts",{title:"Umrah Gifts",base:["dry-fruits","hampers","fruits"]}),
+      R("Just Because","just-because",{title:"Just Because Gifts",base:["gerberas","plants","flowers-and-chocolates","sunflowers"]}),
+      R("Get Well Soon","getwell-gifts",{title:"Get Well Soon Gifts",base:["get-well-soon","fruits","plants"],lead:"get-well-soon"}),
+      R("Same Day","sameday-gifts",{title:"Same Day Gift Delivery",base:["same-day"],kind:["gift","combo"],sameDay:true})]]
+  ],promo:["hx_dryfruit","Hampers for every milestone","c-hampers"]},
+  {label:"Fresh Fruits",href:"c-fresh-fruits",cols:[
+    ["Special",[R("Fruity Bouquets","fruity-bouquets",{title:"Fruity Bouquets",base:["flowers","combos","gifts","occasions"],match:FX("fruit"),not:/dry ?fruit|fruit cake/i})],["View all fresh fruits","c-fresh-fruits"]]
+  ],promo:["hero_fruits","Seasonal fruit, packed the morning of delivery","c-fruits"]},
+  {label:"Same Day",href:"c-same-day"},
+  {label:"Occasions",href:"c-occasions",cols:[
+    ["Celebrate",[["Birthday","c-birthday"],["Anniversary","c-anniversary"],["Congratulations","c-congratulations"],["Wedding","c-wedding-gifts"],["New Born","c-newborn-gifts"],["House Warming","c-housewarming-gifts"]]],
+    ["Express",[["Thank You","c-thank-you"],R("Sorry","sorry-gifts",{title:"Sorry Gifts",base:["sorry-flowers","flowers-and-teddies"],occ:"Sorry"}),["Love & Romance","c-romance"],["Get Well Soon","c-get-well-soon"],["Sympathy","c-sympathy"]]]
+  ],promo:["t_thankyou","Say thank you with flowers","c-thank-you"]}
+];
+VIRTUAL["fresh-fruits"]={title:"Fresh Fruits",base:["fruits","fruity-bouquets"],blurb:"Seasonal fruit baskets and fruity bouquets, packed the morning of delivery"};
+VIRTUAL["diwali"]={title:"Diwali Gifts",base:["sweets","dry-fruits","hampers"],occ:""};
+VIRTUAL["christmas-cakes"]={title:"Christmas Cakes",base:["christmas","designer-cakes","truffle"],kind:"cake",lead:"christmas",occ:"Christmas"};
+VIRTUAL["valentine"]={title:"Valentine's Week Gifts",base:["romance","roses","heart-shape","flowers-and-teddies"],occ:"Love & Romance"};
+// crumbs carry the top-level route
+MENU_FB.forEach(m=>(m.cols||[]).forEach(c=>c[1].forEach(l=>{const k=l[1].slice(2);if(VIRTUAL[k]&&!VIRTUAL[k].crumb&&k!==m.href.slice(2))VIRTUAL[k].crumb=[m.label,m.href];})));
+MENU.splice(0,MENU.length,...MENU_FB);
+
+/* ---------- Upcoming: editable, dated, with post-expiry redirect ---------- */
+const UPCOMING_DEFAULT=[
+  {id:"u1",name:"Christmas",when:"2026-12-25",from:"2026-11-01",to:"2026-12-25",dest:"c-christmas",after:"c-new-year",img:"hx_xmascake",owner:"Merchandising",links:[["Christmas Gifts","c-christmas"],["Christmas Cakes","c-christmas-cakes"],["Gift Hampers","c-hampers"],["Plum & dry fruit gifts","c-dry-fruits"]]},
+  {id:"u2",name:"New Year",when:"2027-01-01",from:"2026-11-15",to:"2027-01-01",dest:"c-new-year",after:"c-flowers",img:"hx_truffle",owner:"Merchandising",links:[["New Year Gifts","c-new-year"],["Midnight Cakes","c-midnight-cakes"],["Premium Flowers","c-premium-flowers"]]},
+  {id:"u3",name:"Valentine's Week",when:"2027-02-07",from:"2027-01-01",to:"2027-02-14",dest:"c-valentine",after:"c-romance",img:"hx_heartbox",owner:"Merchandising",links:[["Valentine's Gifts","c-valentine"],["Red Roses","c-red-roses"],["Heart Shaped","c-heart-shape"]]},
+  {id:"u4",name:"Diwali",when:"2026-11-08",from:"2026-10-01",to:"2026-11-08",dest:"c-diwali",after:"c-hampers",img:"hx_dryfruit",owner:"Merchandising",links:[["Diwali Gifts","c-diwali"]]}
+];
+let UPCOMING=store.get("upcoming",null)||JSON.parse(JSON.stringify(UPCOMING_DEFAULT));
+const upState=u=>{const t=iso(today0());return t<u.from?"Scheduled":t>u.to?"Expired":"Live";};
+const liveUp=()=>UPCOMING.filter(u=>upState(u)==="Live").sort((a,b)=>a.when.localeCompare(b.when));
+function refreshUpcoming(){const L=liveUp();VIRTUAL.upcoming={title:L.length?"Upcoming: "+L.map(u=>u.name).join(" & "):"Upcoming occasions",base:L.length?L.map(u=>u.dest.replace(/^c-/,"")):["all"],blurb:L.length?L.map(u=>`${u.name} Â· ${fmtShort(u.when)}`).join("  Â·  ")+" â€” book now and pick your delivery date.":"Plan ahead for the next big day.",crumb:null};}
+refreshUpcoming();
+
+/* ---------- Header & nav ---------- */
+function renderHeader(){renderHeaderBase();const n=S.cart.reduce((a,i)=>a+i.qty,0);const b=$("#dockbadge");if(b){b.textContent=n;b.hidden=!n;}}
+function megaHTML(m){
+  if(m.upcoming){const L=liveUp();return `<div class="mega"><div class="wrap up">${L.map(u=>`<div class="upcard"><a href="#${u.dest}" class="upimg"><img src="${IMGS[u.img]||IMGS.t_premiumcake}" alt=""></a><h6>${esc(u.name)} Â· ${fmtShort(u.when)}</h6><ul>${u.links.map(l=>`<li><a href="#${l[1]}">${esc(l[0])}</a></li>`).join("")}</ul></div>`).join("")}
+    <div><h6>Plan ahead</h6><ul><li><a href="#page-advance">Book an advance delivery</a></li><li><a href="#c-midnight">Midnight delivery</a></li><li><a href="#page-pincodes">Serviceable pincodes</a></li><li><a href="#c-upcoming">View all upcoming</a></li></ul></div></div></div>`;}
+  if(!m.cols)return "";
+  const promo=m.promo&&m.cols.length<=4;
+  return `<div class="mega"><div class="wrap ${promo?"wp":"np"}" style="--n:${m.cols.length}">${m.cols.map(c=>{const list=c[1],max=11,shown=list.slice(0,max);return `<div><h6>${esc(c[0])}</h6><ul>${shown.map(l=>`<li><a href="#${l[1]}">${esc(l[0])}</a></li>`).join("")}</ul>${c[2]?"":list.length>max?`<a class="va" href="#${m.href}">View all ${ic.arrow}</a>`:""}</div>`}).join("")}
+   ${promo?`<a class="promo" href="#${m.promo[2]}"><img src="${IMGS[m.promo[0]]}" alt=""><div>${esc(m.promo[1])} ${ic.arrow}</div></a>`:""}</div></div>`;
+}
+function buildNav(){
+  refreshUpcoming();
+  $("#nav").innerHTML=MENU.map((m,i)=>`<div data-i="${i}" class="${m.cols||m.upcoming?"has":""}"><a class="nl ${m.hot?"hot":""}" href="#${m.href}" ${m.cols||m.upcoming?`aria-haspopup="true"`:""}>${esc(m.label)}${m.cols||m.upcoming?" "+ic.down:""}</a>${megaHTML(m)}</div>`).join("");
+  $$("#nav>div.has").forEach(d=>{let t;d.addEventListener("mouseenter",()=>{clearTimeout(t);$$("#nav>div.open").forEach(o=>o!==d&&o.classList.remove("open"));d.classList.add("open")});d.addEventListener("mouseleave",()=>{t=setTimeout(()=>d.classList.remove("open"),140)});});
+  if(!buildNav._b){buildNav._b=1;$("#nav").addEventListener("click",e=>{if(e.target.closest("a"))$$("#nav>div").forEach(d=>d.classList.remove("open"))});$("#nav").addEventListener("keydown",e=>{if(e.key==="Escape"){$$("#nav>div").forEach(d=>d.classList.remove("open"));e.target.blur();}});}
+  mobMenu();
+}
+function mobMenu(i){
+  const body=$("#mobmenu .body");
+  if(i===undefined){
+    body.innerHTML=`<div class="mm-list">${MENU.map((m,j)=>m.cols||m.upcoming?`<button class="mm-row ${m.hot?"hot":""}" data-mm="${j}"><span>${esc(m.label)}</span><span aria-hidden="true">â€º</span></button>`:`<a class="mm-row" href="#${m.href}"><span>${esc(m.label)}</span><span aria-hidden="true">â€º</span></a>`).join("")}</div>
+     <div class="mm-quick">${[["Track order","track"],["My account","account"],["Support / Contact us","page-contact"],["Serviceable pincodes","page-pincodes"],["Corporate","page-corporate"],["Become a partner","page-partner"],["Blog","page-blog"]].map(l=>`<a href="#${l[1]}">${l[0]}</a>`).join("")}</div>`;
+    $("#mobmenu header h3").textContent="Menu";return;}
+  const m=MENU[i];const groups=m.upcoming?liveUp().map(u=>[`${u.name} Â· ${fmtShort(u.when)}`,u.links]):m.cols;
+  body.innerHTML=`<button class="mm-back" data-mmback>â€¹ All categories</button><div class="mm-lvl"><span class="eyebrow">Shop</span><h4>${esc(m.label)}</h4></div><a class="btn ghost block" href="#${m.href}">Shop all ${esc(m.label)}</a>
+   ${groups.map((c,j)=>`<details class="faq mm-grp" ${j===0?"open":""}><summary>${esc(c[0])}</summary><div class="mm-links">${c[1].map(l=>`<a href="#${l[1]}">${esc(l[0])}</a>`).join("")}</div></details>`).join("")}`;
+  $("#mobmenu header h3").textContent=m.label;body.scrollTop=0;
+}
+function closeAll(){closeAllBase();document.body.classList.remove("msearch");}
+
+/* ---------- Footer: Information | Help Services | Support | Policies (one link source) ---------- */
+const FOOTER=[
+  ["Information",[["About Us","page-about"],["Career with Us","page-careers"],["Care Tips","page-care"],["Corporate","page-corporate"],["Become a Partner","page-partner"]]],
+  ["Help Services",[["Serviceable Pincodes","page-pincodes"],["Cake Delivery Cities","page-cake-cities"],["Flower Delivery Cities","page-cities"]]],
+  ["Support",[["FAQ","page-faq"],["Blog","page-blog"],["Track Order","track"],["Contact Us","page-contact"]]],
+  ["Policies",[["Terms of Services","page-terms"],["Delivery Information","page-delivery"],["Substitution Policy","page-substitution"],["Refund & Cancellation Policy","page-refund"],["Privacy Policy","page-privacy"]]]
+];
+const SOCIAL=[["Facebook","https://www.facebook.com/flaberry",'<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H8v4h2v8h4v-8h3l1-4h-4V8z"/>'],["X (Twitter)","https://twitter.com/iamflaberry",'<path d="M4 4l7.2 9.6L4.4 20H6l6-5.6 4.2 5.6H20l-7.5-10L19 4h-1.6l-5.6 5.2L7.8 4z"/>'],["Instagram","https://www.instagram.com/flaberryofficial",'<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.2"/>']];
+const socialHTML=()=>`<div class="social">${SOCIAL.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener" aria-label="Flaberry on ${s[0]}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">${s[2]}</svg></a>`).join("")}</div>`;
+function renderFooter(){
+  const col=(h,l)=>`<div><h6>${h}</h6><ul>${l.map(x=>`<li><a href="#${x[1]}">${x[0]}</a></li>`).join("")}</ul></div>`;
+  $("#footer").innerHTML=`<div class="wrap fd"><div class="cols">
+   <div><img src="${IMGS.logo}" alt="Flaberry" class="flogo"><p class="ftag">India's leading brand for flowers, cakes, plants and gifts. Same-day, midnight and advance-date delivery to 500+ cities.</p>
+    <form class="news" id="newsf" onsubmit="event.preventDefault();this.innerHTML='<span>Subscribed. Watch your inbox for offers.</span>'"><label class="sr" for="newsin">Email</label><input id="newsin" type="email" placeholder="Email for offers" required><button class="btn white sm">Subscribe</button></form>
+    <p class="fcontact">Help 8 AM â€“ midnight IST<br><span style="user-select:all">+91 76685 23752</span> Â· <span style="user-select:all">customerservice@flaberry.com</span></p>${socialHTML()}</div>
+   ${FOOTER.map(g=>col(g[0],g[1])).join("")}</div>

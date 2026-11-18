@@ -1,284 +1,765 @@
 {% comment %}
-  Flaberry Classic Header & Utility Bar
-  Source of Truth: reference/Flaberry_Design1_Classic.html
-  Complete reproduction of Flaberry's top utility ticker bar, delivery pincode chip, search with suggestions,
-  action icons, and primary category navigation with mega menus.
+  Flaberry Classic Header & Global Navigation Shell
+  Source of Truth: reference/Flaberry_Design1_Classic.html and user prototype reference screenshots
+  Includes:
+  1. Header Row (Burger, Logo, Ajax Predictive Search, Pincode Chip, Country/Currency Selector, Icons: Track, Support, Account, Cart)
+  2. Desktop Navigation with Full-Width Mega Menus for all 10 categories
+  3. Mobile Navigation Drawer (#mobmenu) with 2-level progressive drill-down & quick links
+  4. Mobile Search Slide Drawer (#searchdrawer) with live Ajax Predictive Search
+  5. Custom Slide Cart Drawer (#cartdrawer) - 100% Ajax-based, absolute/fixed position (never pushes the window), dynamic + / - / remove, auto-opens on Add-to-Cart
+  6. Real-time Sitewide Currency Conversion Engine (INR, USD, AED, GBP, EUR, CAD, AUD, SGD, SAR) with instant DOM updates and persistent selection
 {% endcomment %}
-
-<!-- Top Utility Bar -->
-<div class="flaberry-ubar" aria-label="Utility Announcement">
-  <div class="wrap flaberry-ubar-inner">
-    <div class="ubar-links">
-      <a href="/pages/corporate-gifting">Corporate Gifting</a>
-      <a href="/pages/delivery-cities">Delivery Cities</a>
-      <a href="/pages/serviceable-pincodes">Serviceable Pincodes</a>
-      <a href="/pages/advance-orders">Advance Orders</a>
-    </div>
-
-    <div class="ubar-ticker">
-      <button type="button" class="ticker-arrow" onclick="flaberryRotateTicker(-1)" aria-label="Previous announcement">‹</button>
-      <span id="flaberryTickerText">Use code <b>FLABERRY2026</b> for 15% off your first flower bouquet!</span>
-      <button type="button" class="ticker-arrow" onclick="flaberryRotateTicker(1)" aria-label="Next announcement">›</button>
-    </div>
-
-    <div class="ubar-right">
-      <div class="cur-wrapper">
-        <select class="cur-sel" id="flaberryCurrencySel" title="Currency Selector">
-          <option value="INR">INR (₹)</option>
-          <option value="USD">USD ($)</option>
-          <option value="AED">AED (AED)</option>
-          <option value="EUR">EUR (€)</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Sticky Main Header -->
 <header class="hdr fbhdr" id="flaberryMainHdr">
   <div class="wrap hdr-main">
-    <button class="burger" id="burgerBtn" onclick="flaberryToggleMobileDrawer()" aria-label="Open navigation menu">
+    <!-- Mobile Burger Toggle Button -->
+    <button class="burger" id="burger" type="button" aria-label="Open menu" onclick="window.flaberryOpenMobMenu()">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h12M3 18h18"/></svg>
     </button>
 
-    <!-- Logo -->
-    <a class="logo" href="{{ routes.root_url }}" aria-label="Flaberry Home">
-      <img src="{{ 'logo.png' | file_url }}" alt="Flaberry" width="160" height="38" style="height: 38px; width: auto; display: block;">
+    <!-- Flaberry Logo -->
+    <a class="logo" href="{{ routes.root_url }}" aria-label="Flaberry home">
+      <img src="{{ 'logo.png' | asset_url }}" alt="Flaberry" width="160" height="40" style="height: 40px; width: auto; display: block;">
     </a>
 
+    <!-- Predictive Search Bar with Ajax real-time letter-by-letter results -->
+    <form class="search" id="flaberrySearchForm" action="{{ routes.search_url }}" method="get" role="search" onsubmit="flaberryOnSearchSubmit(event)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input
+        type="search"
+        name="q"
+        id="flaberrySearchInput"
+        placeholder="Search flowers, cakes, gifts…"
+        autocomplete="off"
+        aria-label="Search"
+        onfocus="flaberryOnSearchFocus()"
+        oninput="flaberryOnSearchInput(this.value)"
+      >
+      <div class="suggest" id="flaberrySuggestBox" hidden>
+        <div id="flaberrySuggestContent">
+          <h5>Trending Gifting Searches</h5>
+          <a href="{{ routes.collections_url }}/roses" class="search-item">
+            <img src="{{ 'hx_roses.webp' | asset_url }}" alt="Roses" width="46" height="46" loading="lazy">
+            <div class="search-item-info">
+              <span class="search-item-title">Red Roses Handcrafted Bouquets</span>
+              <span class="search-item-price price-val" data-raw-inr="999">From ₹999</span>
+            </div>
+          </a>
+          <a href="{{ routes.collections_url }}/chocolate-cakes" class="search-item">
+            <img src="{{ 'hx_truffle.webp' | asset_url }}" alt="Truffle" width="46" height="46" loading="lazy">
+            <div class="search-item-info">
+              <span class="search-item-title">Belgian Chocolate Truffle Cake</span>
+              <span class="search-item-price price-val" data-raw-inr="849">From ₹849</span>
+            </div>
+          </a>
+          <a href="{{ routes.collections_url }}/photo-cakes" class="search-item">
+            <img src="{{ 't_photocake.webp' | asset_url }}" alt="Photo cake" width="46" height="46" loading="lazy">
+            <div class="search-item-info">
+              <span class="search-item-title">Personalized Photo Celebration Cake</span>
+              <span class="search-item-price price-val" data-raw-inr="929">From ₹929</span>
+            </div>
+          </a>
+          <a href="{{ routes.collections_url }}/combos" class="search-item">
+            <img src="{{ 't_cakeflower2.webp' | asset_url }}" alt="Combos" width="46" height="46" loading="lazy">
+            <div class="search-item-info">
+              <span class="search-item-title">Flower & Cake Surprise Hampers</span>
+              <span class="search-item-price price-val" data-raw-inr="1499">From ₹1,499</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </form>
+
     <!-- Delivery Pincode Chip -->
-    <button type="button" class="pinchip" id="hdrPinChip" onclick="flaberryOpenPinModal()" aria-label="Select delivery city">
+    <button type="button" class="pinchip" id="pinchip" onclick="flaberryOpenPinModal()" aria-label="Select delivery city">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
       <div>
-        <b id="hdrPinCity">Delhi 110001</b>
-        <small id="hdrPinStatus" style="color: var(--fl-color-leaf, #1f7a4d);">Available Today</small>
+        <span style="font-size: 11px; color: var(--muted, #5f6178); display: block; line-height: 1;">Deliver to</span>
+        <b id="hdrPinCity" style="font-size: 13px; color: var(--ink, #22235c); font-weight: 600;">201301 · Noida</b>
       </div>
     </button>
 
-    <!-- Search with instant suggestions -->
-    <div class="search" id="flaberrySearchWrapper">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="text" id="flaberrySearchInput" autocomplete="off" placeholder="Search flowers, cakes, gifts, occasions…" onfocus="flaberryShowSuggest()" onblur="flaberryHideSuggest()" oninput="flaberryFilterSuggest(this.value)">
-      <div class="suggest" id="flaberrySuggestBox" hidden>
-        <h5>Trending Gifting Searches</h5>
-        <a href="{{ routes.collections_url }}/roses"><img src="{{ 'hx_roses.webp' | file_url }}" alt="Roses" width="40" height="40" loading="lazy"><span>Red Roses Handcrafted Bouquets</span><span class="pp">From ₹999</span></a>
-        <a href="{{ routes.collections_url }}/chocolate-cakes"><img src="{{ 'hx_truffle.webp' | file_url }}" alt="Truffle" width="40" height="40" loading="lazy"><span>Belgian Chocolate Truffle Cake</span><span class="pp">From ₹849</span></a>
-        <a href="{{ routes.collections_url }}/photo-cakes"><img src="{{ 't_photocake.webp' | file_url }}" alt="Photo cake" width="40" height="40" loading="lazy"><span>Personalized Photo Celebration Cake</span><span class="pp">From ₹929</span></a>
-        <a href="{{ routes.collections_url }}/combos"><img src="{{ 't_cakeflowers.webp' | file_url }}" alt="Combos" width="40" height="40" loading="lazy"><span>Flower & Cake Surprise Hampers</span><span class="pp">From ₹1,499</span></a>
-      </div>
+    <!-- Country & Currency Selector (Placed in Header Row per prototype) -->
+    <div class="mk">
+      <label class="sr" for="cursel">Country and currency</label>
+      <select id="cursel" class="cur-sel" title="Country / currency" onchange="flaberryApplyCurrencySitewide(this.value)">
+        <option value="INR" selected>India · ₹ INR</option>
+        <option value="USD">United States · $ USD</option>
+        <option value="AED">UAE · AED</option>
+        <option value="GBP">United Kingdom · £ GBP</option>
+        <option value="EUR">Europe · € EUR</option>
+        <option value="CAD">Canada · $ CAD</option>
+        <option value="AUD">Australia · $ AUD</option>
+        <option value="SGD">Singapore · $ SGD</option>
+        <option value="SAR">Saudi Arabia · SAR</option>
+      </select>
     </div>
 
-    <!-- Header Actions Icons -->
+    <!-- Header Action Icons -->
     <nav class="hicons">
       <a class="hicon opt" href="/pages/serviceable-pincodes">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.7"/><circle cx="17" cy="17.5" r="1.7"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.7"/><circle cx="17" cy="17.5" r="1.7"/></svg>
         <span class="lbl">Track Order</span>
       </a>
       <a class="hicon opt" href="/pages/contact-us">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>
         <span class="lbl">Support</span>
       </a>
-      <a class="hicon" href="{{ routes.account_login_url }}">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
-        <span class="lbl">Sign In</span>
-      </a>
-      <a class="hicon" href="{{ routes.cart_url }}" onclick="event.preventDefault(); flaberryToggleCartDrawer();" id="hdrCartBtn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>
+      {% if customer %}
+        <a class="hicon" href="{{ routes.account_url }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+          <span class="lbl">{{ customer.first_name | default: 'Account' }}</span>
+        </a>
+      {% else %}
+        <a class="hicon" href="{{ routes.account_login_url }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+          <span class="lbl">Sign in</span>
+        </a>
+      {% endif %}
+      <a class="hicon" href="{{ routes.cart_url }}" id="cartbtn" onclick="flaberryToggleCartDrawer(event)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>
         <span class="lbl">Cart</span>
-        <span class="badge" id="hdrCartBadge">0</span>
+        <span class="badge" id="hdrCartBadge" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
     </nav>
   </div>
 
-  <!-- Primary Category Navigation Bar -->
-  <nav class="wrap nav" id="mainCategoryNav" aria-label="Main Navigation">
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/flowers" class="nl">Flowers</a>
+  <!-- Primary Desktop Category Navigation with Exact Mega Menus -->
+  <nav class="wrap nav" id="nav" aria-label="Main">
+
+    <!-- 1. UPCOMING -->
+    <div class="has">
+      <a class="nl hot" href="{{ routes.collections_url }}/all">Upcoming <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap up">
+          <div class="upcard">
+            <a href="{{ routes.collections_url }}/chocolate-cakes" class="upimg">
+              <img src="{{ 'hx_xmascake.webp' | asset_url }}" alt="Christmas Cake" width="220" height="138" loading="lazy">
+            </a>
+            <h6>CHRISTMAS · 25 DEC</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/all">Christmas Gifts</a></li>
+              <li><a href="{{ routes.collections_url }}/chocolate-cakes">Christmas Cakes</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Gift Hampers</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Plum & dry fruit gifts</a></li>
+            </ul>
+          </div>
+          <div class="upcard">
+            <a href="{{ routes.collections_url }}/chocolate-cakes" class="upimg">
+              <img src="{{ 'hx_truffle.webp' | asset_url }}" alt="New Year Truffle" width="220" height="138" loading="lazy">
+            </a>
+            <h6>NEW YEAR · 1 JAN</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/all">New Year Gifts</a></li>
+              <li><a href="{{ routes.collections_url }}/chocolate-cakes">Midnight Cakes</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Premium Flowers</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>PLAN AHEAD</h6>
+            <ul>
+              <li><a href="/pages/advance-orders">Book an advance delivery</a></li>
+              <li><a href="/pages/serviceable-pincodes">Midnight delivery</a></li>
+              <li><a href="/pages/serviceable-pincodes">Serviceable pincodes</a></li>
+              <li><a href="{{ routes.collections_url }}/all">View all upcoming</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/roses" class="nl">Roses</a>
+
+    <!-- 2. BIRTHDAY -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/all">Birthday <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap wp" style="--n: 2;">
+          <div>
+            <h6>SIGNATURE GIFTS</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Birthday Flowers</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Birthday Cakes</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Birthday Hampers</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Chocolates</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Birthday Combos</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Plants</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>RELATION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Her</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Wife</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Husband</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Kids</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Mother</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Father</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Friends</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Him</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Girlfriend</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Boyfriend</a></li>
+            </ul>
+          </div>
+          <a class="promo" href="{{ routes.collections_url }}/all">
+            <img src="{{ 't_birthday.webp' | asset_url }}" alt="Birthday Gifts" width="320" height="191" loading="lazy">
+            <div><span>Birthday gifts, delivered today</span> <span>→</span></div>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/cakes" class="nl">Cakes</a>
+
+    <!-- 3. ANNIVERSARY -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/all">Anniversary <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap wp" style="--n: 2;">
+          <div>
+            <h6>GIFT COLLECTION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Flowers</a></li>
+              <li><a href="{{ routes.collections_url }}/roses">Red Roses</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Heart Shaped</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Cakes</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Gifts</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Plants</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Combos</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Chocolates</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>RELATION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Her</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Wife</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Husband</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Friends</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Him</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Parents</a></li>
+            </ul>
+          </div>
+          <a class="promo" href="{{ routes.collections_url }}/all">
+            <img src="{{ 't_anniv.webp' | asset_url }}" alt="Anniversary" width="320" height="191" loading="lazy">
+            <div><span>Celebrate like the first time</span> <span>→</span></div>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/chocolate-cakes" class="nl">Chocolate Cakes</a>
+
+    <!-- 4. FLOWERS -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/flowers">Flowers <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap np" style="--n: 5;">
+          <div>
+            <h6>FLOWER TYPE</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/roses">Red Roses</a></li>
+              <li><a href="{{ routes.collections_url }}/orchids">Orchids</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Lilies</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Carnations</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Gerberas</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Sunflowers</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Exotic</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Premium</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Mixed</a></li>
+              <li><a href="{{ routes.collections_url }}/roses">All Roses</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">All Flowers</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>FLORAL COLLECTION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Bouquets</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Vase</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Box</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Heart Shape</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Wreaths</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Baskets</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Floral Arrangements</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Chocolate Bouquet</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Romantic Flowers</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>BY OCCASION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Birthday</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Anniversary</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Congratulations</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Wedding</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Sorry</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Miss You</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Get Well Soon</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Sympathy</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Thank You</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Midnight</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Same Day</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>BY RELATION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Her</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Him</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Girlfriend</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Wife</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Husband</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Boyfriend</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Mother</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Father</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Parents</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>BY COLOUR</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/roses">Red</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Pink</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Yellow</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">White</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Mixed</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/photo-cakes" class="nl">Photo Cakes</a>
+
+    <!-- 5. CAKES -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/cakes">Cakes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap wp" style="--n: 3;">
+          <div>
+            <h6>FLAVOURS</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/chocolate-cakes">Chocolate</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Black Forest</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Red Velvet</a></li>
+              <li><a href="{{ routes.collections_url }}/chocolate-cakes">Chocolate Truffle</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Fresh Fruit</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Butterscotch</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Pineapple</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Vanilla</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Strawberry</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Cheese Cakes</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>CAKE TYPES</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/cakes">Heart Shapes</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Eggless</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Premium</a></li>
+              <li><a href="{{ routes.collections_url }}/photo-cakes">Photo</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Jungle Theme</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Barbie Doll</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Spiderman</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Doraemon</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Tier</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Designer</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>BY OCCASION / DELIVERY</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/cakes">Birthday</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Anniversary</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Wedding</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Kids</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">First Birthday</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">First Anniversary</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Same Day</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Midnight</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Fixed Time</a></li>
+            </ul>
+          </div>
+          <a class="promo" href="{{ routes.collections_url }}/photo-cakes">
+            <img src="{{ 't_photocake.webp' | asset_url }}" alt="Photo Cakes" width="320" height="191" loading="lazy">
+            <div><span>Photo cakes, personalised</span> <span>→</span></div>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/combos" class="nl">Combos</a>
+
+    <!-- 6. COMBOS -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/combos">Combos <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap wp" style="--n: 2;">
+          <div>
+            <h6>CURATED GIFT SETS</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/combos">Cake & Flowers</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Flowers & Chocolate</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Fruits & Flowers</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Flowers & Sweets</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Flowers & Teddies</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Flowers & Dry Fruits</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>OCCASIONS</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/combos">Birthday</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Anniversary</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">New Born</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Congratulations</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Love</a></li>
+            </ul>
+          </div>
+          <a class="promo" href="{{ routes.collections_url }}/combos">
+            <img src="{{ 't_cakeflower2.webp' | asset_url }}" alt="Combos" width="320" height="191" loading="lazy">
+            <div><span>Cakes and flowers together</span> <span>→</span></div>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/orchids" class="nl">Orchids</a>
+
+    <!-- 7. GIFTS -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/all">Gifts <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap wp" style="--n: 3;">
+          <div>
+            <h6>UNIQUE SURPRISES</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/combos">Hampers</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Fresh Fruit Baskets</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Premium Chocolates</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Sweets / Mithai</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Dry Fruit Hampers</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Teddy Bears</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Chocolate Bouquet</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>BY RELATION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/combos">Friends</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Teacher</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Her</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Him</a></li>
+              <li><a href="{{ routes.collections_url }}/cakes">Kids</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Father</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Mother</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Girlfriend</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Couples</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Parents</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Mom-to-Be</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>BY OCCASION</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/combos">Birthday</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Anniversary</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Love</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Wedding</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">House Warming</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">New Born</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Congratulations</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Umrah Gift</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Just Because</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Get Well Soon</a></li>
+              <li><a href="{{ routes.collections_url }}/combos">Same Day</a></li>
+            </ul>
+          </div>
+          <a class="promo" href="{{ routes.collections_url }}/combos">
+            <img src="{{ 'hx_dryfruit.webp' | asset_url }}" alt="Gifts" width="320" height="191" loading="lazy">
+            <div><span>Hampers for every milestone</span> <span>→</span></div>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/occasions" class="nl">Occasions</a>
+
+    <!-- 8. FRESH FRUITS -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/all">Fresh Fruits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap wp" style="--n: 1;">
+          <div>
+            <h6>SPECIAL</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/all">Fruity Bouquets</a></li>
+              <li><a href="{{ routes.collections_url }}/all">View all fresh fruits</a></li>
+            </ul>
+          </div>
+          <a class="promo" href="{{ routes.collections_url }}/all">
+            <img src="{{ 'hero_fruits.webp' | asset_url }}" alt="Fresh Fruits" width="320" height="191" loading="lazy">
+            <div><span>Seasonal fruit, packed the morning of delivery</span> <span>→</span></div>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="nav-item">
-      <a href="{{ routes.collections_url }}/flowers" class="nl hot">Special Deals 🔥</a>
+
+    <!-- 9. SAME DAY (Direct Link) -->
+    <div>
+      <a class="nl" href="{{ routes.collections_url }}/all">Same Day</a>
     </div>
+
+    <!-- 10. OCCASIONS -->
+    <div class="has">
+      <a class="nl" href="{{ routes.collections_url }}/all">Occasions <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="mega">
+        <div class="wrap wp" style="--n: 2;">
+          <div>
+            <h6>CELEBRATE</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/all">Birthday</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Anniversary</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Congratulations</a></li>
+              <li><a href="{{ routes.collections_url }}/all">Wedding</a></li>
+              <li><a href="{{ routes.collections_url }}/all">New Born</a></li>
+              <li><a href="{{ routes.collections_url }}/all">House Warming</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6>EXPRESS</h6>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/flowers">Thank You</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Sorry</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Love & Romance</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Get Well Soon</a></li>
+              <li><a href="{{ routes.collections_url }}/flowers">Sympathy</a></li>
+            </ul>
+          </div>
+          <a class="promo" href="{{ routes.collections_url }}/all">
+            <img src="{{ 't_thankyou.webp' | asset_url }}" alt="Occasions" width="320" height="191" loading="lazy">
+            <div><span>Say thank you with flowers</span> <span>→</span></div>
+          </a>
+        </div>
+      </div>
+    </div>
+
   </nav>
 </header>
+
+<!-- Mobile Navigation Slide-Out Drawer (#mobmenu) -->
+<aside class="drawer left" id="mobmenu" aria-label="Menu" aria-hidden="true">
+  <header>
+    <h3 id="mobmenuTitle">Categories</h3>
+    <button class="x" type="button" aria-label="Close menu" onclick="window.flaberryCloseMobMenu()">×</button>
+  </header>
+  <div class="body" id="mobmenuBody">
+    <!-- Level 1 Category List -->
+    <div class="mm-list" id="mobmenuLvl1">
+      <button class="mm-row hot" type="button" onclick="flaberryShowMobSub(0)"><span>Upcoming</span><span aria-hidden="true">›</span></button>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(1)"><span>Birthday</span><span aria-hidden="true">›</span></button>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(2)"><span>Anniversary</span><span aria-hidden="true">›</span></button>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(3)"><span>Flowers</span><span aria-hidden="true">›</span></button>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(4)"><span>Cakes</span><span aria-hidden="true">›</span></button>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(5)"><span>Combos</span><span aria-hidden="true">›</span></button>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(6)"><span>Gifts</span><span aria-hidden="true">›</span></button>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(7)"><span>Fresh Fruits</span><span aria-hidden="true">›</span></button>
+      <a class="mm-row" href="{{ routes.collections_url }}/all"><span>Same Day</span><span aria-hidden="true">›</span></a>
+      <button class="mm-row" type="button" onclick="flaberryShowMobSub(9)"><span>Occasions</span><span aria-hidden="true">›</span></button>
+    </div>
+
+    <!-- Quick Utility Links below list -->
+    <div class="mm-quick" id="mobmenuQuick">
+      <a href="/pages/serviceable-pincodes">Track order</a>
+      <a href="{{ routes.account_url }}">My account</a>
+      <a href="/pages/contact-us">Support / Contact us</a>
+      <a href="/pages/serviceable-pincodes">Serviceable pincodes</a>
+      <a href="/pages/corporate-gifting">Corporate</a>
+      <a href="/pages/become-a-partner">Become a partner</a>
+      <a href="/blogs/news">Blog</a>
+    </div>
+
+    <!-- Level 2 Subcategory Drill-down Container -->
+    <div id="mobmenuLvl2" hidden></div>
+  </div>
+</aside>
+
+<!-- Mobile Search Slide-Down Popup Drawer (#searchdrawer) -->
+<aside class="drawer search-drawer" id="searchdrawer" aria-label="Search" aria-hidden="true">
+  <header style="padding: 14px 18px; border-bottom: 1px solid var(--line, #e3e3ee);">
+    <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.6; flex-shrink: 0;"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input
+        type="search"
+        id="mobSearchInput"
+        placeholder="Search flowers, cakes, gifts…"
+        autocomplete="off"
+        style="flex: 1; border: 0; font-size: 16px; outline: none; background: transparent; padding: 6px 0; color: var(--ink, #22235c);"
+        oninput="flaberryOnMobSearchInput(this.value)"
+      >
+      <button type="button" class="x" onclick="window.flaberryCloseSearchDrawer()" style="background: none; border: 0; font-size: 26px; cursor: pointer; color: var(--ink, #22235c); padding: 0 4px; line-height: 1;">×</button>
+    </div>
+  </header>
+  <div class="body" id="mobSearchBody" style="padding: 16px 20px; overflow-y: auto; max-height: 75vh;">
+    <div id="mobSearchTrending">
+      <h5 style="margin: 0 0 10px; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted, #5f6178);">Popular Categories</h5>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+        <a href="{{ routes.collections_url }}/roses" class="chip">Red Roses</a>
+        <a href="{{ routes.collections_url }}/chocolate-cakes" class="chip">Chocolate Cakes</a>
+        <a href="{{ routes.collections_url }}/combos" class="chip">Combos</a>
+        <a href="{{ routes.collections_url }}/photo-cakes" class="chip">Photo Cakes</a>
+        <a href="{{ routes.collections_url }}/orchids" class="chip">Orchids</a>
+        <a href="{{ routes.collections_url }}/flowers" class="chip">Bouquets</a>
+      </div>
+      <h5 style="margin: 0 0 10px; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted, #5f6178);">Trending Searches</h5>
+      <div style="display: grid; gap: 8px;">
+        <a href="{{ routes.collections_url }}/roses" class="search-item">
+          <img src="{{ 'hx_roses.webp' | asset_url }}" alt="Roses" width="46" height="46" loading="lazy">
+          <div class="search-item-info">
+            <span class="search-item-title">Handcrafted Red Rose Bouquets</span>
+            <span class="search-item-price price-val" data-raw-inr="999">From ₹999</span>
+          </div>
+        </a>
+        <a href="{{ routes.collections_url }}/chocolate-cakes" class="search-item">
+          <img src="{{ 'hx_truffle.webp' | asset_url }}" alt="Truffle" width="46" height="46" loading="lazy">
+          <div class="search-item-info">
+            <span class="search-item-title">Belgian Chocolate Truffle Cake</span>
+            <span class="search-item-price price-val" data-raw-inr="849">From ₹849</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div id="mobSearchResults" hidden></div>
+  </div>
+</aside>
+
+<!-- Custom Slide-Out Cart Drawer (#cartdrawer) - 100% Ajax-driven, Absolute/Fixed Position (Never Pushes Window) -->
+<aside class="drawer cart-drawer-custom" id="cartdrawer" aria-label="Cart" aria-hidden="true">
+  <header>
+    <h3>Your cart</h3>
+    <button class="x" type="button" aria-label="Close cart" onclick="window.flaberryCloseCartDrawer()">×</button>
+  </header>
+  <div class="body" id="cartdrawerContent">
+    {% if cart.item_count > 0 %}
+      <div style="display: grid; gap: 14px;">
+        {% for item in cart.items %}
+          <div class="citem">
+            <img src="{{ item.image | image_url: width: 160, height: 160 }}" alt="{{ item.title | escape }}" width="76" height="76" loading="lazy">
+            <div>
+              <h4>{{ item.product.title }}</h4>
+              <div class="meta">
+                {% unless item.variant.title contains 'Default' %}
+                  <span>{{ item.variant.title }}</span>
+                {% endunless %}
+              </div>
+              <div class="ctl">
+                <div class="qty">
+                  <button type="button" onclick="window.flaberryUpdateCartQty('{{ item.key }}', {{ item.quantity | minus: 1 }})" aria-label="Decrease">−</button>
+                  <span>{{ item.quantity }}</span>
+                  <button type="button" onclick="window.flaberryUpdateCartQty('{{ item.key }}', {{ item.quantity | plus: 1 }})" aria-label="Increase">+</button>
+                </div>
+                <b class="tab-nums price-val" data-raw-inr="{{ item.final_line_price | divided_by: 100.0 }}">{{ item.final_line_price | money }}</b>
+              </div>
+              <button type="button" class="linkbtn" onclick="window.flaberryUpdateCartQty('{{ item.key }}', 0)">Remove</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="text-align: center; padding: 40px 20px;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="margin: 0 auto 12px; opacity: 0.4;"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>
+        <h4 style="font-size: 17px; margin-bottom: 8px;">Your cart is empty</h4>
+        <p style="color: var(--muted, #5f6178); font-size: 13.5px; margin-bottom: 20px;">Explore handcrafted bouquets and fresh cakes for your loved ones.</p>
+        <a href="{{ routes.collections_url }}/flowers" class="btn flora" style="padding: 10px 20px; font-size: 14px;">Shop Flowers</a>
+      </div>
+    {% endif %}
+  </div>
+  <footer id="cartdrawerFooter" {% if cart.item_count == 0 %}hidden{% endif %}>
+    <div style="display: flex; justify-content: space-between; font-size: 14px;">
+      <span style="color: var(--muted, #5f6178);">Subtotal</span>
+      <b id="cartSubtotalVal" class="price-val" data-raw-inr="{{ cart.total_price | divided_by: 100.0 }}">{{ cart.total_price | money }}</b>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--muted, #5f6178);">
+      <span>Delivery charges</span>
+      <span>Calculated at checkout</span>
+    </div>
+    <div style="display: grid; gap: 8px; margin-top: 6px;">
+      <a href="{{ routes.cart_url }}" class="btn ghost block" style="width: 100%; text-align: center;">View cart</a>
+      <a href="/checkout" id="cartCheckoutBtn" class="btn flora block" style="width: 100%; text-align: center;">Checkout · {{ cart.total_price | money }}</a>
+    </div>
+  </footer>
+</aside>
+
+<!-- Scrim Background Overlay for Drawers -->
+<div class="scrim" id="scrim" onclick="window.flaberryCloseAllDrawers()"></div>
 
 <!-- Pincode Modal Dialog -->
 <div id="flaberryPinModal" class="pin-modal-overlay" hidden>
   <div class="pin-modal-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 18px; margin: 0;">Select Delivery Pincode</h3>
-      <button type="button" onclick="flaberryClosePinModal()" style="background: none; border: none; font-size: 22px; cursor: pointer;">×</button>
+      <h3 style="font-size: 18px; margin: 0; color: var(--ink, #22235c);">Select Delivery Pincode</h3>
+      <button type="button" onclick="flaberryClosePinModal()" style="background: none; border: none; font-size: 22px; cursor: pointer; color: var(--ink, #22235c);">×</button>
     </div>
-    <p class="muted" style="font-size: 13.5px; margin-bottom: 14px;">Enter receiver's Indian pincode to confirm same-day delivery, midnight slots, and florist serviceability.</p>
+    <p class="muted" style="font-size: 13.5px; margin-bottom: 14px; color: var(--muted, #5f6178);">Enter receiver's Indian pincode to confirm same-day delivery, midnight slots, and florist serviceability.</p>
     <div style="display: flex; gap: 8px;">
-      <input type="text" id="modalPincodeInp" placeholder="e.g. 110001" maxlength="6" class="strip-inp" style="flex: 1;">
+      <input type="text" id="modalPincodeInp" placeholder="e.g. 201301" maxlength="6" class="strip-inp" style="flex: 1; border: 1px solid var(--line, #e3e3ee); border-radius: 999px; padding: 10px 16px; outline: none;">
       <button type="button" class="btn flora" onclick="flaberrySubmitModalPin()">Save</button>
     </div>
     <div class="quick-cities" style="margin-top: 18px;">
-      <small class="muted" style="display: block; margin-bottom: 8px; font-weight: 600;">Popular Cities:</small>
+      <small class="muted" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--muted, #5f6178);">Popular Cities:</small>
       <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-        <button type="button" class="chip" onclick="flaberrySetQuickPin('Delhi', '110001')">Delhi</button>
-        <button type="button" class="chip" onclick="flaberrySetQuickPin('Mumbai', '400001')">Mumbai</button>
-        <button type="button" class="chip" onclick="flaberrySetQuickPin('Bengaluru', '560001')">Bengaluru</button>
-        <button type="button" class="chip" onclick="flaberrySetQuickPin('Pune', '411001')">Pune</button>
-        <button type="button" class="chip" onclick="flaberrySetQuickPin('Hyderabad', '500001')">Hyderabad</button>
-        <button type="button" class="chip" onclick="flaberrySetQuickPin('Kolkata', '700001')">Kolkata</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Noida', '201301')">Noida 201301</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Delhi', '110001')">Delhi 110001</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Mumbai', '400001')">Mumbai 400001</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Bengaluru', '560001')">Bengaluru 560001</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Pune', '411001')">Pune 411001</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Hyderabad', '500001')">Hyderabad 500001</button>
       </div>
     </div>
   </div>
 </div>
 
 <style>
-  .flaberry-ubar {
-    background: var(--fl-color-ink, #151312);
-    color: #f3efec;
-    font-size: 13px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .flaberry-ubar-inner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    min-height: 42px;
-  }
-  .ubar-links {
-    display: flex;
-    gap: 16px;
-    flex: 1;
-  }
-  .ubar-links a {
-    color: #f3efec;
-    opacity: 0.85;
-    font-size: 12.5px;
-    white-space: nowrap;
-    text-decoration: none;
-  }
-  .ubar-links a:hover {
-    opacity: 1;
-    color: var(--fl-color-flora, #e2522c);
-  }
-  .ubar-ticker {
-    flex: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 12.5px;
-    text-align: center;
-  }
-  .ticker-arrow {
-    background: none;
-    border: none;
-    color: inherit;
-    font-size: 16px;
-    cursor: pointer;
-    opacity: 0.7;
-    padding: 0 4px;
-  }
-  .ticker-arrow:hover {
-    opacity: 1;
-  }
-  .ubar-right {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-  }
-  .cur-sel {
-    background: transparent;
-    color: #f3efec;
-    border: 1px solid #4a4542;
-    border-radius: var(--fl-radius-pill, 999px);
-    padding: 3px 8px;
-    font-size: 12px;
-    outline: none;
-  }
-  .cur-sel option {
-    color: #151312;
-    background: #ffffff;
-  }
-  @media (max-width: 900px) {
-    .ubar-links, .ubar-right {
-      display: none;
-    }
-  }
-
-  /* Header Main */
+  /* Header Main Layout */
   .hdr.fbhdr {
     position: sticky;
     top: 0;
     z-index: 50;
     background: #ffffff;
-    border-bottom: 1px solid var(--fl-color-line, #e7e1dd);
+    border-bottom: 1px solid var(--line, #e3e3ee);
   }
-  .hdr-main {
+  .fbhdr .hdr-main {
     display: flex;
     align-items: center;
-    gap: 18px;
-    padding-block: 12px;
+    gap: 16px;
+    padding-block: 14px;
+  }
+  .logo img {
+    height: 40px;
+    width: auto;
   }
   .burger {
     display: none;
     background: none;
-    border: none;
-    padding: 4px;
+    border: 0;
+    padding: 6px;
     cursor: pointer;
-  }
-  @media (max-width: 990px) {
-    .burger {
-      display: block;
-    }
-    .nav {
-      display: none !important;
-    }
-    .pinchip {
-      display: none !important;
-    }
+    color: var(--ink, #22235c);
   }
   .search {
     flex: 1;
     position: relative;
-    max-width: 520px;
+    max-width: 540px;
   }
   .search input {
     width: 100%;
-    border: 1px solid var(--fl-color-line, #e7e1dd);
-    background: var(--fl-color-mist, #f5f2f0);
-    border-radius: var(--fl-radius-pill, 999px);
-    padding: 10px 16px 10px 42px;
-    font-size: 13.5px;
+    border: 1px solid var(--line, #e3e3ee);
+    background: var(--mist, #f3f3f8);
+    border-radius: 999px;
+    padding: 11px 16px 11px 42px;
+    font-size: 14px;
+    color: var(--ink, #22235c);
     outline: none;
     transition: background 0.2s, border-color 0.2s;
   }
   .search input:focus {
     background: #ffffff;
-    border-color: var(--fl-color-ink, #151312);
+    border-color: var(--ink, #22235c);
   }
   .search svg {
     position: absolute;
-    left: 14px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
     opacity: 0.6;
+    color: var(--ink, #22235c);
   }
   .suggest {
     position: absolute;
@@ -286,35 +767,38 @@
     left: 0;
     right: 0;
     background: #ffffff;
-    border: 1px solid var(--fl-color-line, #e7e1dd);
-    border-radius: var(--fl-radius-md, 16px);
-    box-shadow: 0 18px 40px rgba(21, 19, 18, 0.14);
+    border: 1px solid var(--line, #e3e3ee);
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(34, 35, 92, 0.14);
     padding: 10px;
     z-index: 60;
+    max-height: 70vh;
+    overflow-y: auto;
   }
   .suggest h5 {
     margin: 6px 10px 8px;
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--fl-color-muted, #6f6763);
+    color: var(--muted, #5f6178);
   }
   .suggest a {
     display: flex;
     gap: 12px;
     align-items: center;
     padding: 8px 10px;
-    border-radius: var(--fl-radius-sm, 10px);
+    border-radius: 10px;
     text-decoration: none;
-    color: var(--fl-color-ink, #151312);
+    color: var(--ink, #22235c);
     font-size: 13.5px;
+    transition: background 0.15s;
   }
   .suggest a:hover {
-    background: var(--fl-color-mist, #f5f2f0);
+    background: var(--mist, #f3f3f8);
   }
   .suggest img {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 6px;
     object-fit: cover;
   }
@@ -322,27 +806,39 @@
     margin-left: auto;
     font-weight: 600;
     font-size: 13px;
-    color: var(--fl-color-flora, #e2522c);
+    color: var(--flora-deep, #ad1f2b);
   }
   .pinchip {
     display: flex;
     align-items: center;
     gap: 8px;
-    border: 1px solid var(--fl-color-line, #e7e1dd);
-    border-radius: var(--fl-radius-pill, 999px);
+    border: 1px solid var(--line, #e3e3ee);
+    border-radius: 999px;
     padding: 6px 14px;
     background: #ffffff;
     cursor: pointer;
     text-align: left;
     white-space: nowrap;
     line-height: 1.2;
+    transition: border-color 0.15s;
   }
-  .pinchip b {
-    display: block;
-    font-size: 12.5px;
+  .pinchip:hover {
+    border-color: var(--ink, #22235c);
   }
-  .pinchip small {
-    font-size: 11px;
+  .mk .cur-sel {
+    color: var(--ink, #22235c);
+    background: #ffffff;
+    border: 1px solid var(--line, #e3e3ee);
+    border-radius: 999px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    max-width: 190px;
+    cursor: pointer;
+    outline: none;
+  }
+  .mk .cur-sel:hover {
+    border-color: var(--ink, #22235c);
   }
   .hicons {
     display: flex;
@@ -354,113 +850,1077 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 2px;
     padding: 6px 10px;
-    border-radius: var(--fl-radius-sm, 10px);
-    font-size: 11px;
+    border-radius: 10px;
+    font-size: 11.5px;
     position: relative;
     text-decoration: none;
-    color: var(--fl-color-ink, #151312);
+    color: var(--ink, #22235c);
+    cursor: pointer;
   }
   .hicon:hover {
-    background: var(--fl-color-mist, #f5f2f0);
+    background: var(--mist, #f3f3f8);
   }
   .hicon .badge {
     position: absolute;
     top: 2px;
     right: 6px;
-    background: var(--fl-color-flora, #e2522c);
+    background: var(--flora, #d42f3c);
     color: #ffffff;
     font-size: 10px;
-    min-width: 16px;
-    height: 16px;
-    border-radius: 8px;
+    min-width: 17px;
+    height: 17px;
+    border-radius: 9px;
     display: grid;
     place-items: center;
     font-weight: 700;
   }
-  @media (max-width: 600px) {
-    .hicon.opt {
-      display: none;
-    }
-  }
 
-  /* Nav */
+  /* Desktop Mega Menu Navigation */
   .nav {
     display: flex;
     justify-content: center;
-    gap: 6px;
-    padding-bottom: 8px;
+    gap: 4px;
+    padding-bottom: 10px;
     flex-wrap: wrap;
+    position: relative;
+  }
+  .nav > div {
+    position: static;
   }
   .nav .nl {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: var(--fl-radius-pill, 999px);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--fl-color-ink, #151312);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink, #22235c);
     text-decoration: none;
     transition: background 0.15s;
+    white-space: nowrap;
   }
-  .nav .nl:hover {
-    background: var(--fl-color-mist, #f5f2f0);
+  .nav .nl:hover, .nav > div.open .nl {
+    background: var(--mist, #f3f3f8);
   }
   .nav .nl.hot {
-    color: var(--fl-color-flora, #e2522c);
+    color: var(--flora-deep, #ad1f2b);
+    font-weight: 600;
+  }
+  .mega {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: #ffffff;
+    border-top: 1px solid var(--line, #e3e3ee);
+    box-shadow: 0 30px 50px rgba(34, 35, 92, 0.12);
+    display: none;
+    z-index: 45;
+  }
+  .nav > div.open .mega, .nav > div:hover .mega {
+    display: block;
+  }
+  .mega .wrap {
+    padding-block: 28px 32px;
+  }
+  .mega .wrap.wp {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 2), minmax(150px, 230px)) minmax(0, 1fr);
+    column-gap: 36px;
+  }
+  .mega .wrap.wp .promo {
+    justify-self: end;
+    align-self: start;
+    width: min(320px, 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--mist, #f3f3f8);
+    text-decoration: none;
+    color: var(--ink, #22235c);
+    display: block;
+    box-shadow: 0 4px 16px rgba(34, 35, 92, 0.06);
+  }
+  .mega .wrap.wp .promo img {
+    width: 100%;
+    aspect-ratio: 528 / 316;
+    object-fit: cover;
+  }
+  .mega .wrap.wp .promo div {
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mega .wrap.np {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr));
+    gap: 24px;
+  }
+  .mega .wrap.up {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 24px;
+  }
+  .mega .upcard .upimg {
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: var(--mist, #f3f3f8);
+  }
+  .mega .upcard .upimg img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .mega .upcard .upimg:hover img {
+    transform: scale(1.04);
+  }
+  .mega .upcard h6 {
+    color: var(--flora-deep, #ad1f2b);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .mega h6 {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted, #5f6178);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .mega ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 7px;
+  }
+  .mega li a {
+    font-size: 14px;
+    color: var(--ink, #22235c);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .mega li a:hover {
+    color: var(--flora-deep, #ad1f2b);
   }
 
-  /* Pin Modal */
+  /* Drawer & Scrim Core Styles - Strictly Absolute/Fixed, Zero Window Push */
+  .scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(34, 35, 92, 0.45);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .scrim.on {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(440px, 100%);
+    background: #ffffff;
+    z-index: 999;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(34, 35, 92, 0.25);
+    box-sizing: border-box;
+  }
+  .drawer.left {
+    left: 0;
+    right: auto;
+    transform: translateX(-100%);
+  }
+  .drawer.search-drawer {
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    max-height: 85vh;
+    transform: translateY(-100%);
+    box-shadow: 0 16px 40px rgba(34, 35, 92, 0.18);
+    border-radius: 0 0 18px 18px;
+  }
+  .drawer.on {
+    transform: none !important;
+  }
+  .drawer header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line, #e3e3ee);
+  }
+  .drawer header h3 {
+    font-size: 20px;
+    margin: 0;
+    color: var(--ink, #22235c);
+  }
+  .drawer header .x {
+    background: none;
+    border: 0;
+    font-size: 26px;
+    cursor: pointer;
+    color: var(--ink, #22235c);
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .drawer .body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    display: grid;
+    gap: 14px;
+    align-content: start;
+  }
+  .drawer footer {
+    border-top: 1px solid var(--line, #e3e3ee);
+    padding: 16px 20px;
+    display: grid;
+    gap: 10px;
+    background: #ffffff;
+  }
+
+  /* Prototype Exact Cart Items Layout (.citem) */
+  #cartdrawer .citem {
+    display: grid !important;
+    grid-template-columns: 76px minmax(0, 1fr) !important;
+    gap: 14px !important;
+    font-size: 13px !important;
+    border-bottom: 1px solid var(--line, #e3e3ee) !important;
+    padding-bottom: 14px !important;
+    box-sizing: border-box !important;
+    align-items: start !important;
+  }
+  #cartdrawer .citem img {
+    width: 76px !important;
+    height: 76px !important;
+    min-width: 76px !important;
+    max-width: 76px !important;
+    min-height: 76px !important;
+    max-height: 76px !important;
+    border-radius: 12px !important;
+    object-fit: cover !important;
+    aspect-ratio: 1 / 1 !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+  }
+  #cartdrawer .citem h4 {
+    font-family: var(--body, inherit) !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+    margin: 0 !important;
+    color: var(--ink, #22235c) !important;
+    line-height: 1.3 !important;
+  }
+  #cartdrawer .citem .meta {
+    color: var(--muted, #5f6178) !important;
+    display: grid !important;
+    gap: 2px !important;
+    margin-top: 4px !important;
+    font-size: 12px !important;
+  }
+  #cartdrawer .citem .ctl {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 8px !important;
+  }
+  #cartdrawer .citem .ctl .qty {
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 1px solid var(--line, #e3e3ee) !important;
+    border-radius: 999px !important;
+    padding: 0 4px !important;
+    background: #ffffff !important;
+  }
+  #cartdrawer .citem .ctl .qty button {
+    height: 30px !important;
+    width: 28px !important;
+    background: none !important;
+    border: 0 !important;
+    cursor: pointer !important;
+    font-size: 15px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: var(--ink, #22235c) !important;
+    padding: 0 !important;
+  }
+  #cartdrawer .citem .ctl .qty span {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    padding: 0 6px !important;
+    min-width: 16px !important;
+    text-align: center !important;
+    color: var(--ink, #22235c) !important;
+  }
+  #cartdrawer .citem .linkbtn {
+    background: none !important;
+    border: 0 !important;
+    color: var(--muted, #5f6178) !important;
+    font-size: 12px !important;
+    text-decoration: underline !important;
+    cursor: pointer !important;
+    margin-top: 6px !important;
+    padding: 0 !important;
+    display: inline-block !important;
+  }
+  #cartdrawer .citem .linkbtn:hover {
+    color: var(--flora-deep, #ad1f2b) !important;
+  }
+
+  /* Compact Thumbnail Search Items Layout in Mobile Drawer & Desktop Suggest */
+  .search-item,
+  #searchdrawer .search-item,
+  #mobSearchTrending .search-item,
+  #mobSearchResults .search-item,
+  .suggest .search-item {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: center !important;
+    padding: 8px 10px !important;
+    border-radius: 10px !important;
+    text-decoration: none !important;
+    color: var(--ink, #22235c) !important;
+    transition: background 0.15s !important;
+    box-sizing: border-box !important;
+  }
+  .search-item:hover,
+  #searchdrawer .search-item:hover,
+  #mobSearchTrending .search-item:hover,
+  #mobSearchResults .search-item:hover,
+  .suggest .search-item:hover {
+    background: var(--mist, #f3f3f8) !important;
+  }
+  .search-item img,
+  #searchdrawer .search-item img,
+  #mobSearchTrending .search-item img,
+  #mobSearchResults .search-item img,
+  .suggest .search-item img {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+    border-radius: 8px !important;
+    object-fit: cover !important;
+    aspect-ratio: 1 / 1 !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+  }
+  .search-item-info {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+  }
+  .search-item-title {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    color: var(--ink, #22235c) !important;
+  }
+  .search-item-price {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: var(--flora-deep, #ad1f2b) !important;
+    white-space: nowrap !important;
+    margin-left: auto !important;
+  }
+
+  /* Mobile Menu Progressive Layout */
+  .mm-list {
+    display: grid;
+    border: 1px solid var(--line, #e3e3ee);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .mm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 0;
+    border-bottom: 1px solid var(--line, #e3e3ee);
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    width: 100%;
+    color: var(--ink, #22235c);
+    min-height: 50px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .mm-row:last-child {
+    border-bottom: 0;
+  }
+  .mm-row.hot {
+    color: var(--flora-deep, #ad1f2b);
+  }
+  .mm-quick {
+    display: grid;
+    gap: 14px;
+    padding: 8px 4px 16px;
+    font-size: 14.5px;
+  }
+  .mm-quick a {
+    color: var(--ink, #22235c);
+    text-decoration: none;
+  }
+  .mm-quick a:hover {
+    color: var(--flora-deep, #ad1f2b);
+  }
+  .mm-back {
+    background: none;
+    border: 0;
+    font-weight: 600;
+    color: var(--flora-deep, #ad1f2b);
+    text-align: left;
+    padding: 4px 0;
+    font-size: 14.5px;
+    cursor: pointer;
+  }
+  .mm-lvl h4 {
+    font-size: 24px;
+    margin: 4px 0 10px;
+    color: var(--ink, #22235c);
+  }
+  .mm-grp {
+    border-bottom: 1px solid var(--line, #e3e3ee);
+    padding: 10px 0;
+  }
+  .mm-grp summary {
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    color: var(--ink, #22235c);
+  }
+  .mm-links {
+    display: grid;
+    gap: 10px;
+    padding: 10px 0 6px 12px;
+    font-size: 14.5px;
+  }
+  .mm-links a {
+    color: var(--ink, #22235c);
+    text-decoration: none;
+  }
+
+  /* Mobile Breakpoint (≤960px) */
+  @media (max-width: 960px) {
+    .fbhdr .hdr-main {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      padding-block: 10px;
+    }
+    .burger {
+      display: block;
+    }
+    .logo {
+      justify-self: center;
+    }
+    .fbhdr .search, .fbhdr .pinchip, .fbhdr .hicons, .nav {
+      display: none !important;
+    }
+    .mk .cur-sel {
+      padding: 7px 8px;
+      font-size: 12px;
+      max-width: 128px;
+    }
+  }
+
+  /* Pincode Modal */
   .pin-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 100;
+    background: rgba(34, 35, 92, 0.45);
+    z-index: 1000;
     display: grid;
     place-items: center;
     padding: 16px;
   }
   .pin-modal-card {
     background: #ffffff;
-    border-radius: var(--fl-radius-md, 16px);
+    border-radius: 16px;
     padding: 24px;
     max-width: 440px;
     width: 100%;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 40px rgba(34, 35, 92, 0.2);
+  }
+  .chip {
+    background: var(--mist, #f3f3f8);
+    border: 1px solid var(--line, #e3e3ee);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12.5px;
+    cursor: pointer;
+    color: var(--ink, #22235c);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .chip:hover {
+    border-color: var(--ink, #22235c);
   }
 </style>
 
 <script>
-  var tickerMsgs = [
-    'Use code <b>FLABERRY2026</b> for 15% off your first flower bouquet!',
-    'Midnight delivery guaranteed in 500+ Indian cities.',
-    'Fresh flowers hand-picked daily from Bangalore & Pune farms.',
-    'Complimentary personalized greeting card with every gift.'
+  // Real-time Sitewide Currency Conversion Engine
+  var FLABERRY_CUR = {
+    INR: ["₹", 1],
+    USD: ["$", 0.01192],
+    AED: ["AED ", 0.04377],
+    GBP: ["£", 0.00905],
+    EUR: ["€", 0.01103],
+    CAD: ["C$", 0.01664],
+    AUD: ["A$", 0.01818],
+    SGD: ["S$", 0.01594],
+    SAR: ["SAR ", 0.04473]
+  };
+
+  function flaberryGetActiveCurrency() {
+    try {
+      return localStorage.getItem('flaberry_currency') || 'INR';
+    } catch(e) {
+      return 'INR';
+    }
+  }
+
+  function flaberryFormatMoney(inrAmount) {
+    var cur = flaberryGetActiveCurrency();
+    var conf = FLABERRY_CUR[cur] || FLABERRY_CUR.INR;
+    var sym = conf[0];
+    var rate = conf[1];
+    var num = parseFloat(inrAmount) || 0;
+    if (cur === 'INR') {
+      return '₹' + Math.round(num).toLocaleString('en-IN');
+    }
+    var val = num * rate;
+    return sym + (val >= 100 ? Math.round(val).toLocaleString('en-US') : val.toFixed(2));
+  }
+
+  function flaberryApplyCurrencySitewide(newCurrency) {
+    if (newCurrency) {
+      try { localStorage.setItem('flaberry_currency', newCurrency); } catch(e){}
+    }
+    var cur = flaberryGetActiveCurrency();
+
+    // Sync all dropdowns
+    var selects = document.querySelectorAll('.cur-sel, #cursel');
+    selects.forEach(function(s) { s.value = cur; });
+
+    // 1. Elements with data-raw-inr
+    document.querySelectorAll('[data-raw-inr]').forEach(function(el) {
+      var inrVal = parseFloat(el.getAttribute('data-raw-inr'));
+      if (!isNaN(inrVal)) {
+        var prefix = (el.textContent || '').toLowerCase().includes('from') ? 'From ' : '';
+        el.textContent = prefix + flaberryFormatMoney(inrVal);
+      }
+    });
+
+    // 2. Scan storefront price elements that don't have data-raw-inr yet
+    document.querySelectorAll('.pp, .price, .flaberry-card-price, .pr, .meta .tab-nums, .cart-price').forEach(function(el) {
+      if (!el.getAttribute('data-raw-inr')) {
+        var txt = el.textContent || '';
+        var match = txt.match(/[\d,]+(\.\d+)?/);
+        if (match) {
+          var num = parseFloat(match[0].replace(/,/g, ''));
+          if (!isNaN(num) && num > 0) {
+            el.setAttribute('data-raw-inr', num);
+          }
+        }
+      }
+      var inrVal = parseFloat(el.getAttribute('data-raw-inr'));
+      if (!isNaN(inrVal)) {
+        var prefix = (el.textContent || '').toLowerCase().includes('from') ? 'From ' : '';
+        el.textContent = prefix + flaberryFormatMoney(inrVal);
+      }
+    });
+  }
+
+  // Mobile Menu Data Definition for Progressive Drill-Down
+  var FLABERRY_MOB_MENUS = [
+    {
+      label: "Upcoming",
+      groups: [
+        { title: "CHRISTMAS · 25 DEC", links: [["Christmas Gifts", "/collections/all"], ["Christmas Cakes", "/collections/chocolate-cakes"], ["Gift Hampers", "/collections/combos"], ["Plum & dry fruit gifts", "/collections/all"]] },
+        { title: "NEW YEAR · 1 JAN", links: [["New Year Gifts", "/collections/all"], ["Midnight Cakes", "/collections/chocolate-cakes"], ["Premium Flowers", "/collections/flowers"]] },
+        { title: "PLAN AHEAD", links: [["Book an advance delivery", "/pages/advance-orders"], ["Midnight delivery", "/pages/serviceable-pincodes"], ["Serviceable pincodes", "/pages/serviceable-pincodes"], ["View all upcoming", "/collections/all"]] }
+      ]
+    },
+    {
+      label: "Birthday",
+      groups: [
+        { title: "SIGNATURE GIFTS", links: [["Birthday Flowers", "/collections/flowers"], ["Birthday Cakes", "/collections/cakes"], ["Birthday Hampers", "/collections/combos"], ["Chocolates", "/collections/combos"], ["Birthday Combos", "/collections/combos"], ["Plants", "/collections/all"]] },
+        { title: "RELATION", links: [["Her", "/collections/flowers"], ["Wife", "/collections/flowers"], ["Husband", "/collections/cakes"], ["Kids", "/collections/cakes"], ["Mother", "/collections/flowers"], ["Father", "/collections/all"], ["Friends", "/collections/combos"], ["Him", "/collections/cakes"], ["Girlfriend", "/collections/flowers"], ["Boyfriend", "/collections/cakes"]] }
+      ]
+    },
+    {
+      label: "Anniversary",
+      groups: [
+        { title: "GIFT COLLECTION", links: [["Flowers", "/collections/flowers"], ["Red Roses", "/collections/roses"], ["Heart Shaped", "/collections/cakes"], ["Cakes", "/collections/cakes"], ["Gifts", "/collections/combos"], ["Plants", "/collections/all"], ["Combos", "/collections/combos"], ["Chocolates", "/collections/combos"]] },
+        { title: "RELATION", links: [["Her", "/collections/flowers"], ["Wife", "/collections/flowers"], ["Husband", "/collections/cakes"], ["Friends", "/collections/combos"], ["Him", "/collections/cakes"], ["Parents", "/collections/flowers"]] }
+      ]
+    },
+    {
+      label: "Flowers",
+      groups: [
+        { title: "FLOWER TYPE", links: [["Red Roses", "/collections/roses"], ["Orchids", "/collections/orchids"], ["Lilies", "/collections/flowers"], ["Carnations", "/collections/flowers"], ["Gerberas", "/collections/flowers"], ["Sunflowers", "/collections/flowers"], ["Exotic", "/collections/flowers"], ["Premium", "/collections/flowers"], ["Mixed", "/collections/flowers"], ["All Roses", "/collections/roses"], ["All Flowers", "/collections/flowers"]] },
+        { title: "FLORAL COLLECTION", links: [["Bouquets", "/collections/flowers"], ["Vase", "/collections/flowers"], ["Box", "/collections/flowers"], ["Heart Shape", "/collections/flowers"], ["Wreaths", "/collections/flowers"], ["Baskets", "/collections/flowers"], ["Floral Arrangements", "/collections/flowers"], ["Chocolate Bouquet", "/collections/combos"], ["Romantic Flowers", "/collections/flowers"]] },
+        { title: "BY OCCASION", links: [["Birthday", "/collections/flowers"], ["Anniversary", "/collections/flowers"], ["Congratulations", "/collections/flowers"], ["Wedding", "/collections/flowers"], ["Sorry", "/collections/flowers"], ["Miss You", "/collections/flowers"], ["Get Well Soon", "/collections/flowers"], ["Sympathy", "/collections/flowers"], ["Thank You", "/collections/flowers"], ["Midnight", "/collections/flowers"], ["Same Day", "/collections/flowers"]] },
+        { title: "BY RELATION", links: [["Her", "/collections/flowers"], ["Him", "/collections/flowers"], ["Girlfriend", "/collections/flowers"], ["Wife", "/collections/flowers"], ["Husband", "/collections/flowers"], ["Boyfriend", "/collections/flowers"], ["Mother", "/collections/flowers"], ["Father", "/collections/flowers"], ["Parents", "/collections/flowers"]] },
+        { title: "BY COLOUR", links: [["Red", "/collections/roses"], ["Pink", "/collections/flowers"], ["Yellow", "/collections/flowers"], ["White", "/collections/flowers"], ["Mixed", "/collections/flowers"]] }
+      ]
+    },
+    {
+      label: "Cakes",
+      groups: [
+        { title: "FLAVOURS", links: [["Chocolate", "/collections/chocolate-cakes"], ["Black Forest", "/collections/cakes"], ["Red Velvet", "/collections/cakes"], ["Chocolate Truffle", "/collections/chocolate-cakes"], ["Fresh Fruit", "/collections/cakes"], ["Butterscotch", "/collections/cakes"], ["Pineapple", "/collections/cakes"], ["Vanilla", "/collections/cakes"], ["Strawberry", "/collections/cakes"], ["Cheese Cakes", "/collections/cakes"]] },
+        { title: "CAKE TYPES", links: [["Heart Shapes", "/collections/cakes"], ["Eggless", "/collections/cakes"], ["Premium", "/collections/cakes"], ["Photo", "/collections/photo-cakes"], ["Jungle Theme", "/collections/cakes"], ["Barbie Doll", "/collections/cakes"], ["Spiderman", "/collections/cakes"], ["Doraemon", "/collections/cakes"], ["Tier", "/collections/cakes"], ["Designer", "/collections/cakes"]] },
+        { title: "BY OCCASION / DELIVERY", links: [["Birthday", "/collections/cakes"], ["Anniversary", "/collections/cakes"], ["Wedding", "/collections/cakes"], ["Kids", "/collections/cakes"], ["First Birthday", "/collections/cakes"], ["First Anniversary", "/collections/cakes"], ["Same Day", "/collections/cakes"], ["Midnight", "/collections/cakes"], ["Fixed Time", "/collections/cakes"]] }
+      ]
+    },
+    {
+      label: "Combos",
+      groups: [
+        { title: "CURATED GIFT SETS", links: [["Cake & Flowers", "/collections/combos"], ["Flowers & Chocolate", "/collections/combos"], ["Fruits & Flowers", "/collections/combos"], ["Flowers & Sweets", "/collections/combos"], ["Flowers & Teddies", "/collections/combos"], ["Flowers & Dry Fruits", "/collections/combos"]] },
+        { title: "OCCASIONS", links: [["Birthday", "/collections/combos"], ["Anniversary", "/collections/combos"], ["New Born", "/collections/combos"], ["Congratulations", "/collections/combos"], ["Love", "/collections/combos"]] }
+      ]
+    },
+    {
+      label: "Gifts",
+      groups: [
+        { title: "UNIQUE SURPRISES", links: [["Hampers", "/collections/combos"], ["Fresh Fruit Baskets", "/collections/all"], ["Premium Chocolates", "/collections/combos"], ["Sweets / Mithai", "/collections/combos"], ["Dry Fruit Hampers", "/collections/combos"], ["Teddy Bears", "/collections/combos"], ["Chocolate Bouquet", "/collections/combos"]] },
+        { title: "BY RELATION", links: [["Friends", "/collections/combos"], ["Teacher", "/collections/flowers"], ["Her", "/collections/flowers"], ["Him", "/collections/cakes"], ["Kids", "/collections/cakes"], ["Father", "/collections/all"], ["Mother", "/collections/flowers"], ["Girlfriend", "/collections/flowers"], ["Couples", "/collections/combos"], ["Parents", "/collections/flowers"], ["Mom-to-Be", "/collections/flowers"]] },
+        { title: "BY OCCASION", links: [["Birthday", "/collections/combos"], ["Anniversary", "/collections/combos"], ["Love", "/collections/combos"], ["Wedding", "/collections/combos"], ["House Warming", "/collections/combos"], ["New Born", "/collections/combos"], ["Congratulations", "/collections/combos"], ["Umrah Gift", "/collections/combos"], ["Just Because", "/collections/combos"], ["Get Well Soon", "/collections/combos"], ["Same Day", "/collections/combos"]] }
+      ]
+    },
+    {
+      label: "Fresh Fruits",
+      groups: [
+        { title: "SPECIAL", links: [["Fruity Bouquets", "/collections/all"], ["View all fresh fruits", "/collections/all"]] }
+      ]
+    },
+    {
+      label: "Same Day",
+      groups: []
+    },
+    {
+      label: "Occasions",
+      groups: [
+        { title: "CELEBRATE", links: [["Birthday", "/collections/all"], ["Anniversary", "/collections/all"], ["Congratulations", "/collections/all"], ["Wedding", "/collections/all"], ["New Born", "/collections/all"], ["House Warming", "/collections/all"]] },
+        { title: "EXPRESS", links: [["Thank You", "/collections/flowers"], ["Sorry", "/collections/flowers"], ["Love & Romance", "/collections/flowers"], ["Get Well Soon", "/collections/flowers"], ["Sympathy", "/collections/flowers"]] }
+      ]
+    }
   ];
-  var tickerIndex = 0;
 
-  function flaberryRotateTicker(dir) {
-    tickerIndex = (tickerIndex + dir + tickerMsgs.length) % tickerMsgs.length;
-    var el = document.getElementById('flaberryTickerText');
-    if (el) el.innerHTML = tickerMsgs[tickerIndex];
+  // Global Drawer Open / Close Controls
+  window.flaberryOpenMobMenu = function() {
+    flaberryShowMobLvl1();
+    var d = document.getElementById('mobmenu');
+    var s = document.getElementById('scrim');
+    if (d) d.classList.add('on');
+    if (s) s.classList.add('on');
+  };
+
+  window.flaberryCloseMobMenu = function() {
+    var d = document.getElementById('mobmenu');
+    var s = document.getElementById('scrim');
+    if (d) d.classList.remove('on');
+    if (s) s.classList.remove('on');
+  };
+
+  function flaberryShowMobLvl1() {
+    var title = document.getElementById('mobmenuTitle');
+    var lvl1 = document.getElementById('mobmenuLvl1');
+    var quick = document.getElementById('mobmenuQuick');
+    var lvl2 = document.getElementById('mobmenuLvl2');
+    if (title) title.textContent = 'Categories';
+    if (lvl1) lvl1.hidden = false;
+    if (quick) quick.hidden = false;
+    if (lvl2) {
+      lvl2.hidden = true;
+      lvl2.innerHTML = '';
+    }
   }
 
-  function flaberryShowSuggest() {
-    var b = document.getElementById('flaberrySuggestBox');
-    if (b) b.hidden = false;
+  function flaberryShowMobSub(index) {
+    var data = FLABERRY_MOB_MENUS[index];
+    if (!data) return;
+    var title = document.getElementById('mobmenuTitle');
+    var lvl1 = document.getElementById('mobmenuLvl1');
+    var quick = document.getElementById('mobmenuQuick');
+    var lvl2 = document.getElementById('mobmenuLvl2');
+    if (title) title.textContent = data.label;
+    if (lvl1) lvl1.hidden = true;
+    if (quick) quick.hidden = true;
+    if (!lvl2) return;
+    lvl2.hidden = false;
+
+    var html = '<button class="mm-back" type="button" onclick="flaberryShowMobLvl1()">‹ All categories</button>' +
+      '<div class="mm-lvl"><span style="font-size: 11px; text-transform: uppercase; color: var(--muted, #5f6178); font-weight: 600;">Shop</span>' +
+      '<h4>' + data.label + '</h4></div>' +
+      '<a class="btn ghost block" href="/collections/all" style="width: 100%; text-align: center; margin-bottom: 12px;">Shop all ' + data.label + '</a>';
+
+    data.groups.forEach(function(grp, gIdx) {
+      html += '<details class="mm-grp" ' + (gIdx === 0 ? 'open' : '') + '>' +
+        '<summary>' + grp.title + '</summary>' +
+        '<div class="mm-links">';
+      grp.links.forEach(function(lnk) {
+        html += '<a href="' + lnk[1] + '">' + lnk[0] + '</a>';
+      });
+      html += '</div></details>';
+    });
+
+    lvl2.innerHTML = html;
   }
 
-  function flaberryHideSuggest() {
+  // Mobile Search Slide Popup Drawer Controls
+  window.flaberryOpenSearchDrawer = function() {
+    var d = document.getElementById('searchdrawer');
+    var s = document.getElementById('scrim');
+    if (d) d.classList.add('on');
+    if (s) s.classList.add('on');
     setTimeout(function() {
-      var b = document.getElementById('flaberrySuggestBox');
-      if (b) b.hidden = true;
-    }, 200);
+      var inp = document.getElementById('mobSearchInput');
+      if (inp) inp.focus();
+    }, 150);
+  };
+
+  window.flaberryCloseSearchDrawer = function() {
+    var d = document.getElementById('searchdrawer');
+    var s = document.getElementById('scrim');
+    if (d) d.classList.remove('on');
+    if (s) s.classList.remove('on');
+  };
+
+  var flaberryMobSearchTimer = null;
+  function flaberryOnMobSearchInput(val) {
+    clearTimeout(flaberryMobSearchTimer);
+    var q = (val || '').trim();
+    var trending = document.getElementById('mobSearchTrending');
+    var results = document.getElementById('mobSearchResults');
+    if (!trending || !results) return;
+
+    if (!q) {
+      trending.hidden = false;
+      results.hidden = true;
+      results.innerHTML = '';
+      return;
+    }
+
+    flaberryMobSearchTimer = setTimeout(function() {
+      fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product,collection&resources[limit]=6')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var products = (data && data.resources && data.resources.results && data.resources.results.products) || [];
+          var collections = (data && data.resources && data.resources.results && data.resources.results.collections) || [];
+
+          trending.hidden = true;
+          results.hidden = false;
+
+          if (products.length === 0 && collections.length === 0) {
+            results.innerHTML = '<div style="padding: 16px 0; color: var(--muted, #5f6178); font-size: 14px;">No products found for "' + q + '".</div>';
+            return;
+          }
+
+          var out = '<h5 style="margin: 0 0 10px; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted, #5f6178);">Matching Results</h5>';
+          out += '<div style="display: grid; gap: 12px;">';
+          products.forEach(function(p) {
+            var img = p.image || '{{ "hx_roses.webp" | asset_url }}';
+            var rawPrice = parseFloat(p.price) || 0;
+            var formattedPrice = rawPrice > 0 ? flaberryFormatMoney(rawPrice) : '';
+            out += '<a href="' + p.url + '" class="search-item">' +
+              '<img src="' + img + '" alt="' + p.title + '" width="46" height="46">' +
+              '<div class="search-item-info">' +
+                '<span class="search-item-title">' + p.title + '</span>' +
+                (formattedPrice ? '<span class="search-item-price price-val" data-raw-inr="' + rawPrice + '">' + formattedPrice + '</span>' : '') +
+              '</div>' +
+              '</a>';
+          });
+          collections.forEach(function(c) {
+            out += '<a href="' + c.url + '" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--mist, #f3f3f8); border-radius: 8px; text-decoration: none; color: var(--ink, #22235c); font-size: 13.5px; font-weight: 500;">' +
+              '<span>📂 Collection: ' + c.title + '</span>' +
+              '<span style="color: var(--flora-deep, #ad1f2b); font-weight: 600;">View →</span>' +
+              '</a>';
+          });
+          out += '</div>';
+          results.innerHTML = out;
+        })
+        .catch(function(e) {
+          trending.hidden = false;
+          results.hidden = true;
+        });
+    }, 260);
   }
 
-  function flaberryFilterSuggest(val) {
-    // Live filter
+  // 100% Ajax Cart Drawer Engine
+  window.flaberryRefreshCartDrawer = function(openAfter) {
+    fetch('/cart.js')
+      .then(function(r) { return r.json(); })
+      .then(function(cart) {
+        var count = cart.item_count || 0;
+        var hdrBadge = document.getElementById('hdrCartBadge');
+        var dockBadge = document.getElementById('dockbadge');
+        if (hdrBadge) {
+          hdrBadge.textContent = count;
+          hdrBadge.hidden = count === 0;
+        }
+        if (dockBadge) {
+          dockBadge.textContent = count;
+          dockBadge.hidden = count === 0;
+        }
+
+        var container = document.getElementById('cartdrawerContent');
+        var footer = document.getElementById('cartdrawerFooter');
+        if (!container) return;
+
+        if (count === 0) {
+          container.innerHTML = '<div style="text-align: center; padding: 40px 20px;">' +
+            '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="margin: 0 auto 12px; opacity: 0.4;"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>' +
+            '<h4 style="font-size: 17px; margin-bottom: 8px;">Your cart is empty</h4>' +
+            '<p style="color: var(--muted, #5f6178); font-size: 13.5px; margin-bottom: 20px;">Explore handcrafted bouquets and fresh cakes for your loved ones.</p>' +
+            '<a href="/collections/flowers" class="btn flora" style="padding: 10px 20px; font-size: 14px;">Shop Flowers</a>' +
+            '</div>';
+          if (footer) footer.hidden = true;
+        } else {
+          var html = '<div style="display: grid; gap: 14px;">';
+          cart.items.forEach(function(item) {
+            var itemImg = item.featured_image ? item.featured_image.url : (item.image || '');
+            var variantLabel = (item.variant_title && item.variant_title.indexOf('Default') === -1) ?
+              '<span>' + item.variant_title + '</span>' : '';
+            var rawItemPrice = (item.final_line_price || 0) / 100.0;
+            var formattedPrice = flaberryFormatMoney(rawItemPrice);
+
+            html += '<div class="citem">' +
+              '<img src="' + itemImg + '" alt="' + item.title + '" width="76" height="76">' +
+              '<div>' +
+                '<h4>' + (item.product_title || item.title) + '</h4>' +
+                '<div class="meta">' + variantLabel + '</div>' +
+                '<div class="ctl">' +
+                  '<div class="qty">' +
+                    '<button type="button" onclick="window.flaberryUpdateCartQty(\'' + item.key + '\', ' + (item.quantity - 1) + ')" aria-label="Decrease">−</button>' +
+                    '<span>' + item.quantity + '</span>' +
+                    '<button type="button" onclick="window.flaberryUpdateCartQty(\'' + item.key + '\', ' + (item.quantity + 1) + ')" aria-label="Increase">+</button>' +
+                  '</div>' +
+                  '<b class="tab-nums price-val" data-raw-inr="' + rawItemPrice + '">' + formattedPrice + '</b>' +
+                '</div>' +
+                '<button type="button" class="linkbtn" onclick="window.flaberryUpdateCartQty(\'' + item.key + '\', 0)">Remove</button>' +
+              '</div>' +
+            '</div>';
+          });
+          html += '</div>';
+          container.innerHTML = html;
+
+          if (footer) {
+            footer.hidden = false;
+            var rawTotal = (cart.total_price || 0) / 100.0;
+            var subFormatted = flaberryFormatMoney(rawTotal);
+            var subEl = document.getElementById('cartSubtotalVal');
+            if (subEl) {
+              subEl.textContent = subFormatted;
+              subEl.setAttribute('data-raw-inr', rawTotal);
+            }
+            var chkBtn = document.getElementById('cartCheckoutBtn');
+            if (chkBtn) {
+              chkBtn.textContent = 'Checkout · ' + subFormatted;
+            }
+          }
+        }
+
+        if (openAfter) {
+          var cd = document.getElementById('cartdrawer');
+          var sc = document.getElementById('scrim');
+          if (cd) cd.classList.add('on');
+          if (sc) sc.classList.add('on');
+        }
+      })
+      .catch(function(err) {
+        console.error('Failed to refresh cart', err);
+      });
+  };
+
+  window.flaberryUpdateCartQty = function(key, newQty) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: newQty })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      flaberryRefreshCartDrawer(false);
+    })
+    .catch(function(err) {
+      console.error('Cart quantity update error', err);
+    });
+  };
+
+  window.flaberryToggleCartDrawer = function(e) {
+    if (e) e.preventDefault();
+    flaberryRefreshCartDrawer(true);
+  };
+
+  window.flaberryCloseCartDrawer = function() {
+    var cd = document.getElementById('cartdrawer');
+    var sc = document.getElementById('scrim');
+    if (cd) cd.classList.remove('on');
+    if (sc) sc.classList.remove('on');
+  };
+
+  window.flaberryCloseAllDrawers = function() {
+    var md = document.getElementById('mobmenu');
+    var cd = document.getElementById('cartdrawer');
+    var sd = document.getElementById('searchdrawer');
+    var sc = document.getElementById('scrim');
+    if (md) md.classList.remove('on');
+    if (cd) cd.classList.remove('on');
+    if (sd) sd.classList.remove('on');
+    if (sc) sc.classList.remove('on');
+  };
+
+  // Intercept Global Add to Cart and open custom Ajax Cart Drawer smoothly
+  document.addEventListener('submit', function(e) {
+    var form = e.target.closest('form[action*="/cart/add"]');
+    if (form) {
+      e.preventDefault();
+      var formData = new FormData(form);
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(item) {
+        flaberryRefreshCartDrawer(true);
+      })
+      .catch(function(err) {
+        form.submit();
+      });
+    }
+  });
+
+  // Desktop Search & Nav Interactions
+  var flaberrySearchTimer = null;
+  var flaberryDefaultSuggestHTML = '';
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var defBox = document.getElementById('flaberrySuggestContent');
+    if (defBox) flaberryDefaultSuggestHTML = defBox.innerHTML;
+
+    // Apply currency sitewide
+    flaberryApplyCurrencySitewide();
+
+    // Desktop hover & click handling for Nav items
+    var navItems = document.querySelectorAll('.nav > div.has');
+    navItems.forEach(function(item) {
+      var timer;
+      item.addEventListener('mouseenter', function() {
+        clearTimeout(timer);
+        navItems.forEach(function(other) { if (other !== item) other.classList.remove('open'); });
+        item.classList.add('open');
+      });
+      item.addEventListener('mouseleave', function() {
+        timer = setTimeout(function() { item.classList.remove('open'); }, 150);
+      });
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#flaberrySearchForm')) {
+        var box = document.getElementById('flaberrySuggestBox');
+        if (box) box.hidden = true;
+      }
+    });
+  });
+
+  function flaberryOnSearchFocus() {
+    var box = document.getElementById('flaberrySuggestBox');
+    if (box) box.hidden = false;
   }
 
+  function flaberryOnSearchInput(val) {
+    clearTimeout(flaberrySearchTimer);
+    var query = (val || '').trim();
+    var box = document.getElementById('flaberrySuggestBox');
+    var content = document.getElementById('flaberrySuggestContent');
+    if (!box || !content) return;
+
+    if (!query) {
+      box.hidden = false;
+      content.innerHTML = flaberryDefaultSuggestHTML;
+      flaberryApplyCurrencySitewide();
+      return;
+    }
+
+    box.hidden = false;
+    flaberrySearchTimer = setTimeout(function() {
+      fetch('/search/suggest.json?q=' + encodeURIComponent(query) + '&resources[type]=product,collection&resources[limit]=6')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          var products = (data && data.resources && data.resources.results && data.resources.results.products) || [];
+          var collections = (data && data.resources && data.resources.results && data.resources.results.collections) || [];
+
+          if (products.length === 0 && collections.length === 0) {
+            content.innerHTML = '<div style="padding: 12px 10px; color: var(--muted, #5f6178); font-size: 13.5px;">No products found for "' + query + '". Press Enter to view full search results.</div>';
+            return;
+          }
+
+          var out = '<h5>Matching Results</h5>';
+          products.forEach(function(p) {
+            var img = p.image || '{{ "hx_roses.webp" | asset_url }}';
+            var rawPrice = parseFloat(p.price) || 0;
+            var formattedPrice = rawPrice > 0 ? flaberryFormatMoney(rawPrice) : '';
+            out += '<a href="' + p.url + '" class="search-item">' +
+              '<img src="' + img + '" alt="' + p.title + '" width="46" height="46">' +
+              '<div class="search-item-info">' +
+                '<span class="search-item-title">' + p.title + '</span>' +
+                (formattedPrice ? '<span class="search-item-price price-val" data-raw-inr="' + rawPrice + '">' + formattedPrice + '</span>' : '') +
+              '</div>' +
+              '</a>';
+          });
+          collections.forEach(function(c) {
+            out += '<a href="' + c.url + '" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--mist, #f3f3f8); border-radius: 8px; text-decoration: none; color: var(--ink, #22235c); font-size: 13.5px; font-weight: 500;">' +
+              '<span>📂 Collection: ' + c.title + '</span>' +
+              '<span style="color: var(--flora-deep, #ad1f2b); font-weight: 600;">View →</span>' +
+              '</a>';
+          });
+          content.innerHTML = out;
+        })
+        .catch(function() {
+          content.innerHTML = flaberryDefaultSuggestHTML;
+        });
+    }, 280);
+  }
+
+  function flaberryOnSearchSubmit(e) {
+    // Standard submit to /search
+  }
+
+  // Pincode Modal Handlers
   function flaberryOpenPinModal() {
     var m = document.getElementById('flaberryPinModal');
     if (m) m.hidden = false;
@@ -473,9 +1933,9 @@
 
   function flaberrySubmitModalPin() {
     var val = document.getElementById('modalPincodeInp').value.trim();
-    if (val.length === 6) {
-      document.getElementById('hdrPinCity').textContent = 'Pincode ' + val;
-      document.getElementById('hdrPinStatus').textContent = 'Serviceable Today';
+    if (val.length === 6 && /^\d+$/.test(val)) {
+      document.getElementById('hdrPinCity').textContent = val + ' · Verified';
+      try { localStorage.setItem('flaberry_pincode', val); } catch(e){}
       flaberryClosePinModal();
     } else {
       alert('Please enter a valid 6-digit Indian pincode.');
@@ -483,17 +1943,9 @@
   }
 
   function flaberrySetQuickPin(city, pin) {
-    document.getElementById('hdrPinCity').textContent = city + ' ' + pin;
-    document.getElementById('hdrPinStatus').textContent = 'Serviceable Today';
+    document.getElementById('hdrPinCity').textContent = pin + ' · ' + city;
+    try { localStorage.setItem('flaberry_pincode', pin); } catch(e){}
     flaberryClosePinModal();
-  }
-
-  function flaberryToggleCartDrawer() {
-    alert('Slide-out Cart: You have 0 items. Explore our fresh bouquets and cakes!');
-  }
-
-  function flaberryToggleMobileDrawer() {
-    alert('Mobile Menu: Opening Flaberry navigation drawer...');
   }
 </script>
 

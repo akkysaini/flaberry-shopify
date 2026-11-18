@@ -21,7 +21,7 @@
     type="button"
     class="dock-btn"
     aria-label="Open categories navigation"
-    onclick="document.querySelector('header-drawer summary')?.click();"
+    onclick="window.flaberryOpenMobMenu ? window.flaberryOpenMobMenu() : null;"
   >
     <span class="dock-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -34,12 +34,12 @@
     <span class="dock-label">Categories</span>
   </button>
 
-  <!-- 3. Search (Triggers Search Modal) -->
+  <!-- 3. Search (Triggers Mobile Search Slide Popup) -->
   <button
     type="button"
     class="dock-btn"
     aria-label="Open search"
-    onclick="document.querySelector('#search-modal button, [on\\:click*=\'#search-modal\'], search-button button')?.click();"
+    onclick="window.flaberryOpenSearchDrawer ? window.flaberryOpenSearchDrawer() : null;"
   >
     <span class="dock-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -50,12 +50,12 @@
     <span class="dock-label">Search</span>
   </button>
 
-  <!-- 4. Cart (Triggers Cart Drawer) -->
+  <!-- 4. Cart (Triggers Custom Slide Cart Popup) -->
   <button
     type="button"
     class="dock-btn"
     aria-label="Open shopping cart"
-    onclick="const btn = document.querySelector('[aria-controls=\'cart-drawer\']'); if(btn) btn.click(); else window.location.href = '{{ routes.cart_url }}';"
+    onclick="window.flaberryToggleCartDrawer ? window.flaberryToggleCartDrawer(event) : (window.location.href = '{{ routes.cart_url }}');"
   >
     <span class="dock-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -64,9 +64,7 @@
         <path d="M16 10a4 4 0 0 1-8 0"></path>
       </svg>
     </span>
-    {%- if cart.item_count > 0 -%}
-      <span class="dock-badge">{{ cart.item_count }}</span>
-    {%- endif -%}
+    <span class="dock-badge" id="dockbadge" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
     <span class="dock-label">Cart</span>
   </button>
 

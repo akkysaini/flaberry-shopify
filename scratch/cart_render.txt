@@ -1,0 +1,21 @@
+﻿function renderDrawer(){
+  const t=cartTotals();
+  $("#cartdrawer .body").innerHTML=S.cart.length?S.cart.map(i=>`<div class="citem"><img src="${IMGS[i.pk]}" alt=""><div><h4>${esc(P[i.pk].name)}</h4><div class="meta">${lineMeta(i).map(m=>`<span>${m}</span>`).join("")}</div>
+     <div class="ctl"><div class="qty"><button data-cq="${i.id}" data-d="-1" aria-label="Decrease">âˆ’</button><span>${i.qty}</span><button data-cq="${i.id}" data-d="1" aria-label="Increase">+</button></div><b class="tab-nums">${money(i.price*i.qty)}</b></div><button class="linkbtn" data-rm="${i.id}">Remove</button></div></div>`).join(""):
+    `<div class="empty"><h3>Your cart is empty</h3><p class="muted">Start with the receiver's pincode and pick a gift.</p><a class="btn" href="#c-all">Shop gifts</a></div>`;
+  $("#cartdrawer footer").innerHTML=S.cart.length?`<div class="sumrow"><span>Subtotal</span><b class="tab-nums">${money(t.sub)}</b></div><div class="sumrow"><span>Delivery charges</span><span class="tab-nums">${t.ship?money(t.ship):"Free"}</span></div><a class="btn ghost block" href="#cart">View cart</a><a class="btn flora block" href="#checkout">Checkout Â· ${money(t.total)}</a>`:"";
+}
+function openCart(){renderDrawer();$("#cartdrawer").classList.add("on");$("#scrim").classList.add("on");}
+function cartPage(){
+  if(!S.cart.length)return `<div class="wrap"><nav class="crumbs"><a href="#home">Home</a>/<span>Cart</span></nav><div class="empty" style="margin-top:24px"><h3>Your cart is empty</h3><p class="muted">Gifts you add will appear here with their delivery date, slot and message.</p><a class="btn" href="#c-all">Start shopping</a></div></div>`;
+  const t=cartTotals(),ck=cartCheck();
+  const pin=ck.pins[0];
+  return `<div class="wrap"><nav class="crumbs"><a href="#home">Home</a>/<span>Cart</span></nav>
+  <div class="chead"><h1>Your cart</h1></div>
+  <div class="two" style="grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)"><div style="display:grid;gap:14px">
+   ${ck.bad.length?`<div class="notice no">${ck.bad.length} item(s) can no longer be delivered to ${pin}. Remove them or change the address.</div>`:`<div class="notice ok">${ic.check}<span>All items re-checked: deliverable to <b>${pin}</b> Â· ${PINS[pin]?.city||""}. A florist will be assigned when you place the order.</span></div>`}
+   ${ck.pins.length>1?`<div class="notice warn">Your cart has gifts for ${ck.pins.length} pincodes. Each order goes to one address, so please check out each address separately.</div>`:""}
+   ${S.cart.map(i=>`<div class="ocard" style="grid-template-columns:96px minmax(0,1fr) auto"><img src="${IMGS[i.pk]}" alt="" style="width:96px;height:96px"><div><h4>${esc(P[i.pk].name)}</h4><div class="m" style="display:grid;gap:2px">${lineMeta(i).map(m=>`<span>${m}</span>`).join("")}${ck.bad.includes(i)?`<span class="pill no">Not deliverable to ${i.pin}</span>`:""}</div>
+    <div style="display:flex;gap:12px;margin-top:8px;align-items:center"><div class="qty"><button data-cq="${i.id}" data-d="-1">âˆ’</button><span>${i.qty}</span><button data-cq="${i.id}" data-d="1">+</button></div>${!i.addonOf?`<button class="linkbtn" data-editmsg="${i.id}">Edit message</button>`:""}<button class="linkbtn" data-rm="${i.id}">Remove</button></div></div><b class="tab-nums">${money(i.price*i.qty)}</b></div>`).join("")}
+   <div>${railHead("Add to this delivery","Delivered together with your gift, no extra delivery charge.","cartup")}${rail(addonKeys(S.cart[0].pk).filter(k=>!S.cart.some(i=>i.pk===k)),"cartup")}</div>
+  </div>
