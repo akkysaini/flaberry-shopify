@@ -63,6 +63,32 @@
   {% endif %}
   {{- block.shopify_attributes -}}
 >
+  {% render 'pincode-chip' %}
+
+  <a
+    href="{{ settings.track_order_url | default: '#track' }}"
+    class="header-actions__action header-actions__track-order"
+    aria-label="Track Order"
+    title="Track Order"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+      <path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.7"/><circle cx="17" cy="17.5" r="1.7"/>
+    </svg>
+    <span class="header-actions__action-lbl">Track Order</span>
+  </a>
+
+  <a
+    href="{{ settings.help_url | default: '#page-contact' }}"
+    class="header-actions__action header-actions__help"
+    aria-label="Help & Support"
+    title="Help & Support"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+      <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.5-1 1-1 1.7v.5M12 17h.01"/>
+    </svg>
+    <span class="header-actions__action-lbl">Help</span>
+  </a>
+
   {% if shop.customer_accounts_enabled %}
     {% liquid
       assign account_actions_style = ''

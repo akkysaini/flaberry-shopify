@@ -1,282 +1,327 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "flaberry_hero_slider": {
+      "type": "flaberry-hero-slider",
+      "settings": {
+        "show_trust_pill": true,
+        "trust_badge_image": "shopify:\/\/shop_images\/i_20yrs.png"
+      },
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "slide_1": {
+          "type": "hero_slide",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "text_color": "{{ settings.color_palette.background }}",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "image": "shopify:\/\/shop_images\/hero_flowers.webp",
+            "eyebrow": "Express Delivery Across India",
+            "heading": "Hand-tied bouquets, delivered fresh",
+            "subheading": "Farm-fresh flowers hand-picked daily and delivered on your schedule across 500+ cities.",
+            "button_label": "Shop Flowers",
+            "button_link": "shopify:\/\/collections\/flowers",
+            "secondary_button_label": "Order Cakes",
+            "secondary_button_link": "shopify:\/\/collections\/cakes"
+          }
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "slide_2": {
+          "type": "hero_slide",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0, 0, 0, 0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
+            "image": "shopify:\/\/shop_images\/hero_cake.webp",
+            "eyebrow": "Freshly Baked on Order",
+            "heading": "Artisan cakes for every celebration",
+            "subheading": "Choose eggless, pick your weight and write a custom message on the cake.",
+            "button_label": "Explore Cakes",
+            "button_link": "shopify:\/\/collections\/cakes",
+            "secondary_button_label": "Combo Gifts",
+            "secondary_button_link": "shopify:\/\/collections\/combos"
+          }
+        },
+        "slide_3": {
+          "type": "hero_slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/hero_anniv.webp",
+            "eyebrow": "Milestones & Anniversaries",
+            "heading": "Celebrate like the first time",
+            "subheading": "Grand rose arrangements, luxury chocolates, and midnight surprise delivery.",
+            "button_label": "Anniversary Gifts",
+            "button_link": "shopify:\/\/collections\/anniversary",
+            "secondary_button_label": "View All",
+            "secondary_button_link": "shopify:\/\/collections\/occasions"
+          }
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
-      ],
-      "name": "t:names.hero",
-      "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
-      }
+        "slide_1",
+        "slide_2",
+        "slide_3"
+      ]
     },
-    "product_list_fa6P9H": {
-      "type": "product-list",
+    "flaberry_pincode_band": {
+      "type": "flaberry-pincode-band",
+      "settings": {}
+    },
+    "flaberry_category_rail": {
+      "type": "flaberry-category-rail",
+      "settings": {
+        "title": "Shop by category",
+        "subtitle": "Explore our signature floral collections, bakery delights, and gifting hampers."
+      },
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "t:names.header",
-          "static": true,
+        "cat_roses": {
+          "type": "category",
           "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_list_text_YFtzcL": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h4",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "button-unstyled",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
+            "image": "shopify:\/\/shop_images\/t_roses.webp",
+            "title": "Roses",
+            "link": "shopify:\/\/collections\/roses"
+          }
         },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
+        "cat_cakes": {
+          "type": "category",
           "settings": {
-            "product_card_gap": 4,
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_677WP3": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_title_YXxMTj": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "price_JQzVV4": {
-              "type": "price",
-              "name": "t:names.product_price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
-          ]
+            "image": "shopify:\/\/shop_images\/t_cakeflower2.webp",
+            "title": "Cakes",
+            "link": "shopify:\/\/collections\/cakes"
+          }
+        },
+        "cat_combos": {
+          "type": "category",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/t_cakeflowers.webp",
+            "title": "Combos",
+            "link": "shopify:\/\/collections\/combos"
+          }
+        },
+        "cat_photocakes": {
+          "type": "category",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/t_photocake.webp",
+            "title": "Photo Cakes",
+            "link": "shopify:\/\/collections\/photo-cakes"
+          }
+        },
+        "cat_bouquets": {
+          "type": "category",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/t_bouquets.webp",
+            "title": "Bouquets",
+            "link": "shopify:\/\/collections\/bouquets"
+          }
+        },
+        "cat_orchids": {
+          "type": "category",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/t_orchids.webp",
+            "title": "Orchids",
+            "link": "shopify:\/\/collections\/orchids"
+          }
+        },
+        "cat_heart": {
+          "type": "category",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/t_heartcake.webp",
+            "title": "Heart Shaped",
+            "link": "shopify:\/\/collections\/heart-shape"
+          }
+        },
+        "cat_gourmet": {
+          "type": "category",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/t_thankyou.webp",
+            "title": "Gifts & Hampers",
+            "link": "shopify:\/\/collections\/gifts"
+          }
         }
       },
-      "name": "t:names.featured_collection",
+      "block_order": [
+        "cat_roses",
+        "cat_cakes",
+        "cat_combos",
+        "cat_photocakes",
+        "cat_bouquets",
+        "cat_orchids",
+        "cat_heart",
+        "cat_gourmet"
+      ]
+    },
+    "flaberry_trust_bar": {
+      "type": "flaberry-trust-bar",
+      "settings": {}
+    },
+    "flaberry_best_sellers": {
+      "type": "flaberry-product-rail",
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "title": "Best Sellers in Flowers",
+        "subtitle": "Hand-crafted fresh arrangements that our customers love most.",
+        "collection": "flowers",
+        "products_to_show": 10
       }
+    },
+    "flaberry_split_banner": {
+      "type": "flaberry-split-banner",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/t_cakeflowers.webp",
+        "eyebrow": "Flower Combos",
+        "heading": "Flowers are better with cake",
+        "description": "Bouquets paired with cakes, chocolates and teddies — one delivery, one message card.",
+        "button_label": "Shop Combos",
+        "button_link": "shopify:\/\/collections\/combos"
+      }
+    },
+    "flaberry_tabbed_cakes": {
+      "type": "flaberry-tabbed-cakes",
+      "settings": {
+        "title": "Cakes for every celebration",
+        "subtitle": "Baked fresh on order. Choose eggless, pick a weight and add an icing message."
+      },
+      "blocks": {
+        "tab_chocolate": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Chocolate",
+            "collection": "chocolate-cakes"
+          }
+        },
+        "tab_truffle": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Truffle",
+            "collection": "truffle"
+          }
+        },
+        "tab_photo": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Photo Cakes",
+            "collection": "photo-cakes"
+          }
+        },
+        "tab_eggless": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Eggless",
+            "collection": "eggless"
+          }
+        },
+        "tab_designer": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Designer",
+            "collection": "designer-cakes"
+          }
+        }
+      },
+      "block_order": [
+        "tab_chocolate",
+        "tab_truffle",
+        "tab_photo",
+        "tab_eggless",
+        "tab_designer"
+      ]
+    },
+    "flaberry_occasions_rail": {
+      "type": "flaberry-product-rail",
+      "settings": {
+        "title": "Occasions & Milestone Celebrations",
+        "subtitle": "Curated gifts for Birthdays, Anniversaries, and Special Moments.",
+        "collection": "occasions",
+        "products_to_show": 10
+      }
+    },
+    "flaberry_reviews": {
+      "type": "flaberry-reviews",
+      "settings": {
+        "title": "Loved by 2 million+ senders",
+        "subtitle": "Real reviews from customers who trust Flaberry for their most memorable occasions."
+      },
+      "blocks": {
+        "rev_1": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "The flowers arrived in Bangalore right at midnight. My mother was so touched by the fresh lilies!",
+            "author": "Priya S.",
+            "city": "Bengaluru",
+            "product_name": "Serene Pink Lilies"
+          }
+        },
+        "rev_2": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "Ordered a photo cake for my nephew's birthday in Pune. Freshly baked, moist and delivered exactly on time.",
+            "author": "Rohan M.",
+            "city": "Pune",
+            "product_name": "Personalized Photo Cake"
+          }
+        },
+        "rev_3": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "Best gifting service from USA to Delhi. Payment in USD was smooth and the bouquet was gorgeous.",
+            "author": "Ananya K.",
+            "city": "New Jersey (Sender to Delhi)",
+            "product_name": "Red Rose Gift Luxe"
+          }
+        }
+      },
+      "block_order": [
+        "rev_1",
+        "rev_2",
+        "rev_3"
+      ]
+    },
+    "flaberry_seo_faq": {
+      "type": "flaberry-seo-faq",
+      "settings": {
+        "seo_heading": "Send flowers & cakes to India with Flaberry",
+        "faq_heading": "Frequently Asked Questions"
+      },
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "How does Same-Day Delivery work?",
+            "answer": "Orders placed before 4:00 PM IST qualify for same-day delivery across 500+ serviceable cities. You can select your preferred delivery time slot during checkout."
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "question": "Are the flowers and cakes fresh?",
+            "answer": "Yes, 100%. Flowers reach our distribution hubs within 2 to 3 days of being hand-picked. Cakes are baked fresh by our partner master bakeries only after your order is confirmed."
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I order from outside India?",
+            "answer": "Absolutely. Flaberry serves customers worldwide across the USA, UK, Canada, UAE, Australia, and Europe with international credit card and PayPal support, delivering right to doorsteps across India."
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I add a personalized message card?",
+            "answer": "Yes, every gift order comes with a free personalized greeting message card. Simply enter your message on the product page or cart drawer, and our team prints it neatly onto a physical gift card."
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4"
+      ]
     }
   },
   "order": [
-    "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "flaberry_hero_slider",
+    "flaberry_pincode_band",
+    "flaberry_category_rail",
+    "flaberry_trust_bar",
+    "flaberry_best_sellers",
+    "flaberry_split_banner",
+    "flaberry_tabbed_cakes",
+    "flaberry_occasions_rail",
+    "flaberry_reviews",
+    "flaberry_seo_faq"
   ]
 }

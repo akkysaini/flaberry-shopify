@@ -1,0 +1,339 @@
+{% comment %}
+  Flaberry Reusable Product Card Snippet
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Displays product image, rating stars, price, variants, unapproved reference indicator, and quick add.
+{% endcomment %}
+
+{% if product != blank %}
+  <div class="flaberry-card" data-product-id="{{ product.id }}" data-handle="{{ product.handle }}">
+    <a href="{{ product.url }}" class="flaberry-card-media-link">
+      <div class="flaberry-card-media">
+        {% if product.featured_media != blank %}
+          {{ product.featured_media | image_url: width: 600, height: 600 | image_tag: 
+            width: 300, 
+            height: 300, 
+            loading: 'lazy', 
+            class: 'flaberry-card-img', 
+            widths: '240, 320, 480, 600',
+            sizes: '(max-width: 768px) 50vw, 280px',
+            alt: product.title | escape 
+          }}
+        {% else %}
+          <div class="flaberry-card-no-img">No Image</div>
+        {% endif %}
+
+        {% if product.compare_at_price > product.price %}
+          {% assign save_percent = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+          <span class="flaberry-badge-sale">{{ save_percent }}% OFF</span>
+        {% endif %}
+      </div>
+    </a>
+
+    <div class="flaberry-card-body">
+      <div class="flaberry-card-meta">
+        <span class="flaberry-card-type">{{ product.vendor }} • {{ product.type }}</span>
+        {% assign rating_val = product.metafields.flaberry.rating.value | default: '4.8' %}
+        {% assign reviews_val = product.metafields.flaberry.reviews_count.value | default: 85 %}
+        <div class="flaberry-card-rating">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>{{ rating_val }} ({{ reviews_val }})</span>
+        </div>
+      </div>
+
+      <h3 class="flaberry-card-title">
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      </h3>
+
+      <div class="flaberry-card-pricing">
+        <div class="flaberry-card-prices">
+          {% if product.price_varies %}
+            <span class="flaberry-from">From</span>
+          {% endif %}
+          <span class="flaberry-price-main">{{ product.price | money }}</span>
+          {% if product.compare_at_price > product.price %}
+            <span class="flaberry-price-compare">{{ product.compare_at_price | money }}</span>
+          {% endif %}
+        </div>
+
+        {% assign price_status = product.metafields.flaberry_internal.price_approval_status.value %}
+        {% if price_status == 'UNAPPROVED_INTERNAL_REFERENCE' %}
+          <span class="flaberry-unapproved-chip" title="Price is an internal reference value pending client commercial confirmation">
+            Ref Price
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="flaberry-card-actions">
+        <button 
+          type="button" 
+          class="flaberry-card-quick-add" 
+          onclick="flaberryQuickAddToCart('{{ product.variants.first.id }}', this)" 
+          {% unless product.available %}disabled{% endunless %}
+        >
+          {% if product.available %}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>Add to Cart</span>
+          {% else %}
+            <span>Sold Out</span>
+          {% endif %}
+        </button>
+      </div>
+    </div>
+  </div>
+{% elsif title != blank %}
+  <div class="flaberry-card" data-preview="true">
+    <a href="{{ link | default: '#' }}" class="flaberry-card-media-link">
+      <div class="flaberry-card-media">
+        {% if image != blank %}
+          <img src="{{ image }}" alt="{{ title | escape }}" class="flaberry-card-img" loading="lazy" width="300" height="300">
+        {% else %}
+          <div class="flaberry-card-no-img">No Image</div>
+        {% endif %}
+        {% if compare_at_price > price and compare_at_price != blank %}
+          {% assign save_percent = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price %}
+          <span class="flaberry-badge-sale">{{ save_percent }}% OFF</span>
+        {% endif %}
+      </div>
+    </a>
+
+    <div class="flaberry-card-body">
+      <div class="flaberry-card-meta">
+        <span class="flaberry-card-type">{{ vendor | default: 'Flaberry' }} • {{ category | default: 'Floral' }}</span>
+        <div class="flaberry-card-rating">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>{{ rating | default: '4.8' }} ({{ reviews_count | default: 85 }})</span>
+        </div>
+      </div>
+
+      <h3 class="flaberry-card-title">
+        <a href="{{ link | default: '#' }}">{{ title }}</a>
+      </h3>
+
+      <div class="flaberry-card-pricing">
+        <div class="flaberry-card-prices">
+          <span class="flaberry-price-main">{{ price_formatted | default: '₹1,299.00' }}</span>
+          {% if compare_price_formatted != blank %}
+            <span class="flaberry-price-compare">{{ compare_price_formatted }}</span>
+          {% endif %}
+        </div>
+        <span class="flaberry-unapproved-chip" title="Price is an internal reference value pending client commercial confirmation">
+          Ref Price
+        </span>
+      </div>
+
+      <div class="flaberry-card-actions">
+        <button type="button" class="flaberry-card-quick-add" onclick="flaberryQuickAddToCart('preview', this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Add to Cart</span>
+        </button>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<style>
+  .flaberry-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: var(--fl-radius-md, 16px);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    overflow: hidden;
+    width: 270px;
+    flex-shrink: 0;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s;
+  }
+  @media (max-width: 768px) {
+    .flaberry-card {
+      width: 210px;
+    }
+  }
+  .flaberry-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(21, 19, 18, 0.09);
+    border-color: #d6cecb;
+  }
+  .flaberry-card-media-link {
+    text-decoration: none;
+    display: block;
+  }
+  .flaberry-card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--fl-color-mist, #f5f2f0);
+    overflow: hidden;
+  }
+  .flaberry-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .flaberry-card:hover .flaberry-card-img {
+    transform: scale(1.04);
+  }
+  .flaberry-card-no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fl-color-muted, #6f6763);
+    font-size: 13px;
+  }
+  .flaberry-badge-sale {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .flaberry-card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .flaberry-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .flaberry-card-type {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--fl-color-muted, #6f6763);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .flaberry-card-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0 0 10px;
+  }
+  .flaberry-card-title a {
+    color: var(--fl-color-ink, #151312);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .flaberry-card-title a:hover {
+    color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-card-pricing {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    margin-bottom: 12px;
+  }
+  .flaberry-card-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .flaberry-from {
+    font-size: 12px;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .flaberry-price-main {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-price-compare {
+    font-size: 13px;
+    text-decoration: line-through;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .flaberry-unapproved-chip {
+    font-size: 10px;
+    font-weight: 600;
+    color: #8c5208;
+    background: #fef0db;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #fed7aa;
+  }
+  .flaberry-card-actions {
+    width: 100%;
+  }
+  .flaberry-card-quick-add {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+    background: var(--fl-color-mist, #f5f2f0);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-pill, 999px);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .flaberry-card-quick-add:hover:not(:disabled) {
+    background: var(--fl-color-flora, #e2522c);
+    border-color: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+  }
+  .flaberry-card-quick-add:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  if (typeof window.flaberryQuickAddToCart !== 'function') {
+    window.flaberryQuickAddToCart = function(variantId, btnEl) {
+      if (!variantId) return;
+      const originalText = btnEl.innerHTML;
+      btnEl.disabled = true;
+      btnEl.innerHTML = 'Adding...';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      })
+      .then(res => res.json())
+      .then(data => {
+        btnEl.innerHTML = 'Added! ✓';
+        // Trigger cart drawer open if available
+        const cartDrawer = document.querySelector('cart-drawer') || document.getElementById('cart-drawer');
+        if (cartDrawer && typeof cartDrawer.open === 'function') {
+          cartDrawer.open();
+        } else {
+          // Dispatch native Shopify cart change event
+          document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: data } }));
+        }
+        setTimeout(() => {
+          btnEl.disabled = false;
+          btnEl.innerHTML = originalText;
+        }, 1800);
+      })
+      .catch(err => {
+        console.error('Quick Add Error:', err);
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalText;
+      });
+    };
+  }
+</script>

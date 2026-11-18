@@ -1,0 +1,578 @@
+{
+  "totalCollections": 57,
+  "populatedCount": 27,
+  "emptyCount": 30,
+  "manifestProductsCount": 48,
+  "results": [
+    {
+      "index": 1,
+      "handle": "flowers",
+      "title": "Flowers",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Flowers",
+      "matchCount": 26,
+      "matchingSKUs": "FBF661, FBF667, FBFC01, FBF256, FBF473, FBF561, FBF562, FBF193, FBF173, FBV120, FBF589, FBF546, FBF716, FBF404, FBF553, FBD144, FRT001, FFB002, FBF610, FBF683, FBF205, FBC208, FBF429, FBF516, FRT009, FBF106",
+      "status": "POPULATED"
+    },
+    {
+      "index": 2,
+      "handle": "cakes",
+      "title": "Cakes",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Cakes",
+      "matchCount": 21,
+      "matchingSKUs": "FBC002, FBC246, FBC089, FBC034, FBC047, FBC121, FBC092, FBC007, FBC051, FBC069, FBC084, FBC006, FBC001, FBC057, FBC065, FBC130, FBC295, FBPH331, FBC012, FBDS456, FBC024",
+      "status": "POPULATED"
+    },
+    {
+      "index": 3,
+      "handle": "combos",
+      "title": "Combos",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Combos",
+      "matchCount": 1,
+      "matchingSKUs": "FBSC155",
+      "status": "POPULATED"
+    },
+    {
+      "index": 4,
+      "handle": "gifts",
+      "title": "Gifts",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Gifts",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 5,
+      "handle": "occasions",
+      "title": "Occasions",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Occasion Gifts",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 6,
+      "handle": "roses",
+      "title": "Roses",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS roses",
+      "matchCount": 3,
+      "matchingSKUs": "FBF661, FBF667, FBFC01",
+      "status": "POPULATED"
+    },
+    {
+      "index": 7,
+      "handle": "orchids",
+      "title": "Orchids",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS orchids",
+      "matchCount": 2,
+      "matchingSKUs": "FBF256, FBF473",
+      "status": "POPULATED"
+    },
+    {
+      "index": 8,
+      "handle": "lilies",
+      "title": "Lilies",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS lilies",
+      "matchCount": 2,
+      "matchingSKUs": "FBF561, FBF562",
+      "status": "POPULATED"
+    },
+    {
+      "index": 9,
+      "handle": "carnations",
+      "title": "Carnations",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS carnations",
+      "matchCount": 2,
+      "matchingSKUs": "FBF193, FBF173",
+      "status": "POPULATED"
+    },
+    {
+      "index": 10,
+      "handle": "gerberas",
+      "title": "Gerberas",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS gerberas",
+      "matchCount": 2,
+      "matchingSKUs": "FBV120, FBF589",
+      "status": "POPULATED"
+    },
+    {
+      "index": 11,
+      "handle": "sunflowers",
+      "title": "Sunflowers",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS sunflowers",
+      "matchCount": 2,
+      "matchingSKUs": "FBF546, FBF716",
+      "status": "POPULATED"
+    },
+    {
+      "index": 12,
+      "handle": "bouquets",
+      "title": "Flower Bouquets",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS bouquets",
+      "matchCount": 1,
+      "matchingSKUs": "FBF404",
+      "status": "POPULATED"
+    },
+    {
+      "index": 13,
+      "handle": "vase",
+      "title": "Vase Arrangements",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS vase",
+      "matchCount": 2,
+      "matchingSKUs": "FBF553, FBD144",
+      "status": "POPULATED"
+    },
+    {
+      "index": 14,
+      "handle": "baskets",
+      "title": "Flower Baskets",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS baskets",
+      "matchCount": 3,
+      "matchingSKUs": "FRT001, FFB002, FBF610",
+      "status": "POPULATED"
+    },
+    {
+      "index": 15,
+      "handle": "box",
+      "title": "Flowers in Box",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS box",
+      "matchCount": 2,
+      "matchingSKUs": "FBF683, FBF205",
+      "status": "POPULATED"
+    },
+    {
+      "index": 16,
+      "handle": "heart-shape",
+      "title": "Heart Shaped",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS heart-shape",
+      "matchCount": 4,
+      "matchingSKUs": "FBC208, FBF429, FBC246, FBC069",
+      "status": "POPULATED"
+    },
+    {
+      "index": 17,
+      "handle": "premium-flowers",
+      "title": "Premium & Exotic",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS premium-flowers",
+      "matchCount": 2,
+      "matchingSKUs": "FBF516, FRT009",
+      "status": "POPULATED"
+    },
+    {
+      "index": 18,
+      "handle": "sympathy",
+      "title": "Sympathy & Wreaths",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS sympathy",
+      "matchCount": 1,
+      "matchingSKUs": "FBF106",
+      "status": "POPULATED"
+    },
+    {
+      "index": 19,
+      "handle": "chocolate-cakes",
+      "title": "Chocolate Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS chocolate-cakes",
+      "matchCount": 3,
+      "matchingSKUs": "FBC002, FBC246, FBC089",
+      "status": "POPULATED"
+    },
+    {
+      "index": 20,
+      "handle": "truffle",
+      "title": "Truffle Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS truffle",
+      "matchCount": 4,
+      "matchingSKUs": "FBC034, FBC047, FBC121, FBC092",
+      "status": "POPULATED"
+    },
+    {
+      "index": 21,
+      "handle": "black-forest",
+      "title": "Black Forest",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS black-forest",
+      "matchCount": 2,
+      "matchingSKUs": "FBC007, FBC051",
+      "status": "POPULATED"
+    },
+    {
+      "index": 22,
+      "handle": "red-velvet",
+      "title": "Red Velvet",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS red-velvet",
+      "matchCount": 2,
+      "matchingSKUs": "FBC069, FBC084",
+      "status": "POPULATED"
+    },
+    {
+      "index": 23,
+      "handle": "pineapple",
+      "title": "Pineapple",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS pineapple",
+      "matchCount": 3,
+      "matchingSKUs": "FBC006, FBC001, FBC057",
+      "status": "POPULATED"
+    },
+    {
+      "index": 24,
+      "handle": "butterscotch",
+      "title": "Butterscotch",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS butterscotch",
+      "matchCount": 2,
+      "matchingSKUs": "FBC065, FBC130",
+      "status": "POPULATED"
+    },
+    {
+      "index": 25,
+      "handle": "photo-cakes",
+      "title": "Photo Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS photo-cakes",
+      "matchCount": 2,
+      "matchingSKUs": "FBC295, FBPH331",
+      "status": "POPULATED"
+    },
+    {
+      "index": 26,
+      "handle": "eggless",
+      "title": "Eggless Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS eggless",
+      "matchCount": 3,
+      "matchingSKUs": "FBC121, FBC092, FBC012",
+      "status": "POPULATED"
+    },
+    {
+      "index": 27,
+      "handle": "designer-cakes",
+      "title": "Designer & Tier Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS designer-cakes",
+      "matchCount": 1,
+      "matchingSKUs": "FBDS456",
+      "status": "POPULATED"
+    },
+    {
+      "index": 28,
+      "handle": "kids-cakes",
+      "title": "Kids Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS kids-cakes",
+      "matchCount": 1,
+      "matchingSKUs": "FBC024",
+      "status": "POPULATED"
+    },
+    {
+      "index": 29,
+      "handle": "cake-and-flowers",
+      "title": "Flowers with Cake",
+      "group": "Combos Sub",
+      "rule": "productTag EQUALS cake-and-flowers",
+      "matchCount": 1,
+      "matchingSKUs": "FBSC155",
+      "status": "POPULATED"
+    },
+    {
+      "index": 30,
+      "handle": "flowers-and-chocolates",
+      "title": "Flowers with Chocolates",
+      "group": "Combos Sub",
+      "rule": "productTag EQUALS flowers-and-chocolates",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 31,
+      "handle": "flowers-and-teddies",
+      "title": "Flowers with Teddy",
+      "group": "Combos Sub",
+      "rule": "productTag EQUALS flowers-and-teddies",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 32,
+      "handle": "sweets",
+      "title": "Sweets & Mithai",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS sweets",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 33,
+      "handle": "dry-fruits",
+      "title": "Dry Fruits",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS dry-fruits",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 34,
+      "handle": "hampers",
+      "title": "Gift Hampers",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS hampers",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 35,
+      "handle": "fruits",
+      "title": "Fresh Fruit Baskets",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS fruits",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 36,
+      "handle": "plants",
+      "title": "Plants",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS plants",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 37,
+      "handle": "birthday",
+      "title": "Birthday",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS birthday",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 38,
+      "handle": "anniversary",
+      "title": "Anniversary",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS anniversary",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 39,
+      "handle": "christmas",
+      "title": "Christmas Gifts",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS christmas",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 40,
+      "handle": "new-year",
+      "title": "New Year Gifts",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS new-year",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 41,
+      "handle": "romance",
+      "title": "Love & Romance",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS romance",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 42,
+      "handle": "congratulations",
+      "title": "Congratulations",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS congratulations",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 43,
+      "handle": "thank-you",
+      "title": "Thank You",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS thank-you",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 44,
+      "handle": "get-well-soon",
+      "title": "Get Well Soon",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS get-well-soon",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 45,
+      "handle": "for-her",
+      "title": "Gifts for Her",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-her",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 46,
+      "handle": "for-him",
+      "title": "Gifts for Him",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-him",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 47,
+      "handle": "for-mother",
+      "title": "Gifts for Mother",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-mother",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 48,
+      "handle": "for-father",
+      "title": "Gifts for Father",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-father",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 49,
+      "handle": "for-wife",
+      "title": "Gifts for Wife",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-wife",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 50,
+      "handle": "for-husband",
+      "title": "Gifts for Husband",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-husband",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 51,
+      "handle": "for-friends",
+      "title": "Gifts for Friends",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-friends",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 52,
+      "handle": "for-kids",
+      "title": "Gifts for Kids",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-kids",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 53,
+      "handle": "red-flowers",
+      "title": "Red Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS red-flowers",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 54,
+      "handle": "pink-flowers",
+      "title": "Pink Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS pink-flowers",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 55,
+      "handle": "yellow-flowers",
+      "title": "Yellow Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS yellow-flowers",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 56,
+      "handle": "white-flowers",
+      "title": "White Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS white-flowers",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    },
+    {
+      "index": 57,
+      "handle": "mixed-flowers",
+      "title": "Mixed Colour Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS mixed-flowers",
+      "matchCount": 0,
+      "matchingSKUs": "NONE",
+      "status": "EMPTY (Pending full catalog)"
+    }
+  ]
+}

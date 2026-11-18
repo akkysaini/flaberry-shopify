@@ -1,0 +1,361 @@
+{
+  "manifest_version": "1.0.0",
+  "store_domain": "flaberry-pps4i03n.myshopify.com",
+  "api_version": "2026-10",
+  "api_version_header_observed": "2026-10",
+  "execution_batch_id": "PHASE1C_PILOT_1794958475126",
+  "started_at": "2026-11-17T23:34:35.126Z",
+  "completed_at": "2026-11-17T23:39:05.081Z",
+  "status": "COMPLETED",
+  "guardrails_enforced": {
+    "zero_publications": true,
+    "draft_status_only": true,
+    "isolated_menu": true,
+    "redacted_signed_urls": true,
+    "atomic_manifest_persistence": true,
+    "price_metafields_unapproved_internal_reference": true
+  },
+  "resources": {
+    "files": [
+      {
+        "id": "gid://shopify/MediaImage/46817383645375",
+        "filename": "hero_flowers.webp",
+        "sha256": "520dc0e6780be4380f2cecb261f1e20127daaf5964286e694960806c034d5d08",
+        "fileStatus": "UPLOADED",
+        "createdAt": "2026-11-17T23:34:41Z"
+      },
+      {
+        "id": "gid://shopify/MediaImage/46817383678143",
+        "filename": "t_roses.webp",
+        "sha256": "82c5c4dbb3439bee15c6f6f0669212222c4039253710e53602e1da1e42bf0a49",
+        "fileStatus": "UPLOADED",
+        "createdAt": "2026-11-17T23:34:41Z"
+      },
+      {
+        "id": "gid://shopify/MediaImage/46817383710911",
+        "filename": "i_20yrs.png",
+        "sha256": "5865d22dd9d96aa0e577b2aaa82706331a44a50dd31625078d037bd8656cb755",
+        "fileStatus": "UPLOADED",
+        "createdAt": "2026-11-17T23:34:41Z"
+      }
+    ],
+    "products": [
+      {
+        "id": "gid://shopify/Product/15476147781823",
+        "handle": "red-rose-gift-luxe",
+        "title": "Red Rose Gift Luxe",
+        "status": "DRAFT",
+        "variants": [
+          {
+            "id": "gid://shopify/ProductVariant/67998423056575",
+            "sku": "FBF661",
+            "price": "1990.00"
+          }
+        ],
+        "media": [
+          {
+            "id": "gid://shopify/MediaImage/46817383776447",
+            "filename": "p0.webp",
+            "status": "PROCESSING"
+          }
+        ]
+      },
+      {
+        "id": "gid://shopify/Product/15476154073279",
+        "handle": "chocolate-cake",
+        "title": "Chocolate Truffle Cake",
+        "status": "DRAFT",
+        "variants": [
+          {
+            "id": "gid://shopify/ProductVariant/67998429479103",
+            "title": "1/2 kg",
+            "sku": "FBC002-05",
+            "price": "1299.00",
+            "selectedOptions": [
+              {
+                "name": "Weight",
+                "value": "1/2 kg"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/ProductVariant/67998429511871",
+            "title": "1 kg",
+            "sku": "FBC002-10",
+            "price": "2338.00",
+            "selectedOptions": [
+              {
+                "name": "Weight",
+                "value": "1 kg"
+              }
+            ]
+          }
+        ],
+        "media": [
+          {
+            "id": "gid://shopify/MediaImage/46817394294975",
+            "filename": "p125.webp",
+            "status": "PROCESSING"
+          }
+        ]
+      }
+    ],
+    "collections": [
+      {
+        "id": "gid://shopify/Collection/493159088319",
+        "handle": "flowers",
+        "title": "Flowers",
+        "rule": "productType EQUALS Flowers",
+        "publication_state": "UNPUBLISHED_ONLINE_STORE"
+      },
+      {
+        "id": "gid://shopify/Collection/493159153855",
+        "handle": "roses",
+        "title": "Roses",
+        "rule": "productTag TAGGED_WITH roses",
+        "publication_state": "UNPUBLISHED_ONLINE_STORE"
+      }
+    ],
+    "pages": [
+      {
+        "id": "gid://shopify/Page/144728326335",
+        "handle": "advance-orders",
+        "title": "Advance Order Booking",
+        "isPublished": false
+      }
+    ],
+    "menus": [
+      {
+        "id": "gid://shopify/Menu/259464528063",
+        "handle": "flaberry-nav-pilot-draft",
+        "title": "Flaberry Navigation (Pilot Draft)",
+        "items": [
+          {
+            "id": "gid://shopify/MenuItem/653744668863",
+            "title": "Flowers",
+            "url": "/collections/flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653744701631",
+            "title": "Roses",
+            "url": "/collections/roses"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653744734399",
+            "title": "Advance Orders",
+            "url": "/pages/advance-orders"
+          }
+        ]
+      }
+    ]
+  },
+  "accounting": {
+    "primary_admin_records_created": 9,
+    "attached_product_media_created": 2,
+    "total_shopify_managed_objects": 11
+  },
+  "verification_audit": {
+    "file1": {
+      "id": "gid://shopify/MediaImage/46817383645375",
+      "fileStatus": "READY",
+      "alt": "Flaberry Pilot Reference Asset: hero_flowers.webp",
+      "createdAt": "2026-11-17T23:34:41Z",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0799/9491/2959/files/hero_flowers.webp?v=1794958481",
+        "width": 872,
+        "height": 362
+      }
+    },
+    "file2": {
+      "id": "gid://shopify/MediaImage/46817383678143",
+      "fileStatus": "READY",
+      "alt": "Flaberry Pilot Reference Asset: t_roses.webp",
+      "createdAt": "2026-11-17T23:34:41Z",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0799/9491/2959/files/t_roses.webp?v=1794958481",
+        "width": 528,
+        "height": 316
+      }
+    },
+    "file3": {
+      "id": "gid://shopify/MediaImage/46817383710911",
+      "fileStatus": "READY",
+      "alt": "Flaberry Pilot Reference Asset: i_20yrs.png",
+      "createdAt": "2026-11-17T23:34:41Z",
+      "image": {
+        "url": "https://cdn.shopify.com/s/files/1/0799/9491/2959/files/i_20yrs.png?v=1794958482",
+        "width": 70,
+        "height": 70
+      }
+    },
+    "product1": {
+      "id": "gid://shopify/Product/15476147781823",
+      "handle": "red-rose-gift-luxe",
+      "title": "Red Rose Gift Luxe",
+      "status": "DRAFT",
+      "productType": "Flowers",
+      "vendor": "Flaberry",
+      "tags": [
+        "flowers",
+        "luxe",
+        "pilot",
+        "roses"
+      ],
+      "variants": {
+        "nodes": [
+          {
+            "id": "gid://shopify/ProductVariant/67998423056575",
+            "sku": "FBF661",
+            "price": "1990.00",
+            "title": "Default Title"
+          }
+        ]
+      },
+      "media": {
+        "nodes": [
+          {
+            "id": "gid://shopify/MediaImage/46817383776447",
+            "status": "READY",
+            "alt": "Red Rose Gift Luxe - Pilot Prototype Image",
+            "mediaContentType": "IMAGE"
+          }
+        ]
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "key": "price_approval_status",
+            "value": "UNAPPROVED_INTERNAL_REFERENCE"
+          },
+          {
+            "key": "prototype_reference_inr",
+            "value": "1990.00"
+          }
+        ]
+      }
+    },
+    "product2": {
+      "id": "gid://shopify/Product/15476154073279",
+      "handle": "chocolate-cake",
+      "title": "Chocolate Truffle Cake",
+      "status": "DRAFT",
+      "productType": "Cakes",
+      "vendor": "Flaberry",
+      "tags": [
+        "cakes",
+        "chocolate",
+        "pilot"
+      ],
+      "options": [
+        {
+          "name": "Weight",
+          "values": [
+            "1/2 kg",
+            "1 kg"
+          ]
+        }
+      ],
+      "variants": {
+        "nodes": [
+          {
+            "id": "gid://shopify/ProductVariant/67998429479103",
+            "sku": "FBC002-05",
+            "price": "1299.00",
+            "title": "1/2 kg",
+            "selectedOptions": [
+              {
+                "name": "Weight",
+                "value": "1/2 kg"
+              }
+            ]
+          },
+          {
+            "id": "gid://shopify/ProductVariant/67998429511871",
+            "sku": "FBC002-10",
+            "price": "2338.00",
+            "title": "1 kg",
+            "selectedOptions": [
+              {
+                "name": "Weight",
+                "value": "1 kg"
+              }
+            ]
+          }
+        ]
+      },
+      "media": {
+        "nodes": [
+          {
+            "id": "gid://shopify/MediaImage/46817394294975",
+            "status": "READY",
+            "alt": "Chocolate Truffle Cake - Pilot Prototype Image",
+            "mediaContentType": "IMAGE"
+          }
+        ]
+      },
+      "metafields": {
+        "nodes": [
+          {
+            "key": "price_approval_status",
+            "value": "UNAPPROVED_INTERNAL_REFERENCE"
+          }
+        ]
+      }
+    },
+    "collection1": {
+      "id": "gid://shopify/Collection/493159088319",
+      "handle": "flowers",
+      "title": "Flowers",
+      "descriptionHtml": "<!-- Flaberry Pilot Unpublished Hub Collection -->",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58996687039",
+          "title": "Flowers Source"
+        }
+      ]
+    },
+    "collection2": {
+      "id": "gid://shopify/Collection/493159153855",
+      "handle": "roses",
+      "title": "Roses",
+      "descriptionHtml": "<!-- Flaberry Pilot Unpublished Sub-Collection -->",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58996719807",
+          "title": "Roses Source"
+        }
+      ]
+    },
+    "page": {
+      "id": "gid://shopify/Page/144728326335",
+      "handle": "advance-orders",
+      "title": "Advance Order Booking",
+      "isPublished": false
+    },
+    "menu": {
+      "id": "gid://shopify/Menu/259464528063",
+      "handle": "flaberry-nav-pilot-draft",
+      "title": "Flaberry Navigation (Pilot Draft)",
+      "items": [
+        {
+          "id": "gid://shopify/MenuItem/653744668863",
+          "title": "Flowers",
+          "url": "/collections/flowers",
+          "type": "HTTP"
+        },
+        {
+          "id": "gid://shopify/MenuItem/653744701631",
+          "title": "Roses",
+          "url": "/collections/roses",
+          "type": "HTTP"
+        },
+        {
+          "id": "gid://shopify/MenuItem/653744734399",
+          "title": "Advance Orders",
+          "url": "/pages/advance-orders",
+          "type": "HTTP"
+        }
+      ]
+    }
+  }
+}

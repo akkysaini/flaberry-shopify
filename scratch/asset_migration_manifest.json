@@ -1,0 +1,471 @@
+{
+  "manifest_version": "1.0.0",
+  "store_domain": "flaberry-pps4i03n.myshopify.com",
+  "api_version": "2026-10",
+  "updated_at": "2026-11-18T00:37:48.893Z",
+  "assets": [
+    {
+      "id": "gid://shopify/MediaImage/46817383645375",
+      "filename": "hero_flowers.webp",
+      "sha256": "520dc0e6780be4380f2cecb261f1e20127daaf5964286e694960806c034d5d08",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-17T23:34:41Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817383678143",
+      "filename": "t_roses.webp",
+      "sha256": "82c5c4dbb3439bee15c6f6f0669212222c4039253710e53602e1da1e42bf0a49",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-17T23:34:41Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817383710911",
+      "filename": "i_20yrs.png",
+      "sha256": "5865d22dd9d96aa0e577b2aaa82706331a44a50dd31625078d037bd8656cb755",
+      "category": "brand_and_decorative",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-17T23:34:41Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817579794623",
+      "filename": "hx_roses.webp",
+      "sha256": "6b474b7bf43750f67474e33bbbda84d9d5e0fca0cfd77e98ae9886c29a8727d7",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:12:52Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817580187839",
+      "filename": "hx_orchids.webp",
+      "sha256": "ca356b7f394c628b3de197a1c4c85a1de537a1a55740fa5c3c950a8fe73c9d38",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:12:55Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817580449983",
+      "filename": "hx_velvet.webp",
+      "sha256": "40f0542383d993195085b36ac2eb948dad0e7120ef92cefa69d1bd188735749b",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:12:57Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817580646591",
+      "filename": "hx_ferrero.webp",
+      "sha256": "33c8fe6c6d920b016d0d3706820f2691dd022f48ecb41e4a0cf523a2c1d47385",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:00Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817581596863",
+      "filename": "hx_xmascake.webp",
+      "sha256": "b2baedf80f4cc184b67a350c8ebf7a365f58172c620102cd1f574de2680f0626",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:03Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817581891775",
+      "filename": "hx_dryfruit.webp",
+      "sha256": "4ab94234c2b09a86386862f9de47fcaecb8b14fc9e812e099f150fffbd833a2a",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:06Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817582055615",
+      "filename": "hx_heartbox.webp",
+      "sha256": "3c0e03c3474976fd43c598ba20dd84c30a2ea22c3b569de11fb171e55b4f79f9",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:08Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817582284991",
+      "filename": "hx_truffle.webp",
+      "sha256": "7ba31174beb4f375a9f08d6b87f94983cfae423980f1c0fba3f010bd1250d92f",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:10Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817582547135",
+      "filename": "hx_lily.webp",
+      "sha256": "ff1553f5e9d750bd6915268e3f1f7db5dd0e804cf19aeb39b5a5d2a4c846ad69",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:13Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817582809279",
+      "filename": "hx_mixbox.webp",
+      "sha256": "4ce85133f5a73f81757fce86116db4d4f3bd266b10b0938e4c06a2185b103f7f",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:15Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817583005887",
+      "filename": "hero_bday.webp",
+      "sha256": "00bb9ffc205865f0e05deb9b566c897cae4a04f0042fc00349198cc89dae2cf7",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:18Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817583268031",
+      "filename": "hero_cake.webp",
+      "sha256": "e67350b5e6bdd8c86902b65c0f5364454f41fbd6c2520ce1e0a383a8a3f196ed",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:20Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817583464639",
+      "filename": "hero_anniv.webp",
+      "sha256": "355b0fe2ffc974c258d751ed9a14b41d36d0e3d910106dfb980c617f498e849c",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:23Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817583595711",
+      "filename": "hero_fruits.webp",
+      "sha256": "656f7cc24788f0af2667c6ce5adbef8163522cfb0f6c13be2c95659ebd5454f0",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:25Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817583759551",
+      "filename": "hero_him.webp",
+      "sha256": "f8755bfe7f532a4780c989510f156c9f2b509e1151f0835a67deb5b267603e07",
+      "category": "hero_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:27Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817583923391",
+      "filename": "t_photocake.webp",
+      "sha256": "e3b4845d77bd163c8edf3aa8fa55ee0d5c5c3fa6e86e1099f38bc34fef8dc610",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:30Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584021695",
+      "filename": "t_anniv.webp",
+      "sha256": "d7d1b3cbc368b218fdc2499a0fd640490470709d171aafb608ea77d915ca4bf6",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:33Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584119999",
+      "filename": "t_congrats.webp",
+      "sha256": "5af14b500872dcaf8e967d60ad6e9a11c63b328bff2bb5c7d970442abf27a25a",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:35Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584218303",
+      "filename": "t_bouquets.webp",
+      "sha256": "353d9a591d50be10aeaa1fcf11489cc9b391f7b961e37f8c5cc2daa3b48b8e6f",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:38Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584316607",
+      "filename": "t_cakeflower2.webp",
+      "sha256": "8b0665b22db57dd78819c6e2cb0deb0ce39980189f5b0e3b1c1cb5edacb51c95",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:40Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584414911",
+      "filename": "t_eggless.webp",
+      "sha256": "b3629677b2a51dff933c4593297ab0c40a945dc33db6f9340d2369c85bdd4234",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:42Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584578751",
+      "filename": "t_premiumcake.webp",
+      "sha256": "f11ba4f87f53b1dcdaabc52f5e2907f5dab67696a3a05a0a67193d86b7349df3",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:44Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584611519",
+      "filename": "t_birthday.webp",
+      "sha256": "739730a1495ce2419de20b142c5a05ff9b95bc740156071bed4e01e0790b7f30",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:46Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584709823",
+      "filename": "t_vase.webp",
+      "sha256": "d71726f43dc830153c4f95e4d658ca49ec41799187ed284da96dbf1eec7a1efa",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:50Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817584742591",
+      "filename": "t_heartcake.webp",
+      "sha256": "efca6480e068210a351261184a3201306516e3f764a703e59469905acdc862ea",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:52Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817585201343",
+      "filename": "t_thankyou.webp",
+      "sha256": "49e25bc02e45f413a8da3d3db1ee834d389ebf58aee0767288c64acc5c479179",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:55Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817585234111",
+      "filename": "t_cakeflowers.webp",
+      "sha256": "ae3ad1cb85a36110906e5a747ed949d0fdfb48d9ad83f0da07c45e549af86383",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:13:58Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817585365183",
+      "filename": "t_heart.webp",
+      "sha256": "421fce23dd6097753711413c75c915068e1ea3e781af1764510c9d9ccd6bc1a8",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:14:00Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817585463487",
+      "filename": "t_kidscake.webp",
+      "sha256": "be1480492fb4577c1a443b4bbb045d55533df8bc14496c2b43aee029e1f4e312",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:14:02Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817585627327",
+      "filename": "t_orchids.webp",
+      "sha256": "1f903aaa3060f229dd4b78c57d0f1d6c032e3e6ef3170f5f9dbb82a9392ed53c",
+      "category": "promotional_banners",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:14:05Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817585692863",
+      "filename": "logo.png",
+      "sha256": "8d777d07668c2fc4244e1167fc7e92a9b1b9256cdcdc539b771e82e29352c73d",
+      "category": "brand_and_decorative",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:14:07Z",
+      "cdnUrl": null
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817712242879",
+      "filename": "bb_1.webp",
+      "sha256": "422c7691123df07d981ba0c360a7368dfd796bfa374a477c39c61622d6fff13f",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:16Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817712505023",
+      "filename": "bb_2.webp",
+      "sha256": "10d9fe229b021224e0b7fe5b253b11abd6f83e8656daa68280386891d40456f9",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:18Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817712865471",
+      "filename": "bb_3.webp",
+      "sha256": "a2caa5f7b000c384900733cb111f0d57b4e8eaddbfe4f842730b1bea990345b3",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:19Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817712996543",
+      "filename": "bb_4.webp",
+      "sha256": "23a01512410bbfd28a6659772b038d0c28286e173495bd43c5aebf73c1600050",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:21Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817713127615",
+      "filename": "bv1_1.webp",
+      "sha256": "4151faa33663425ce405cafd591d0c3657d5075f73f6a6dac637f2c1777dfcb3",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:23Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817713389759",
+      "filename": "bv1_2.webp",
+      "sha256": "f1ba14c41c93ed143b6cf18bd417f2950ec7e94212739201f05dd3d65192f2cf",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:25Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817713717439",
+      "filename": "bv1_3.webp",
+      "sha256": "75dbb0464240f3119e0637f5c6973c32f9b5eb18d733250a23211eb4796a9d60",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:26Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817713881279",
+      "filename": "bv1_4.webp",
+      "sha256": "acb475255a69869778f4efa88d5b70811cb89960fee2675888c10b870e22b83f",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:28Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817714176191",
+      "filename": "bv1_5.webp",
+      "sha256": "23d7efd18c4cb10a37ec7a37a0847c393ffc0aca1600063e8ece9f56d83c6bf0",
+      "category": "banner_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:30Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817714274495",
+      "filename": "f_fresh.webp",
+      "sha256": "6509fdb0351f1df5b178784e45b4e99132023bdc12c1a4f92c5afac13800257f",
+      "category": "feature_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:32Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817714405567",
+      "filename": "f_handcrafted.webp",
+      "sha256": "4aa0d80be9862274db3aa33959b7baee56425646ab61e86e72fe695e21ba3c9a",
+      "category": "feature_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:33Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817714471103",
+      "filename": "f_midnight.webp",
+      "sha256": "289e85dde2bf8199b7bb3b9c20ab12d86d1948cd9148806360ac54c494ea9e03",
+      "category": "feature_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:35Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817714667711",
+      "filename": "f_sameday.webp",
+      "sha256": "1fbb9cf342a9246b514b829b6d202995033a4b9a45d0ed34bcdfbdfc3af66615",
+      "category": "feature_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:37Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817714766015",
+      "filename": "f_support.webp",
+      "sha256": "5b27e66f9de9d5a67d18512524353e186a6b5fe3f7d71c6e6a9ec5cd12da34c6",
+      "category": "feature_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:38Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817714897087",
+      "filename": "i_pricing.png",
+      "sha256": "eeefccc321e99ddc4f7167a74e8fa930b7dd763668e609d5045e51455a484e3e",
+      "category": "trust_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:40Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817715028159",
+      "filename": "i_secure.png",
+      "sha256": "9cea835623eb1625f56cb81b6ceb40904d728c3cf9036ad96abffa8eceac5c41",
+      "category": "trust_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:41Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817715290303",
+      "filename": "i_support.png",
+      "sha256": "0da42bd1b3f9643d4f81a6b289504f8782b39930c8d99641ed676b4c18d8c771",
+      "category": "trust_icons",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:43Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817715421375",
+      "filename": "payments.png",
+      "sha256": "9b68b0925ec6253bad0d64c9e750603991e855954fdf7c4af8c7a77b5104ff8e",
+      "category": "ui_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:45Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817715585215",
+      "filename": "sq_bhaidooj.webp",
+      "sha256": "482ef87335982fc73024ec6d4e0d53165f36deae94deb2a95a0c5cd682be6edb",
+      "category": "ui_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:46Z"
+    },
+    {
+      "id": "gid://shopify/MediaImage/46817715781823",
+      "filename": "sq_mens.webp",
+      "sha256": "969fc0920a3cc537dfe195cc2d62774dc5c8d6d7b77e0e28d3f7afa59c85d3fe",
+      "category": "ui_assets",
+      "fileStatus": "UPLOADED",
+      "createdAt": "2026-11-18T00:37:48Z"
+    }
+  ]
+}

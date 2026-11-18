@@ -1,0 +1,50 @@
+/**
+ * Flaberry Floating WhatsApp Support Widget
+ * Source of Truth: reference/Flaberry_Design1_Classic.html
+ */
+
+.wa-widget {
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--fl-radius-pill, 999px);
+  background-color: var(--fl-color-wa, #25d366);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.wa-widget:hover,
+.wa-widget:focus-visible {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.55);
+  outline: none;
+}
+
+.wa-widget svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+/* On mobile with sticky dock */
+@media screen and (max-width: 960px) {
+  .wa-widget {
+    right: 16px;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    width: 46px;
+    height: 46px;
+  }
+
+  .wa-widget svg {
+    width: 26px;
+    height: 26px;
+  }
+}

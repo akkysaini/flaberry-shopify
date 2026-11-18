@@ -1,0 +1,792 @@
+{
+  "manifest_version": "1.0.0",
+  "store_domain": "flaberry-pps4i03n.myshopify.com",
+  "api_version": "2026-10",
+  "updated_at": "2026-11-18T00:16:03.319Z",
+  "collections": [
+    {
+      "id": "gid://shopify/Collection/493159088319",
+      "handle": "flowers",
+      "title": "Flowers",
+      "rule": "productType EQUALS Flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE"
+    },
+    {
+      "id": "gid://shopify/Collection/493159153855",
+      "handle": "roses",
+      "title": "Roses",
+      "rule": "productTag TAGGED_WITH roses",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE"
+    },
+    {
+      "id": "gid://shopify/Collection/493160923327",
+      "handle": "cakes",
+      "title": "Cakes",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Cakes",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998325439",
+          "title": "Cakes Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493160956095",
+      "handle": "combos",
+      "title": "Combos",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Combos",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998358207",
+          "title": "Combos Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493160988863",
+      "handle": "gifts",
+      "title": "Gifts",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Gifts",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998390975",
+          "title": "Gifts Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161021631",
+      "handle": "occasions",
+      "title": "Occasions",
+      "group": "Parent Hub",
+      "rule": "productType EQUALS Occasion Gifts",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998423743",
+          "title": "Occasions Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161054399",
+      "handle": "orchids",
+      "title": "Orchids",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS orchids",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998456511",
+          "title": "Orchids Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161087167",
+      "handle": "lilies",
+      "title": "Lilies",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS lilies",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998489279",
+          "title": "Lilies Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161119935",
+      "handle": "carnations",
+      "title": "Carnations",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS carnations",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998522047",
+          "title": "Carnations Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161152703",
+      "handle": "gerberas",
+      "title": "Gerberas",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS gerberas",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998554815",
+          "title": "Gerberas Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161185471",
+      "handle": "sunflowers",
+      "title": "Sunflowers",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS sunflowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998587583",
+          "title": "Sunflowers Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161218239",
+      "handle": "bouquets",
+      "title": "Flower Bouquets",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS bouquets",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998620351",
+          "title": "Flower Bouquets Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161251007",
+      "handle": "vase",
+      "title": "Vase Arrangements",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS vase",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998653119",
+          "title": "Vase Arrangements Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161283775",
+      "handle": "baskets",
+      "title": "Flower Baskets",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS baskets",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998685887",
+          "title": "Flower Baskets Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161316543",
+      "handle": "box",
+      "title": "Flowers in Box",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS box",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998718655",
+          "title": "Flowers in Box Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161349311",
+      "handle": "heart-shape",
+      "title": "Heart Shaped",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS heart-shape",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998751423",
+          "title": "Heart Shaped Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161382079",
+      "handle": "premium-flowers",
+      "title": "Premium & Exotic",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS premium-flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998784191",
+          "title": "Premium & Exotic Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161414847",
+      "handle": "sympathy",
+      "title": "Sympathy & Wreaths",
+      "group": "Flowers Sub",
+      "rule": "productTag EQUALS sympathy",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998816959",
+          "title": "Sympathy & Wreaths Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161447615",
+      "handle": "chocolate-cakes",
+      "title": "Chocolate Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS chocolate-cakes",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998849727",
+          "title": "Chocolate Cakes Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161480383",
+      "handle": "truffle",
+      "title": "Truffle Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS truffle",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998882495",
+          "title": "Truffle Cakes Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161513151",
+      "handle": "black-forest",
+      "title": "Black Forest",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS black-forest",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998915263",
+          "title": "Black Forest Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161545919",
+      "handle": "red-velvet",
+      "title": "Red Velvet",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS red-velvet",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998948031",
+          "title": "Red Velvet Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161578687",
+      "handle": "pineapple",
+      "title": "Pineapple",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS pineapple",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58998980799",
+          "title": "Pineapple Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161611455",
+      "handle": "butterscotch",
+      "title": "Butterscotch",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS butterscotch",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999013567",
+          "title": "Butterscotch Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161644223",
+      "handle": "photo-cakes",
+      "title": "Photo Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS photo-cakes",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999046335",
+          "title": "Photo Cakes Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161676991",
+      "handle": "eggless",
+      "title": "Eggless Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS eggless",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999079103",
+          "title": "Eggless Cakes Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161709759",
+      "handle": "designer-cakes",
+      "title": "Designer & Tier Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS designer-cakes",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999111871",
+          "title": "Designer & Tier Cakes Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161742527",
+      "handle": "kids-cakes",
+      "title": "Kids Cakes",
+      "group": "Cakes Sub",
+      "rule": "productTag EQUALS kids-cakes",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999144639",
+          "title": "Kids Cakes Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161775295",
+      "handle": "cake-and-flowers",
+      "title": "Flowers with Cake",
+      "group": "Combos Sub",
+      "rule": "productTag EQUALS cake-and-flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999177407",
+          "title": "Flowers with Cake Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161808063",
+      "handle": "flowers-and-chocolates",
+      "title": "Flowers with Chocolates",
+      "group": "Combos Sub",
+      "rule": "productTag EQUALS flowers-and-chocolates",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999210175",
+          "title": "Flowers with Chocolates Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161840831",
+      "handle": "flowers-and-teddies",
+      "title": "Flowers with Teddy",
+      "group": "Combos Sub",
+      "rule": "productTag EQUALS flowers-and-teddies",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999242943",
+          "title": "Flowers with Teddy Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161873599",
+      "handle": "sweets",
+      "title": "Sweets & Mithai",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS sweets",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999275711",
+          "title": "Sweets & Mithai Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161906367",
+      "handle": "dry-fruits",
+      "title": "Dry Fruits",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS dry-fruits",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999308479",
+          "title": "Dry Fruits Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161939135",
+      "handle": "hampers",
+      "title": "Gift Hampers",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS hampers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999341247",
+          "title": "Gift Hampers Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493161971903",
+      "handle": "fruits",
+      "title": "Fresh Fruit Baskets",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS fruits",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999374015",
+          "title": "Fresh Fruit Baskets Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162004671",
+      "handle": "plants",
+      "title": "Plants",
+      "group": "Gifts Sub",
+      "rule": "productTag EQUALS plants",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999406783",
+          "title": "Plants Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162037439",
+      "handle": "birthday",
+      "title": "Birthday",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS birthday",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999439551",
+          "title": "Birthday Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162070207",
+      "handle": "anniversary",
+      "title": "Anniversary",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS anniversary",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999472319",
+          "title": "Anniversary Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162102975",
+      "handle": "christmas",
+      "title": "Christmas Gifts",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS christmas",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999505087",
+          "title": "Christmas Gifts Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162135743",
+      "handle": "new-year",
+      "title": "New Year Gifts",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS new-year",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999537855",
+          "title": "New Year Gifts Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162168511",
+      "handle": "romance",
+      "title": "Love & Romance",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS romance",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999570623",
+          "title": "Love & Romance Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162201279",
+      "handle": "congratulations",
+      "title": "Congratulations",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS congratulations",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999603391",
+          "title": "Congratulations Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162234047",
+      "handle": "thank-you",
+      "title": "Thank You",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS thank-you",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999636159",
+          "title": "Thank You Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162266815",
+      "handle": "get-well-soon",
+      "title": "Get Well Soon",
+      "group": "Occasions Hub",
+      "rule": "productTag EQUALS get-well-soon",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999668927",
+          "title": "Get Well Soon Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162299583",
+      "handle": "for-her",
+      "title": "Gifts for Her",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-her",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999701695",
+          "title": "Gifts for Her Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162332351",
+      "handle": "for-him",
+      "title": "Gifts for Him",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-him",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999734463",
+          "title": "Gifts for Him Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162365119",
+      "handle": "for-mother",
+      "title": "Gifts for Mother",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-mother",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999767231",
+          "title": "Gifts for Mother Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162397887",
+      "handle": "for-father",
+      "title": "Gifts for Father",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-father",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999799999",
+          "title": "Gifts for Father Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162430655",
+      "handle": "for-wife",
+      "title": "Gifts for Wife",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-wife",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999832767",
+          "title": "Gifts for Wife Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162463423",
+      "handle": "for-husband",
+      "title": "Gifts for Husband",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-husband",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999865535",
+          "title": "Gifts for Husband Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162496191",
+      "handle": "for-friends",
+      "title": "Gifts for Friends",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-friends",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999898303",
+          "title": "Gifts for Friends Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162528959",
+      "handle": "for-kids",
+      "title": "Gifts for Kids",
+      "group": "Relationship",
+      "rule": "productTag EQUALS for-kids",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999931071",
+          "title": "Gifts for Kids Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162561727",
+      "handle": "red-flowers",
+      "title": "Red Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS red-flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999963839",
+          "title": "Red Flowers Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162594495",
+      "handle": "pink-flowers",
+      "title": "Pink Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS pink-flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/58999996607",
+          "title": "Pink Flowers Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162627263",
+      "handle": "yellow-flowers",
+      "title": "Yellow Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS yellow-flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/59000029375",
+          "title": "Yellow Flowers Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162660031",
+      "handle": "white-flowers",
+      "title": "White Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS white-flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/59000062143",
+          "title": "White Flowers Source"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Collection/493162692799",
+      "handle": "mixed-flowers",
+      "title": "Mixed Colour Flowers",
+      "group": "Colour",
+      "rule": "productTag EQUALS mixed-flowers",
+      "publication_state": "UNPUBLISHED_ONLINE_STORE",
+      "sources": [
+        {
+          "id": "gid://shopify/CollectionConditionsSource/59000094911",
+          "title": "Mixed Colour Flowers Source"
+        }
+      ]
+    }
+  ]
+}

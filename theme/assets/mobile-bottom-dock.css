@@ -1,0 +1,98 @@
+/**
+ * Flaberry Mobile Sticky Bottom Action Dock
+ * Source of Truth: reference/Flaberry_Design1_Classic.html
+ */
+
+.dock {
+  display: none;
+}
+
+@media screen and (max-width: 960px) {
+  body {
+    padding-bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .dock {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    background-color: var(--fl-color-paper, #ffffff);
+    border-top: 1px solid var(--fl-color-line, #e7e1dd);
+    padding: 4px max(6px, env(safe-area-inset-right, 0px)) calc(4px + env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px));
+    box-shadow: 0 -6px 20px rgba(21, 19, 18, 0.08);
+    box-sizing: border-box;
+  }
+
+  .dock-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-family: var(--fl-font-body, inherit);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fl-color-muted, #6f6763);
+    background: none;
+    border: 0;
+    padding: 4px 0;
+    min-height: 52px;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .dock-btn:hover,
+  .dock-btn:focus-visible {
+    color: var(--fl-color-flora, #e2522c);
+    outline: none;
+  }
+
+  .dock-btn.is-active {
+    color: var(--fl-color-flora, #e2522c);
+  }
+
+  .dock-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+  }
+
+  .dock-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+  }
+
+  .dock-label {
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .dock-badge {
+    position: absolute;
+    top: 3px;
+    left: calc(50% + 5px);
+    background-color: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+    font-size: 10px;
+    min-width: 17px;
+    height: 17px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    font-weight: 600;
+    box-sizing: border-box;
+  }
+}

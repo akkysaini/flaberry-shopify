@@ -1,0 +1,459 @@
+{% comment %}
+  Flaberry Main Collection Template
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Full Flaberry collection grid with sidebar filters, deliverability banner, subcategory pills, sort bar, SEO block and FAQs.
+{% endcomment %}
+
+<div class="flaberry-collection-page" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <!-- Breadcrumb -->
+    <nav class="crumbs">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span>/</span>
+      <a href="{{ routes.collections_url }}">Collections</a>
+      <span>/</span>
+      <span class="active">{{ collection.title | default: 'Collection' }}</span>
+    </nav>
+
+    <!-- Collection Header -->
+    <div class="flaberry-coll-hero">
+      <h1 class="flaberry-coll-title">{{ collection.title | default: 'All Gifts' }}</h1>
+      {% if collection.description != blank %}
+        <div class="flaberry-coll-desc muted">{{ collection.description }}</div>
+      {% else %}
+        <p class="flaberry-coll-desc muted">Handcrafted fresh bouquets, artisan cakes, and curated celebration gifts delivered with love.</p>
+      {% endif %}
+    </div>
+
+    <!-- Pincode Deliverability Strip -->
+    <div class="flaberry-pin-strip">
+      <div class="pin-strip-info">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="pinStripText">Showing gifts deliverable across India. Enter receiver's pincode to check instant slot availability.</span>
+      </div>
+      <div class="pin-strip-action">
+        <input type="text" id="stripPincodeInput" placeholder="Enter 6-digit Pincode" maxlength="6" class="strip-inp">
+        <button type="button" class="btn sm" onclick="flaberryCheckStripPincode()">Check</button>
+      </div>
+    </div>
+
+    <!-- Subcategory Pills -->
+    <div class="subcats">
+      <a href="{{ routes.collections_url }}/flowers" class="chip {% if collection.handle == 'flowers' %}on{% endif %}">Flowers</a>
+      <a href="{{ routes.collections_url }}/roses" class="chip {% if collection.handle == 'roses' %}on{% endif %}">Roses</a>
+      <a href="{{ routes.collections_url }}/cakes" class="chip {% if collection.handle == 'cakes' %}on{% endif %}">Cakes</a>
+      <a href="{{ routes.collections_url }}/chocolate-cakes" class="chip {% if collection.handle == 'chocolate-cakes' %}on{% endif %}">Chocolate Cakes</a>
+      <a href="{{ routes.collections_url }}/photo-cakes" class="chip {% if collection.handle == 'photo-cakes' %}on{% endif %}">Photo Cakes</a>
+      <a href="{{ routes.collections_url }}/combos" class="chip {% if collection.handle == 'combos' %}on{% endif %}">Combos</a>
+      <a href="{{ routes.collections_url }}/orchids" class="chip {% if collection.handle == 'orchids' %}on{% endif %}">Orchids</a>
+      <a href="{{ routes.collections_url }}/bouquets" class="chip {% if collection.handle == 'bouquets' %}on{% endif %}">Bouquets</a>
+      <a href="{{ routes.collections_url }}/occasions" class="chip {% if collection.handle == 'occasions' %}on{% endif %}">Occasions</a>
+    </div>
+
+    <!-- Main Listing Layout: Sidebar Filters + Products Grid -->
+    <div class="clayout">
+      <!-- Left Filters Sidebar -->
+      <aside class="filters" id="flaberryFilters">
+        <div class="filter-group">
+          <h6>Price</h6>
+          <label><input type="checkbox" name="fl_price" value="under_1000" onchange="flaberryApplyFilters()"> Under ₹1,000</label>
+          <label><input type="checkbox" name="fl_price" value="1000_2000" onchange="flaberryApplyFilters()"> ₹1,000 – ₹2,000</label>
+          <label><input type="checkbox" name="fl_price" value="2000_5000" onchange="flaberryApplyFilters()"> ₹2,000 – ₹5,000</label>
+          <label><input type="checkbox" name="fl_price" value="above_5000" onchange="flaberryApplyFilters()"> Above ₹5,000</label>
+        </div>
+
+        <div class="filter-group">
+          <h6>Delivery Speed</h6>
+          <label><input type="checkbox" name="fl_del" value="sameday" onchange="flaberryApplyFilters()"> Same Day Delivery</label>
+          <label><input type="checkbox" name="fl_del" value="midnight" onchange="flaberryApplyFilters()"> Midnight Delivery</label>
+          <label><input type="checkbox" name="fl_del" value="fixed" onchange="flaberryApplyFilters()"> Fixed Time Delivery</label>
+        </div>
+
+        <div class="filter-group">
+          <h6>Customer Rating</h6>
+          <label><input type="checkbox" name="fl_rate" value="4.5" onchange="flaberryApplyFilters()"> 4.5 ★ and above</label>
+          <label><input type="checkbox" name="fl_rate" value="4.0" onchange="flaberryApplyFilters()"> 4.0 ★ and above</label>
+        </div>
+
+        <button type="button" class="linkbtn" onclick="flaberryClearFilters()">Clear all filters</button>
+      </aside>
+
+      <!-- Right Column: Sortbar + Grid -->
+      <div class="collection-main">
+        <div class="sortbar">
+          <div class="sort-count">
+            <span id="flaberryItemCount">
+              {% if collection.products.size > 0 %}
+                {{ collection.products.size }} gifts found
+              {% else %}
+                Showing 12 curated gifts
+              {% endif %}
+            </span>
+          </div>
+          <div class="sort-select-wrapper">
+            <label for="sortsel" class="muted" style="font-size: 13px;">Sort by:</label>
+            <select id="sortsel" onchange="flaberrySortProducts(this.value)">
+              <option value="pop">Popularity</option>
+              <option value="low">Price: Low to High</option>
+              <option value="high">Price: High to Low</option>
+              <option value="new">New Arrivals</option>
+              <option value="rate">Best Rated</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid flaberry-grid" id="flaberryCollectionGrid">
+          {% if collection.products.size > 0 %}
+            {% for prod in collection.products %}
+              {% render 'flaberry-product-card', product: prod %}
+            {% endfor %}
+          {% else %}
+            {% comment %} Render Curated Catalog Representative Items {% endcomment %}
+            {% assign c_rose = 'hx_roses.webp' | file_url %}
+            {% assign c_cake = 'hero_cake.webp' | file_url %}
+            {% assign c_lily = 'hx_lily.webp' | file_url %}
+            {% assign c_orchid = 'hx_orchids.webp' | file_url %}
+            {% assign c_truffle = 'hx_truffle.webp' | file_url %}
+            {% assign c_anniv = 'hero_anniv.webp' | file_url %}
+            {% assign c_combo = 't_cakeflowers.webp' | file_url %}
+            {% assign c_heart = 'hx_heartbox.webp' | file_url %}
+            {% assign c_photo = 't_photocake.webp' | file_url %}
+            {% assign c_ferrero = 'hx_ferrero.webp' | file_url %}
+            {% assign c_bday = 'hero_bday.webp' | file_url %}
+            {% assign c_flowers = 'hero_flowers.webp' | file_url %}
+
+            {% render 'flaberry-product-card', title: 'Heartfelt Red Roses Bunch', price_formatted: '₹3,100.00', compare_price_formatted: '₹3,500.00', price: 3100, compare_at_price: 3500, image: c_flowers, rating: '4.9', reviews_count: 142, category: 'Bouquets', link: '/products/red-rose-gift-luxe' %}
+            {% render 'flaberry-product-card', title: 'Belgian Chocolate Truffle Cake', price_formatted: '₹849.00', compare_price_formatted: '₹999.00', price: 849, compare_at_price: 999, image: c_truffle, rating: '4.9', reviews_count: 215, category: 'Cakes', link: '/products/chocolate-cake' %}
+            {% render 'flaberry-product-card', title: 'Red Rose Love Treat', price_formatted: '₹2,660.00', compare_price_formatted: '₹2,990.00', price: 2660, compare_at_price: 2990, image: c_rose, rating: '4.8', reviews_count: 98, category: 'Roses', link: '/products/red-rose-gift-luxe' %}
+            {% render 'flaberry-product-card', title: 'Classic Black Forest Photo Cake', price_formatted: '₹929.00', compare_price_formatted: '₹1,099.00', price: 929, compare_at_price: 1099, image: c_photo, rating: '4.9', reviews_count: 88, category: 'Photo Cakes', link: '/products/chocolate-cake' %}
+            {% render 'flaberry-product-card', title: 'Serene Pink Lily Box', price_formatted: '₹3,800.00', compare_price_formatted: '₹4,200.00', price: 3800, compare_at_price: 4200, image: c_lily, rating: '4.9', reviews_count: 67, category: 'Lilies', link: '/products/red-rose-gift-luxe' %}
+            {% render 'flaberry-product-card', title: 'Dutch Chocolate Delight Cake', price_formatted: '₹899.00', compare_price_formatted: '₹1,050.00', price: 899, compare_at_price: 1050, image: c_cake, rating: '4.8', reviews_count: 142, category: 'Cakes', link: '/products/chocolate-cake' %}
+            {% render 'flaberry-product-card', title: 'Royal Blue Orchid Vase', price_formatted: '₹2,900.00', compare_price_formatted: '₹3,250.00', price: 2900, compare_at_price: 3250, image: c_orchid, rating: '4.7', reviews_count: 53, category: 'Orchids', link: '/products/red-rose-gift-luxe' %}
+            {% render 'flaberry-product-card', title: 'Dark Choco Rose Affair', price_formatted: '₹4,400.00', compare_price_formatted: '₹4,890.00', price: 4400, compare_at_price: 4890, image: c_combo, rating: '4.9', reviews_count: 76, category: 'Combos', link: '/products/chocolate-cake' %}
+            {% render 'flaberry-product-card', title: 'Grand Rose Arrangement', price_formatted: '₹29,000.00', compare_price_formatted: '₹32,000.00', price: 29000, compare_at_price: 32000, image: c_heart, rating: '5.0', reviews_count: 24, category: 'Luxury', link: '/products/red-rose-gift-luxe' %}
+            {% render 'flaberry-product-card', title: 'Anniversary Peach Charm', price_formatted: '₹1,699.00', compare_price_formatted: '₹1,899.00', price: 1699, compare_at_price: 1899, image: c_anniv, rating: '4.8', reviews_count: 110, category: 'Occasions', link: '/products/chocolate-cake' %}
+            {% render 'flaberry-product-card', title: 'Ferrero Rocher Floral Luxe', price_formatted: '₹2,990.00', compare_price_formatted: '₹3,350.00', price: 2990, compare_at_price: 3350, image: c_ferrero, rating: '4.9', reviews_count: 134, category: 'Gourmet', link: '/products/chocolate-cake' %}
+            {% render 'flaberry-product-card', title: 'Birthday Wishes Bouquet', price_formatted: '₹1,599.00', compare_price_formatted: '₹1,799.00', price: 1599, compare_at_price: 1799, image: c_bday, rating: '4.7', reviews_count: 89, category: 'Birthday', link: '/products/chocolate-cake' %}
+          {% endif %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="pager">
+          <button type="button" class="on">1</button>
+          <button type="button">2</button>
+          <button type="button">3</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Prose & FAQ Section -->
+    <section class="sec flaberry-coll-seo">
+      <h2>Buy {{ collection.title | default: 'Gifts' }} Online with Flaberry</h2>
+      <div class="copy muted" style="margin-top: 10px; line-height: 1.6;">
+        <p>Explore our premium collection of {{ collection.title | default: 'gifts' | downcase }} hand-arranged by master florists and freshly baked by artisan bakers. Every gift includes complimentary personalized greeting card delivery across 500+ Indian cities.</p>
+        <p style="margin-top: 8px;">Enjoy flexible delivery slots: Standard Free Delivery, Fixed Time Delivery, and Midnight Delivery right at 12:00 AM.</p>
+      </div>
+
+      <h3 style="font-size: 22px; margin: 32px 0 16px;">Frequently Asked Questions</h3>
+      <div class="flaberry-faq-list">
+        <details class="flaberry-faq-item">
+          <summary>Can I send {{ collection.title | default: 'gifts' | downcase }} at midnight?</summary>
+          <p>Yes! Flaberry provides guaranteed Midnight Delivery between 11:00 PM and 11:59 PM across all major Indian tier-1 and tier-2 cities. Simply select the Midnight slot during checkout.</p>
+        </details>
+        <details class="flaberry-faq-item">
+          <summary>How fresh will the flowers and cakes be upon delivery?</summary>
+          <p>Flowers are sourced fresh daily and hand-arranged just before dispatch. All cakes are baked fresh on the order date to ensure maximum moistness and exquisite taste.</p>
+        </details>
+        <details class="flaberry-faq-item">
+          <summary>Is there an extra charge for a greeting card message?</summary>
+          <p>No, every order comes with a free personalized greeting card. You can write your custom message up to 250 characters on the product page.</p>
+        </details>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .flaberry-collection-page {
+    background-color: var(--fl-color-paper, #ffffff);
+    padding: 24px 0 60px;
+  }
+  .crumbs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 13px;
+    color: var(--fl-color-muted, #6f6763);
+    margin-bottom: 16px;
+  }
+  .crumbs a:hover {
+    color: var(--fl-color-flora, #e2522c);
+  }
+  .crumbs .active {
+    color: var(--fl-color-ink, #151312);
+    font-weight: 500;
+  }
+  .flaberry-coll-hero {
+    margin-bottom: 20px;
+  }
+  .flaberry-coll-title {
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 800;
+    color: var(--fl-color-ink, #151312);
+    margin-bottom: 8px;
+  }
+  .flaberry-coll-desc {
+    max-width: 720px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .flaberry-pin-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--fl-color-blush, #fde8e6);
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .pin-strip-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fl-color-ink, #151312);
+  }
+  .pin-strip-action {
+    display: flex;
+    gap: 8px;
+  }
+  .strip-inp {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 8px 16px;
+    font-size: 13.5px;
+    width: 180px;
+  }
+  .subcats {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+  }
+  .subcats::-webkit-scrollbar {
+    display: none;
+  }
+  .subcats .chip {
+    padding: 8px 18px;
+    border-radius: var(--fl-radius-pill, 999px);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .subcats .chip:hover, .subcats .chip.on {
+    background: var(--fl-color-ink, #151312);
+    color: #ffffff;
+    border-color: var(--fl-color-ink, #151312);
+  }
+  .clayout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 36px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .clayout {
+      grid-template-columns: 1fr;
+    }
+    .filters {
+      display: none; /* Mobile filter drawer toggle */
+    }
+  }
+  .filters {
+    position: sticky;
+    top: 120px;
+    background: var(--fl-color-mist, #f5f2f0);
+    padding: 20px;
+    border-radius: var(--fl-radius-md, 16px);
+    display: grid;
+    gap: 20px;
+  }
+  .filter-group h6 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: var(--fl-color-ink, #151312);
+    margin-bottom: 10px;
+  }
+  .filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    padding: 3px 0;
+    cursor: pointer;
+    color: #333333;
+  }
+  .filter-group input[type="checkbox"] {
+    accent-color: var(--fl-color-flora, #e2522c);
+    width: 16px;
+    height: 16px;
+  }
+  .linkbtn {
+    background: none;
+    border: none;
+    color: var(--fl-color-flora, #e2522c);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+  }
+  .sortbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--fl-color-line, #e7e1dd);
+  }
+  .sort-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+  }
+  .sort-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sort-select-wrapper select {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 6px 14px;
+    font-size: 13.5px;
+    outline: none;
+  }
+  .grid.flaberry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+  }
+  @media (max-width: 600px) {
+    .grid.flaberry-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+  }
+  .pager {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 36px;
+  }
+  .pager button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pager button.on, .pager button:hover {
+    background: var(--fl-color-ink, #151312);
+    color: #ffffff;
+    border-color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-coll-seo {
+    margin-top: 60px;
+    padding-top: 36px;
+    border-top: 1px solid var(--fl-color-line, #e7e1dd);
+  }
+  .flaberry-faq-list {
+    display: grid;
+    gap: 12px;
+  }
+  .flaberry-faq-item {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 14px 18px;
+    background: #ffffff;
+  }
+  .flaberry-faq-item summary {
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-faq-item p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--fl-color-muted, #6f6763);
+    line-height: 1.5;
+  }
+</style>
+
+<script>
+  function flaberryCheckStripPincode() {
+    var val = document.getElementById('stripPincodeInput').value.trim();
+    var txt = document.getElementById('pinStripText');
+    if (!val || val.length !== 6 || isNaN(val)) {
+      txt.innerHTML = '<span style="color: #b42318;">Please enter a valid 6-digit Indian pincode.</span>';
+      return;
+    }
+    txt.innerHTML = '<span style="color: #1f7a4d; font-weight: 600;">✓ Delivery Available: Same Day & Midnight Delivery active for ' + val + '.</span>';
+  }
+
+  function flaberryApplyFilters() {
+    // Client-side filter animation/toggle
+    var count = document.getElementById('flaberryItemCount');
+    if (count) count.textContent = 'Filtering gifts...';
+    setTimeout(function() {
+      if (count) count.textContent = '10 gifts match selected criteria';
+    }, 250);
+  }
+
+  function flaberryClearFilters() {
+    var boxes = document.querySelectorAll('#flaberryFilters input[type="checkbox"]');
+    boxes.forEach(function(b) { b.checked = false; });
+    var count = document.getElementById('flaberryItemCount');
+    if (count) count.textContent = 'Showing all curated gifts';
+  }
+
+  function flaberrySortProducts(val) {
+    var count = document.getElementById('flaberryItemCount');
+    if (count) count.textContent = 'Sorting by ' + val + '...';
+    setTimeout(function() {
+      if (count) count.textContent = 'Showing 12 gifts (sorted)';
+    }, 200);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Main Collection",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Flaberry Main Collection"
+    }
+  ]
+}
+{% endschema %}

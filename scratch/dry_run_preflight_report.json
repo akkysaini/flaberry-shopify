@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-11-17T23:00:24.838Z",
+  "allPassed": true,
+  "totalChecks": 18,
+  "checks": [
+    {
+      "name": "API Version",
+      "expected": "2026-10",
+      "actual": "2026-10",
+      "pass": true
+    },
+    {
+      "name": "Draft Products Count",
+      "expected": 2,
+      "actual": 2,
+      "pass": true
+    },
+    {
+      "name": "Unpublished Collections Count",
+      "expected": 2,
+      "actual": 2,
+      "pass": true
+    },
+    {
+      "name": "Unpublished Pages Count",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "name": "Isolated Navigation Menus Count",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "name": "Files CDN Uploads Count",
+      "expected": 3,
+      "actual": 3,
+      "pass": true
+    },
+    {
+      "name": "Product Media Uploads Count",
+      "expected": 2,
+      "actual": 2,
+      "pass": true
+    },
+    {
+      "name": "Total Pilot Assets",
+      "expected": 5,
+      "actual": 5,
+      "pass": true
+    },
+    {
+      "name": "Isolated Menu Handle Check",
+      "expected": "flaberry-nav-pilot-draft",
+      "actual": "flaberry-nav-pilot-draft",
+      "pass": true
+    },
+    {
+      "name": "Existing Main-Menu Protected",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "name": "Products Status is DRAFT",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "name": "Collections Unpublished",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "name": "Pages Unpublished",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "name": "Asset on disk: hero_flowers.webp",
+      "expected": "Exists (>0 bytes)",
+      "actual": "25658 bytes",
+      "pass": true
+    },
+    {
+      "name": "Asset on disk: t_roses.webp",
+      "expected": "Exists (>0 bytes)",
+      "actual": "12792 bytes",
+      "pass": true
+    },
+    {
+      "name": "Asset on disk: i_20yrs.png",
+      "expected": "Exists (>0 bytes)",
+      "actual": "6909 bytes",
+      "pass": true
+    },
+    {
+      "name": "Asset on disk: p0.webp",
+      "expected": "Exists (>0 bytes)",
+      "actual": "9524 bytes",
+      "pass": true
+    },
+    {
+      "name": "Asset on disk: p125.webp",
+      "expected": "Exists (>0 bytes)",
+      "actual": "16466 bytes",
+      "pass": true
+    }
+  ],
+  "failures": []
+}

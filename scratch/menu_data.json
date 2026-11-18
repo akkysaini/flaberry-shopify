@@ -1,0 +1,611 @@
+[
+  {
+    "label": "Christmas & New Year",
+    "hot": true,
+    "cols": [
+      [
+        "Christmas",
+        [
+          [
+            "Christmas Gifts",
+            "c-christmas"
+          ],
+          [
+            "Christmas Cakes",
+            "c-christmas"
+          ],
+          [
+            "Plum & Fruit Cakes",
+            "c-christmas"
+          ],
+          [
+            "Gift Hampers",
+            "c-hampers"
+          ]
+        ]
+      ],
+      [
+        "New Year",
+        [
+          [
+            "New Year Gifts",
+            "c-new-year"
+          ],
+          [
+            "New Year Cakes",
+            "c-new-year"
+          ],
+          [
+            "Midnight Delivery",
+            "c-midnight"
+          ],
+          [
+            "Premium Flowers",
+            "c-premium-flowers"
+          ]
+        ]
+      ],
+      [
+        "Plan ahead",
+        [
+          [
+            "Book an advance delivery",
+            "page-advance"
+          ],
+          [
+            "Same Day Delivery",
+            "c-same-day"
+          ],
+          [
+            "Serviceable pincodes",
+            "page-pincodes"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_premiumcake",
+      "Christmas cakes, baked fresh",
+      "c-christmas"
+    ]
+  },
+  {
+    "label": "Birthday",
+    "cols": [
+      [
+        "Signature gifts",
+        [
+          [
+            "Birthday Flowers",
+            "c-birthday"
+          ],
+          [
+            "Birthday Cakes",
+            "c-chocolate-cakes"
+          ],
+          [
+            "Photo Cakes",
+            "c-photo-cakes"
+          ],
+          [
+            "Flowers with Cake",
+            "c-cake-and-flowers"
+          ],
+          [
+            "Plants",
+            "c-plants"
+          ]
+        ]
+      ],
+      [
+        "By relationship",
+        [
+          [
+            "For Her",
+            "c-for-her"
+          ],
+          [
+            "For Him",
+            "c-for-him"
+          ],
+          [
+            "For Mother",
+            "c-for-mother"
+          ],
+          [
+            "For Father",
+            "c-for-father"
+          ],
+          [
+            "For Friends",
+            "c-for-friends"
+          ],
+          [
+            "For Kids",
+            "c-for-kids"
+          ]
+        ]
+      ],
+      [
+        "Delivery",
+        [
+          [
+            "Midnight Delivery",
+            "c-midnight"
+          ],
+          [
+            "Same Day Delivery",
+            "c-same-day"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_birthday",
+      "Birthday gifting stop",
+      "c-birthday"
+    ]
+  },
+  {
+    "label": "Anniversary",
+    "cols": [
+      [
+        "Anniversary",
+        [
+          [
+            "Anniversary Flowers",
+            "c-anniversary"
+          ],
+          [
+            "Red Roses",
+            "c-red-flowers"
+          ],
+          [
+            "Heart Shaped",
+            "c-heart-shape"
+          ],
+          [
+            "Anniversary Cakes",
+            "c-red-velvet"
+          ],
+          [
+            "Love & Romance",
+            "c-romance"
+          ]
+        ]
+      ],
+      [
+        "By relationship",
+        [
+          [
+            "For Wife",
+            "c-for-wife"
+          ],
+          [
+            "For Husband",
+            "c-for-husband"
+          ],
+          [
+            "For Parents",
+            "c-for-mother"
+          ]
+        ]
+      ],
+      [
+        "Combos",
+        [
+          [
+            "Flowers with Cake",
+            "c-cake-and-flowers"
+          ],
+          [
+            "Flowers with Chocolates",
+            "c-flowers-and-chocolates"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_anniv",
+      "Celebrate like the first time",
+      "c-anniversary"
+    ]
+  },
+  {
+    "label": "Flowers",
+    "cols": [
+      [
+        "By flower",
+        [
+          [
+            "All Flowers",
+            "c-flowers"
+          ],
+          [
+            "Roses",
+            "c-roses"
+          ],
+          [
+            "Orchids",
+            "c-orchids"
+          ],
+          [
+            "Lilies",
+            "c-lilies"
+          ],
+          [
+            "Carnations",
+            "c-carnations"
+          ],
+          [
+            "Gerberas",
+            "c-gerberas"
+          ],
+          [
+            "Sunflowers",
+            "c-sunflowers"
+          ],
+          [
+            "Premium & Exotic",
+            "c-premium-flowers"
+          ]
+        ]
+      ],
+      [
+        "By arrangement",
+        [
+          [
+            "Bouquets",
+            "c-bouquets"
+          ],
+          [
+            "Vase Arrangements",
+            "c-vase"
+          ],
+          [
+            "Baskets",
+            "c-baskets"
+          ],
+          [
+            "Flowers in Box",
+            "c-box"
+          ],
+          [
+            "Heart Shaped",
+            "c-heart-shape"
+          ],
+          [
+            "Sympathy & Wreaths",
+            "c-sympathy"
+          ]
+        ]
+      ],
+      [
+        "By colour",
+        [
+          [
+            "Red",
+            "c-red-flowers"
+          ],
+          [
+            "Pink",
+            "c-pink-flowers"
+          ],
+          [
+            "Yellow",
+            "c-yellow-flowers"
+          ],
+          [
+            "White",
+            "c-white-flowers"
+          ],
+          [
+            "Mixed Colours",
+            "c-mixed-flowers"
+          ]
+        ]
+      ],
+      [
+        "By city",
+        [
+          [
+            "Delhi",
+            "city-delhi"
+          ],
+          [
+            "Mumbai",
+            "city-mumbai"
+          ],
+          [
+            "Bengaluru",
+            "city-bengaluru"
+          ],
+          [
+            "Kolkata",
+            "city-kolkata"
+          ],
+          [
+            "Chennai",
+            "city-chennai"
+          ],
+          [
+            "All cities",
+            "page-cities"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_roses",
+      "Fresh roses, hand-tied",
+      "c-roses"
+    ]
+  },
+  {
+    "label": "Cakes",
+    "cols": [
+      [
+        "By flavour",
+        [
+          [
+            "All Cakes",
+            "c-cakes"
+          ],
+          [
+            "Chocolate",
+            "c-chocolate-cakes"
+          ],
+          [
+            "Truffle",
+            "c-truffle"
+          ],
+          [
+            "Black Forest",
+            "c-black-forest"
+          ],
+          [
+            "Red Velvet",
+            "c-red-velvet"
+          ],
+          [
+            "Pineapple",
+            "c-pineapple"
+          ],
+          [
+            "Butterscotch",
+            "c-butterscotch"
+          ]
+        ]
+      ],
+      [
+        "By type",
+        [
+          [
+            "Eggless",
+            "c-eggless"
+          ],
+          [
+            "Photo Cakes",
+            "c-photo-cakes"
+          ],
+          [
+            "Designer & Tier",
+            "c-designer-cakes"
+          ],
+          [
+            "Kids Cakes",
+            "c-kids-cakes"
+          ]
+        ]
+      ],
+      [
+        "Delivery",
+        [
+          [
+            "Midnight Cakes",
+            "c-midnight"
+          ],
+          [
+            "Same Day Cakes",
+            "c-same-day"
+          ]
+        ]
+      ],
+      [
+        "By city",
+        [
+          [
+            "Cakes in Delhi",
+            "city-delhi"
+          ],
+          [
+            "Cakes in Mumbai",
+            "city-mumbai"
+          ],
+          [
+            "Cakes in Bengaluru",
+            "city-bengaluru"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_photocake",
+      "Photo cakes, personalised",
+      "c-photo-cakes"
+    ]
+  },
+  {
+    "label": "Combos",
+    "cols": [
+      [
+        "Combos",
+        [
+          [
+            "All Combos",
+            "c-combos"
+          ],
+          [
+            "Flowers with Cake",
+            "c-cake-and-flowers"
+          ],
+          [
+            "Flowers with Chocolates",
+            "c-flowers-and-chocolates"
+          ],
+          [
+            "Flowers with Teddy",
+            "c-flowers-and-teddies"
+          ]
+        ]
+      ],
+      [
+        "For",
+        [
+          [
+            "For Her",
+            "c-for-her"
+          ],
+          [
+            "For Him",
+            "c-for-him"
+          ],
+          [
+            "For Kids",
+            "c-for-kids"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_cakeflower2",
+      "Cakes and flowers together",
+      "c-cake-and-flowers"
+    ]
+  },
+  {
+    "label": "Gifts",
+    "cols": [
+      [
+        "Gifts",
+        [
+          [
+            "All Gifts",
+            "c-gifts"
+          ],
+          [
+            "Gift Hampers",
+            "c-hampers"
+          ],
+          [
+            "Sweets & Mithai",
+            "c-sweets"
+          ],
+          [
+            "Dry Fruits",
+            "c-dry-fruits"
+          ],
+          [
+            "Fresh Fruit Baskets",
+            "c-fruits"
+          ],
+          [
+            "Plants",
+            "c-plants"
+          ]
+        ]
+      ],
+      [
+        "By recipient",
+        [
+          [
+            "For Mother",
+            "c-for-mother"
+          ],
+          [
+            "For Father",
+            "c-for-father"
+          ],
+          [
+            "For Friends",
+            "c-for-friends"
+          ]
+        ]
+      ],
+      [
+        "Corporate",
+        [
+          [
+            "Corporate Gifting",
+            "page-corporate"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_congrats",
+      "Gifts for every milestone",
+      "c-congratulations"
+    ]
+  },
+  {
+    "label": "Occasions",
+    "cols": [
+      [
+        "Occasions",
+        [
+          [
+            "Birthday",
+            "c-birthday"
+          ],
+          [
+            "Anniversary",
+            "c-anniversary"
+          ],
+          [
+            "Love & Romance",
+            "c-romance"
+          ],
+          [
+            "Congratulations",
+            "c-congratulations"
+          ],
+          [
+            "Thank You",
+            "c-thank-you"
+          ],
+          [
+            "Get Well Soon",
+            "c-get-well-soon"
+          ],
+          [
+            "Sympathy",
+            "c-sympathy"
+          ]
+        ]
+      ],
+      [
+        "Upcoming",
+        [
+          [
+            "Christmas · 25 Dec",
+            "c-christmas"
+          ],
+          [
+            "New Year · 1 Jan",
+            "c-new-year"
+          ],
+          [
+            "Valentine's Week · 7–14 Feb",
+            "c-romance"
+          ]
+        ]
+      ]
+    ],
+    "promo": [
+      "t_thankyou",
+      "Say thank you with flowers",
+      "c-thank-you"
+    ]
+  }
+]

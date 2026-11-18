@@ -1,0 +1,53 @@
+{{ 'pincode-modal.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'flaberry-pincode.js' | asset_url }}" defer></script>
+
+<div
+  id="pinmodal"
+  class="pinmodal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="pinmodal-title"
+  hidden
+>
+  <div class="pinmodal-scrim" id="pinmodal-scrim"></div>
+  <div class="pinmodal-dialog">
+    <div class="pinmodal-header">
+      <div>
+        <h2 id="pinmodal-title" class="pinmodal-title">Select Delivery Location</h2>
+        <p class="pinmodal-subtitle">Enter your postal code to personalize your delivery experience.</p>
+      </div>
+      <button
+        type="button"
+        class="pinmodal-close-btn"
+        data-pinclose
+        aria-label="Close delivery location dialog"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <form id="pinmodal-form" class="pinmodal-form">
+      <div class="pinmodal-input-row">
+        <input
+          type="text"
+          id="pinmodal-input"
+          class="pinmodal-input"
+          placeholder="Enter postal code"
+          autocomplete="postal-code"
+          required
+        >
+        <button type="submit" class="pinmodal-submit-btn">Apply</button>
+      </div>
+    </form>
+
+    <div id="pinmodal-status"></div>
+
+    <div class="pinmodal-footer">
+      <span style="color: var(--fl-color-muted, #6f6763);">Global delivery support</span>
+      <button type="button" id="pinmodal-reset" class="pinmodal-reset-btn">Clear Location</button>
+    </div>
+  </div>
+</div>

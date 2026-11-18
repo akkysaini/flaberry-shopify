@@ -9,6 +9,9 @@
  */
 {
   "current": {
+    "logo": "shopify:\/\/shop_images\/logo.png",
+    "whatsapp_phone": "+917668523752",
+    "whatsapp_greeting": "Hi Flaberry, I need assistance with flower & cake delivery in India.",
     "logo_height": 36,
     "logo_height_mobile": 28,
     "type_body_font": "inter_n4",

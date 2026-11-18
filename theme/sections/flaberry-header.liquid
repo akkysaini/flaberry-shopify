@@ -1,0 +1,510 @@
+{% comment %}
+  Flaberry Classic Header & Utility Bar
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Complete reproduction of Flaberry's top utility ticker bar, delivery pincode chip, search with suggestions,
+  action icons, and primary category navigation with mega menus.
+{% endcomment %}
+
+<!-- Top Utility Bar -->
+<div class="flaberry-ubar" aria-label="Utility Announcement">
+  <div class="wrap flaberry-ubar-inner">
+    <div class="ubar-links">
+      <a href="/pages/corporate-gifting">Corporate Gifting</a>
+      <a href="/pages/delivery-cities">Delivery Cities</a>
+      <a href="/pages/serviceable-pincodes">Serviceable Pincodes</a>
+      <a href="/pages/advance-orders">Advance Orders</a>
+    </div>
+
+    <div class="ubar-ticker">
+      <button type="button" class="ticker-arrow" onclick="flaberryRotateTicker(-1)" aria-label="Previous announcement">‹</button>
+      <span id="flaberryTickerText">Use code <b>FLABERRY2026</b> for 15% off your first flower bouquet!</span>
+      <button type="button" class="ticker-arrow" onclick="flaberryRotateTicker(1)" aria-label="Next announcement">›</button>
+    </div>
+
+    <div class="ubar-right">
+      <div class="cur-wrapper">
+        <select class="cur-sel" id="flaberryCurrencySel" title="Currency Selector">
+          <option value="INR">INR (₹)</option>
+          <option value="USD">USD ($)</option>
+          <option value="AED">AED (AED)</option>
+          <option value="EUR">EUR (€)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky Main Header -->
+<header class="hdr fbhdr" id="flaberryMainHdr">
+  <div class="wrap hdr-main">
+    <button class="burger" id="burgerBtn" onclick="flaberryToggleMobileDrawer()" aria-label="Open navigation menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h12M3 18h18"/></svg>
+    </button>
+
+    <!-- Logo -->
+    <a class="logo" href="{{ routes.root_url }}" aria-label="Flaberry Home">
+      <img src="{{ 'logo.png' | file_url }}" alt="Flaberry" width="160" height="38" style="height: 38px; width: auto; display: block;">
+    </a>
+
+    <!-- Delivery Pincode Chip -->
+    <button type="button" class="pinchip" id="hdrPinChip" onclick="flaberryOpenPinModal()" aria-label="Select delivery city">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <div>
+        <b id="hdrPinCity">Delhi 110001</b>
+        <small id="hdrPinStatus" style="color: var(--fl-color-leaf, #1f7a4d);">Available Today</small>
+      </div>
+    </button>
+
+    <!-- Search with instant suggestions -->
+    <div class="search" id="flaberrySearchWrapper">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="flaberrySearchInput" autocomplete="off" placeholder="Search flowers, cakes, gifts, occasions…" onfocus="flaberryShowSuggest()" onblur="flaberryHideSuggest()" oninput="flaberryFilterSuggest(this.value)">
+      <div class="suggest" id="flaberrySuggestBox" hidden>
+        <h5>Trending Gifting Searches</h5>
+        <a href="{{ routes.collections_url }}/roses"><img src="{{ 'hx_roses.webp' | file_url }}" alt="Roses" width="40" height="40" loading="lazy"><span>Red Roses Handcrafted Bouquets</span><span class="pp">From ₹999</span></a>
+        <a href="{{ routes.collections_url }}/chocolate-cakes"><img src="{{ 'hx_truffle.webp' | file_url }}" alt="Truffle" width="40" height="40" loading="lazy"><span>Belgian Chocolate Truffle Cake</span><span class="pp">From ₹849</span></a>
+        <a href="{{ routes.collections_url }}/photo-cakes"><img src="{{ 't_photocake.webp' | file_url }}" alt="Photo cake" width="40" height="40" loading="lazy"><span>Personalized Photo Celebration Cake</span><span class="pp">From ₹929</span></a>
+        <a href="{{ routes.collections_url }}/combos"><img src="{{ 't_cakeflowers.webp' | file_url }}" alt="Combos" width="40" height="40" loading="lazy"><span>Flower & Cake Surprise Hampers</span><span class="pp">From ₹1,499</span></a>
+      </div>
+    </div>
+
+    <!-- Header Actions Icons -->
+    <nav class="hicons">
+      <a class="hicon opt" href="/pages/serviceable-pincodes">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.7"/><circle cx="17" cy="17.5" r="1.7"/></svg>
+        <span class="lbl">Track Order</span>
+      </a>
+      <a class="hicon opt" href="/pages/contact-us">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>
+        <span class="lbl">Support</span>
+      </a>
+      <a class="hicon" href="{{ routes.account_login_url }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+        <span class="lbl">Sign In</span>
+      </a>
+      <a class="hicon" href="{{ routes.cart_url }}" onclick="event.preventDefault(); flaberryToggleCartDrawer();" id="hdrCartBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>
+        <span class="lbl">Cart</span>
+        <span class="badge" id="hdrCartBadge">0</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Primary Category Navigation Bar -->
+  <nav class="wrap nav" id="mainCategoryNav" aria-label="Main Navigation">
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/flowers" class="nl">Flowers</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/roses" class="nl">Roses</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/cakes" class="nl">Cakes</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/chocolate-cakes" class="nl">Chocolate Cakes</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/photo-cakes" class="nl">Photo Cakes</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/combos" class="nl">Combos</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/orchids" class="nl">Orchids</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/occasions" class="nl">Occasions</a>
+    </div>
+    <div class="nav-item">
+      <a href="{{ routes.collections_url }}/flowers" class="nl hot">Special Deals 🔥</a>
+    </div>
+  </nav>
+</header>
+
+<!-- Pincode Modal Dialog -->
+<div id="flaberryPinModal" class="pin-modal-overlay" hidden>
+  <div class="pin-modal-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-size: 18px; margin: 0;">Select Delivery Pincode</h3>
+      <button type="button" onclick="flaberryClosePinModal()" style="background: none; border: none; font-size: 22px; cursor: pointer;">×</button>
+    </div>
+    <p class="muted" style="font-size: 13.5px; margin-bottom: 14px;">Enter receiver's Indian pincode to confirm same-day delivery, midnight slots, and florist serviceability.</p>
+    <div style="display: flex; gap: 8px;">
+      <input type="text" id="modalPincodeInp" placeholder="e.g. 110001" maxlength="6" class="strip-inp" style="flex: 1;">
+      <button type="button" class="btn flora" onclick="flaberrySubmitModalPin()">Save</button>
+    </div>
+    <div class="quick-cities" style="margin-top: 18px;">
+      <small class="muted" style="display: block; margin-bottom: 8px; font-weight: 600;">Popular Cities:</small>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Delhi', '110001')">Delhi</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Mumbai', '400001')">Mumbai</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Bengaluru', '560001')">Bengaluru</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Pune', '411001')">Pune</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Hyderabad', '500001')">Hyderabad</button>
+        <button type="button" class="chip" onclick="flaberrySetQuickPin('Kolkata', '700001')">Kolkata</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .flaberry-ubar {
+    background: var(--fl-color-ink, #151312);
+    color: #f3efec;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .flaberry-ubar-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 42px;
+  }
+  .ubar-links {
+    display: flex;
+    gap: 16px;
+    flex: 1;
+  }
+  .ubar-links a {
+    color: #f3efec;
+    opacity: 0.85;
+    font-size: 12.5px;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .ubar-links a:hover {
+    opacity: 1;
+    color: var(--fl-color-flora, #e2522c);
+  }
+  .ubar-ticker {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 12.5px;
+    text-align: center;
+  }
+  .ticker-arrow {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0 4px;
+  }
+  .ticker-arrow:hover {
+    opacity: 1;
+  }
+  .ubar-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .cur-sel {
+    background: transparent;
+    color: #f3efec;
+    border: 1px solid #4a4542;
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 3px 8px;
+    font-size: 12px;
+    outline: none;
+  }
+  .cur-sel option {
+    color: #151312;
+    background: #ffffff;
+  }
+  @media (max-width: 900px) {
+    .ubar-links, .ubar-right {
+      display: none;
+    }
+  }
+
+  /* Header Main */
+  .hdr.fbhdr {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #ffffff;
+    border-bottom: 1px solid var(--fl-color-line, #e7e1dd);
+  }
+  .hdr-main {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-block: 12px;
+  }
+  .burger {
+    display: none;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+  }
+  @media (max-width: 990px) {
+    .burger {
+      display: block;
+    }
+    .nav {
+      display: none !important;
+    }
+    .pinchip {
+      display: none !important;
+    }
+  }
+  .search {
+    flex: 1;
+    position: relative;
+    max-width: 520px;
+  }
+  .search input {
+    width: 100%;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: var(--fl-color-mist, #f5f2f0);
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 10px 16px 10px 42px;
+    font-size: 13.5px;
+    outline: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .search input:focus {
+    background: #ffffff;
+    border-color: var(--fl-color-ink, #151312);
+  }
+  .search svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+  }
+  .suggest {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-md, 16px);
+    box-shadow: 0 18px 40px rgba(21, 19, 18, 0.14);
+    padding: 10px;
+    z-index: 60;
+  }
+  .suggest h5 {
+    margin: 6px 10px 8px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .suggest a {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: var(--fl-radius-sm, 10px);
+    text-decoration: none;
+    color: var(--fl-color-ink, #151312);
+    font-size: 13.5px;
+  }
+  .suggest a:hover {
+    background: var(--fl-color-mist, #f5f2f0);
+  }
+  .suggest img {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  .suggest .pp {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--fl-color-flora, #e2522c);
+  }
+  .pinchip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 6px 14px;
+    background: #ffffff;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .pinchip b {
+    display: block;
+    font-size: 12.5px;
+  }
+  .pinchip small {
+    font-size: 11px;
+  }
+  .hicons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+  .hicon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 10px;
+    border-radius: var(--fl-radius-sm, 10px);
+    font-size: 11px;
+    position: relative;
+    text-decoration: none;
+    color: var(--fl-color-ink, #151312);
+  }
+  .hicon:hover {
+    background: var(--fl-color-mist, #f5f2f0);
+  }
+  .hicon .badge {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    background: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+  }
+  @media (max-width: 600px) {
+    .hicon.opt {
+      display: none;
+    }
+  }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .nav .nl {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: var(--fl-radius-pill, 999px);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .nav .nl:hover {
+    background: var(--fl-color-mist, #f5f2f0);
+  }
+  .nav .nl.hot {
+    color: var(--fl-color-flora, #e2522c);
+  }
+
+  /* Pin Modal */
+  .pin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+  }
+  .pin-modal-card {
+    background: #ffffff;
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 24px;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+</style>
+
+<script>
+  var tickerMsgs = [
+    'Use code <b>FLABERRY2026</b> for 15% off your first flower bouquet!',
+    'Midnight delivery guaranteed in 500+ Indian cities.',
+    'Fresh flowers hand-picked daily from Bangalore & Pune farms.',
+    'Complimentary personalized greeting card with every gift.'
+  ];
+  var tickerIndex = 0;
+
+  function flaberryRotateTicker(dir) {
+    tickerIndex = (tickerIndex + dir + tickerMsgs.length) % tickerMsgs.length;
+    var el = document.getElementById('flaberryTickerText');
+    if (el) el.innerHTML = tickerMsgs[tickerIndex];
+  }
+
+  function flaberryShowSuggest() {
+    var b = document.getElementById('flaberrySuggestBox');
+    if (b) b.hidden = false;
+  }
+
+  function flaberryHideSuggest() {
+    setTimeout(function() {
+      var b = document.getElementById('flaberrySuggestBox');
+      if (b) b.hidden = true;
+    }, 200);
+  }
+
+  function flaberryFilterSuggest(val) {
+    // Live filter
+  }
+
+  function flaberryOpenPinModal() {
+    var m = document.getElementById('flaberryPinModal');
+    if (m) m.hidden = false;
+  }
+
+  function flaberryClosePinModal() {
+    var m = document.getElementById('flaberryPinModal');
+    if (m) m.hidden = true;
+  }
+
+  function flaberrySubmitModalPin() {
+    var val = document.getElementById('modalPincodeInp').value.trim();
+    if (val.length === 6) {
+      document.getElementById('hdrPinCity').textContent = 'Pincode ' + val;
+      document.getElementById('hdrPinStatus').textContent = 'Serviceable Today';
+      flaberryClosePinModal();
+    } else {
+      alert('Please enter a valid 6-digit Indian pincode.');
+    }
+  }
+
+  function flaberrySetQuickPin(city, pin) {
+    document.getElementById('hdrPinCity').textContent = city + ' ' + pin;
+    document.getElementById('hdrPinStatus').textContent = 'Serviceable Today';
+    flaberryClosePinModal();
+  }
+
+  function flaberryToggleCartDrawer() {
+    alert('Slide-out Cart: You have 0 items. Explore our fresh bouquets and cakes!');
+  }
+
+  function flaberryToggleMobileDrawer() {
+    alert('Mobile Menu: Opening Flaberry navigation drawer...');
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Classic Header",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Flaberry Classic Header"
+    }
+  ]
+}
+{% endschema %}

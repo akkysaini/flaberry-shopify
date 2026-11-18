@@ -1,0 +1,68 @@
+{
+  "manifest_version": "1.0.0",
+  "store_domain": "flaberry-pps4i03n.myshopify.com",
+  "api_version": "2026-10",
+  "updated_at": "2026-11-18T00:21:47.440Z",
+  "pages": [
+    {
+      "id": "gid://shopify/Page/144728326335",
+      "handle": "advance-orders",
+      "title": "Advance Order Booking",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729407679",
+      "handle": "about-us",
+      "title": "About Us",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729440447",
+      "handle": "corporate-gifting",
+      "title": "Corporate Gifting",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729473215",
+      "handle": "serviceable-pincodes",
+      "title": "Serviceable Pincodes",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729505983",
+      "handle": "delivery-cities",
+      "title": "Delivery Cities",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729538751",
+      "handle": "contact-us",
+      "title": "Contact Us",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729571519",
+      "handle": "faq",
+      "title": "Frequently Asked Questions",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729604287",
+      "handle": "terms-and-conditions",
+      "title": "Terms & Conditions",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729637055",
+      "handle": "privacy-policy",
+      "title": "Privacy Policy",
+      "isPublished": false
+    },
+    {
+      "id": "gid://shopify/Page/144729669823",
+      "handle": "refund-policy",
+      "title": "Cancellation & Refund Policy",
+      "isPublished": false
+    }
+  ]
+}

@@ -10,8 +10,33 @@
 {%- enddoc -%}
 
 {% unless style == 'none' %}
+  <!-- Desktop Inline Persistent Search (Flaberry prototype .hdr .search) -->
+  <form
+    action="{{ routes.search_url }}"
+    method="get"
+    role="search"
+    class="header-search-inline {% if class != blank %} {{ class | strip }}{% endif %}"
+  >
+    <span class="header-search-inline__icon" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+    </span>
+    <input
+      type="search"
+      name="q"
+      value="{{ search.terms | escape }}"
+      placeholder="Search flowers, cakes, gifts…"
+      autocomplete="off"
+      aria-label="{{ 'content.search_input_label' | t }}"
+      class="header-search-inline__input"
+      on:focus="#search-modal/showDialog"
+    >
+  </form>
+
+  <!-- Mobile Search Modal Trigger Button -->
   <search-button
-    class="search-action{% if display_style == 'text' %} search-action--text{% endif %}{% if class != blank %} {{ class | strip }}{% endif %}"
+    class="search-action search-action--mobile{% if display_style == 'text' %} search-action--text{% endif %}{% if class != blank %} {{ class | strip }}{% endif %}"
   >
     <button
       on:click="#search-modal/showDialog"
@@ -23,7 +48,7 @@
         {{ 'content.search' | t }}
       </span>
 
-      <span class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}">
+      <span class="svg-wrapper">
         {{ 'icon-search.svg' | inline_asset_content }}
       </span>
     </button>

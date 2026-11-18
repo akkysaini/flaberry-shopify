@@ -1,0 +1,15 @@
+{%- doc -%}
+  Renders the 'Shop all gifts' action button at the top of the mobile drawer.
+  Matching prototype `reference/Flaberry_Design1_Classic.html` #mobmenu
+
+  @param {object} block_settings - The block settings object.
+{%- enddoc -%}
+
+{% if block_settings.drawer_show_shop_all != false %}
+  {% assign shop_all_dest = block_settings.drawer_shop_all_url | default: routes.all_products_collection_url %}
+  <div class="menu-drawer__shop-all-wrapper">
+    <a href="{{ shop_all_dest }}" class="menu-drawer__shop-all-btn">
+      {{ block_settings.drawer_shop_all_label | default: 'Shop all gifts' }}
+    </a>
+  </div>
+{% endif %}

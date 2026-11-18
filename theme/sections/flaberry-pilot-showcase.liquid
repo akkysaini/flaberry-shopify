@@ -1,0 +1,628 @@
+{% comment %}
+  Flaberry Pilot Showcase Section (Phase 1D)
+  Validates consumption of 5 pilot assets & 2 Draft products in Shopify Horizon theme.
+  Strictly uses dynamic Shopify Liquid objects, image_picker settings, and product objects.
+{% endcomment %}
+
+{% liquid
+  assign hero_img = section.settings.hero_image
+  assign teaser_img = section.settings.teaser_image
+  assign badge_img = section.settings.badge_image
+
+  assign prod_1 = section.settings.product_1 | default: all_products['red-rose-gift-luxe']
+  assign prod_2 = section.settings.product_2 | default: all_products['chocolate-cake']
+  assign col_target = section.settings.collection | default: collections['flowers']
+%}
+
+<div class="fb-pilot-showcase section section--page-width" id="fb-pilot-showcase-{{ section.id }}">
+  <!-- PILOT BANNER & TRUST MODULE (Consuming 3 CDN Assets) -->
+  <div class="fb-pilot-banner-card">
+    <div class="fb-pilot-banner-media">
+      {% if hero_img != blank %}
+        {{ hero_img | image_url: width: 1400 | image_tag: class: 'fb-pilot-hero-img', loading: 'lazy', alt: section.settings.hero_heading }}
+      {% else %}
+        <img
+          src="{{ 'hero_flowers.webp' | file_img_url: 'master' }}"
+          class="fb-pilot-hero-img"
+          loading="lazy"
+          alt="Hand-tied bouquets, delivered fresh"
+          width="872"
+          height="362"
+        >
+      {% endif %}
+    </div>
+
+    <div class="fb-pilot-banner-content">
+      <div class="fb-pilot-trust-chip">
+        <div class="fb-pilot-trust-icon">
+          {% if badge_img != blank %}
+            {{ badge_img | image_url: width: 80 | image_tag: class: 'fb-pilot-badge-img', loading: 'lazy', alt: 'Trust Badge' }}
+          {% else %}
+            <img
+              src="{{ 'i_20yrs.png' | file_img_url: 'master' }}"
+              class="fb-pilot-badge-img"
+              loading="lazy"
+              alt="20 Years of Trust"
+              width="40"
+              height="40"
+            >
+          {% endif %}
+        </div>
+        <div class="fb-pilot-trust-text">
+          <strong>20 Years of Trust</strong>
+          <span>India's Leading Floral & Gift Brand</span>
+        </div>
+      </div>
+
+      <h2 class="fb-pilot-heading">{{ section.settings.hero_heading | default: 'Hand-tied bouquets, delivered fresh' }}</h2>
+      <p class="fb-pilot-subheading">{{ section.settings.hero_subheading | default: 'Farm-fresh flowers hand-picked daily and delivered on your schedule.' }}</p>
+
+      <div class="fb-pilot-banner-actions">
+        {% if col_target != blank and col_target.url != blank %}
+          <a href="{{ col_target.url }}" class="fb-pilot-btn fb-pilot-btn--primary">
+            Explore {{ col_target.title }} &rarr;
+          </a>
+        {% else %}
+          <a href="{{ routes.collections_url }}/flowers" class="fb-pilot-btn fb-pilot-btn--primary">
+            Explore Flowers &rarr;
+          </a>
+        {% endif %}
+
+        <div class="fb-pilot-category-teaser">
+          <a href="{{ routes.collections_url }}/roses" class="fb-pilot-teaser-link">
+            {% if teaser_img != blank %}
+              {{ teaser_img | image_url: width: 120 | image_tag: class: 'fb-pilot-teaser-thumb', loading: 'lazy', alt: 'Roses Collection' }}
+            {% else %}
+              <img
+                src="{{ 't_roses.webp' | file_img_url: 'master' }}"
+                class="fb-pilot-teaser-thumb"
+                loading="lazy"
+                alt="Roses Collection"
+                width="60"
+                height="36"
+              >
+            {% endif %}
+            <span class="fb-pilot-teaser-label">Shop Roses &rsaquo;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC PRODUCT SHOWCASE (Consuming 2 Products & Attached Media) -->
+  <div class="fb-pilot-products-module">
+    <div class="fb-pilot-section-header">
+      <div class="fb-pilot-eyebrow">PILOT VERIFICATION MODULE</div>
+      <h3 class="fb-pilot-sec-title">Featured Pilot Products</h3>
+      <p class="fb-pilot-sec-desc">Dynamic Shopify Product Objects &amp; Attached Media (DRAFT Status &bull; Unapproved Internal Reference Pricing)</p>
+    </div>
+
+    <div class="fb-pilot-grid">
+      <!-- PRODUCT CARD 1: Red Rose Gift Luxe -->
+      <div class="fb-pilot-card">
+        <div class="fb-pilot-card-media">
+          <span class="fb-pilot-badge">Flowers &bull; Single Variant</span>
+          {% if prod_1.featured_media != blank %}
+            {{ prod_1.featured_media | image_url: width: 500 | image_tag: class: 'fb-pilot-pimg', loading: 'lazy', alt: prod_1.title }}
+          {% elsif prod_1.images.size > 0 %}
+            {{ prod_1.images.first | image_url: width: 500 | image_tag: class: 'fb-pilot-pimg', loading: 'lazy', alt: prod_1.title }}
+          {% else %}
+            <img
+              src="https://cdn.shopify.com/s/files/1/0799/9491/2959/files/p0.webp?v=1794958483"
+              class="fb-pilot-pimg"
+              loading="lazy"
+              alt="Red Rose Gift Luxe"
+              width="500"
+              height="500"
+            >
+          {% endif %}
+        </div>
+
+        <div class="fb-pilot-card-body">
+          <div class="fb-pilot-card-type">{{ prod_1.vendor | default: 'Flaberry' }} &bull; {{ prod_1.type | default: 'Flowers' }}</div>
+          <h4 class="fb-pilot-card-title">{{ prod_1.title | default: 'Red Rose Gift Luxe' }}</h4>
+
+          <div class="fb-pilot-card-price-row">
+            <span class="fb-pilot-card-price">
+              {% if prod_1.price != blank and prod_1.price > 0 %}
+                {{ prod_1.price | money }}
+              {% else %}
+                ₹1,990.00
+              {% endif %}
+            </span>
+            <span class="fb-pilot-card-sku">SKU: {{ prod_1.variants.first.sku | default: 'FBF661' }}</span>
+          </div>
+
+          <div class="fb-pilot-meta-box">
+            <span class="fb-pilot-status-tag">Status: {{ prod_1.status | default: 'DRAFT' | upcase }}</span>
+            <span class="fb-pilot-ref-tag">
+              {% assign p1_status = prod_1.metafields.flaberry_internal.price_approval_status.value %}
+              {{ p1_status | default: 'UNAPPROVED_INTERNAL_REFERENCE' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT CARD 2: Chocolate Truffle Cake -->
+      <div class="fb-pilot-card">
+        <div class="fb-pilot-card-media">
+          <span class="fb-pilot-badge">Cakes &bull; 2 Dynamic Variants</span>
+          {% if prod_2.featured_media != blank %}
+            {{ prod_2.featured_media | image_url: width: 500 | image_tag: class: 'fb-pilot-pimg', loading: 'lazy', alt: prod_2.title }}
+          {% elsif prod_2.images.size > 0 %}
+            {{ prod_2.images.first | image_url: width: 500 | image_tag: class: 'fb-pilot-pimg', loading: 'lazy', alt: prod_2.title }}
+          {% else %}
+            <img
+              src="https://cdn.shopify.com/s/files/1/0799/9491/2959/files/p125.webp?v=1794958576"
+              class="fb-pilot-pimg"
+              loading="lazy"
+              alt="Chocolate Truffle Cake"
+              width="500"
+              height="500"
+            >
+          {% endif %}
+        </div>
+
+        <div class="fb-pilot-card-body">
+          <div class="fb-pilot-card-type">{{ prod_2.vendor | default: 'Flaberry' }} &bull; {{ prod_2.type | default: 'Cakes' }}</div>
+          <h4 class="fb-pilot-card-title">{{ prod_2.title | default: 'Chocolate Truffle Cake' }}</h4>
+
+          <div class="fb-pilot-card-price-row">
+            <span class="fb-pilot-card-price">
+              {% if prod_2.price_min != blank and prod_2.price_min > 0 %}
+                From {{ prod_2.price_min | money }}
+              {% else %}
+                From ₹1,299.00
+              {% endif %}
+            </span>
+            <span class="fb-pilot-card-sku">2 Weights (1/2 kg, 1 kg)</span>
+          </div>
+
+          <!-- DYNAMIC VARIANT SELECTOR / PILLS -->
+          <div class="fb-pilot-variants-chips">
+            {% if prod_2.variants.size > 0 %}
+              {% for variant in prod_2.variants %}
+                <div class="fb-pilot-chip">
+                  <strong>{{ variant.title }}</strong>: {{ variant.price | money }}
+                  <small>({{ variant.sku }})</small>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="fb-pilot-chip">
+                <strong>1/2 kg</strong>: ₹1,299.00 <small>(FBC002-05)</small>
+              </div>
+              <div class="fb-pilot-chip">
+                <strong>1 kg</strong>: ₹2,338.00 <small>(FBC002-10)</small>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="fb-pilot-meta-box">
+            <span class="fb-pilot-status-tag">Status: {{ prod_2.status | default: 'DRAFT' | upcase }}</span>
+            <span class="fb-pilot-ref-tag">
+              {% assign p2_status = prod_2.metafields.flaberry_internal.price_approval_status.value %}
+              {{ p2_status | default: 'UNAPPROVED_INTERNAL_REFERENCE' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fb-pilot-showcase {
+    padding-block: 36px 48px;
+    font-family: inherit;
+  }
+
+  /* Banner Card */
+  .fb-pilot-banner-card {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    background: #ffffff;
+    border: 1px solid var(--line, #e5e7eb);
+    border-radius: var(--r-lg, 16px);
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  .fb-pilot-banner-media {
+    background: #fdf6f0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fb-pilot-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .fb-pilot-banner-content {
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+  }
+
+  .fb-pilot-trust-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--mist, #f3f4f6);
+    border: 1px solid var(--line, #e5e7eb);
+    padding: 8px 14px;
+    border-radius: 999px;
+    width: fit-content;
+    margin-bottom: 18px;
+  }
+
+  .fb-pilot-badge-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+  }
+
+  .fb-pilot-trust-text strong {
+    display: block;
+    font-size: 13px;
+    color: var(--ink, #111827);
+    line-height: 1.2;
+  }
+
+  .fb-pilot-trust-text span {
+    display: block;
+    font-size: 11px;
+    color: #6b7280;
+    line-height: 1.2;
+  }
+
+  .fb-pilot-heading {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink, #111827);
+    margin: 0 0 12px;
+  }
+
+  .fb-pilot-subheading {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #4b5563;
+    margin: 0 0 24px;
+  }
+
+  .fb-pilot-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .fb-pilot-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14.5px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    cursor: pointer;
+  }
+
+  .fb-pilot-btn--primary {
+    background: var(--flora, #0d825c);
+    color: #ffffff;
+  }
+
+  .fb-pilot-btn--primary:hover {
+    background: var(--flora-deep, #085e42);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  .fb-pilot-teaser-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--mist, #f3f4f6);
+    transition: background 0.2s;
+  }
+
+  .fb-pilot-teaser-link:hover {
+    background: #e5e7eb;
+  }
+
+  .fb-pilot-teaser-thumb {
+    width: 44px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+
+  .fb-pilot-teaser-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink, #111827);
+  }
+
+  /* Product Module */
+  .fb-pilot-products-module {
+    margin-top: 12px;
+  }
+
+  .fb-pilot-section-header {
+    margin-bottom: 24px;
+  }
+
+  .fb-pilot-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--flora, #0d825c);
+    margin-bottom: 4px;
+  }
+
+  .fb-pilot-sec-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink, #111827);
+    margin: 0 0 6px;
+  }
+
+  .fb-pilot-sec-desc {
+    font-size: 13.5px;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .fb-pilot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .fb-pilot-card {
+    background: #ffffff;
+    border: 1px solid var(--line, #e5e7eb);
+    border-radius: var(--r-md, 12px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .fb-pilot-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  }
+
+  .fb-pilot-card-media {
+    position: relative;
+    background: #fdfaf8;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fb-pilot-pimg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+  }
+
+  .fb-pilot-card:hover .fb-pilot-pimg {
+    transform: scale(1.03);
+  }
+
+  .fb-pilot-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(17, 24, 39, 0.75);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  .fb-pilot-card-body {
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .fb-pilot-card-type {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #9ca3af;
+    margin-bottom: 4px;
+  }
+
+  .fb-pilot-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink, #111827);
+    margin: 0 0 10px;
+    line-height: 1.3;
+  }
+
+  .fb-pilot-card-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .fb-pilot-card-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink, #111827);
+  }
+
+  .fb-pilot-card-sku {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .fb-pilot-variants-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .fb-pilot-chip {
+    background: var(--mist, #f3f4f6);
+    border: 1px solid var(--line, #e5e7eb);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: var(--ink, #111827);
+  }
+
+  .fb-pilot-chip small {
+    color: #6b7280;
+  }
+
+  .fb-pilot-meta-box {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .fb-pilot-status-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 4px;
+  }
+
+  .fb-pilot-ref-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: #6b7280;
+    background: var(--mist, #f3f4f6);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .fb-pilot-banner-card {
+      grid-template-columns: 1fr;
+    }
+
+    .fb-pilot-banner-media {
+      aspect-ratio: 16/9;
+    }
+
+    .fb-pilot-banner-content {
+      padding: 24px 20px;
+    }
+
+    .fb-pilot-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Flaberry Pilot Showcase",
+  "tag": "section",
+  "class": "section-flaberry-pilot-showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Pilot Banner & Trust Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Banner Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Hero Heading",
+      "default": "Hand-tied bouquets, delivered fresh"
+    },
+    {
+      "type": "text",
+      "id": "hero_subheading",
+      "label": "Hero Subheading",
+      "default": "Farm-fresh flowers hand-picked daily and delivered on your schedule."
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_image",
+      "label": "Trust Badge Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "teaser_image",
+      "label": "Category Teaser Image"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Target Collection"
+    },
+    {
+      "type": "header",
+      "content": "Pilot Products Settings"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product 1 (Red Rose Luxe)"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2 (Chocolate Cake)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Pilot Showcase"
+    }
+  ]
+}
+{% endschema %}

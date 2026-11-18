@@ -1,0 +1,515 @@
+[
+  {
+    "handle": "flowers",
+    "type": "Parent Group",
+    "rule": "productType EQUALS Flowers",
+    "matchingCount": 26,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF661 (Red Rose Gift Luxe), FBF667 (Midnight Rose Desire), FBFC01 (Red Roses Bouquet Petite)",
+    "reason": ""
+  },
+  {
+    "handle": "cakes",
+    "type": "Parent Group",
+    "rule": "productType EQUALS Cakes",
+    "matchingCount": 21,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC002 (Chocolate Cake), FBC246 (Heart Shape Chocolate Cake), FBC089 (Lip Smacking Chocolate Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "combos",
+    "type": "Parent Group",
+    "rule": "productType EQUALS Combos",
+    "matchingCount": 1,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBSC155 (Pink and White Roses with Chocolate Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "gifts",
+    "type": "Parent Group",
+    "rule": "productType EQUALS Gifts",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "occasions",
+    "type": "Parent Group",
+    "rule": "productType EQUALS Occasion Gifts",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "roses",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS roses",
+    "matchingCount": 3,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF661 (Red Rose Gift Luxe), FBF667 (Midnight Rose Desire), FBFC01 (Red Roses Bouquet Petite)",
+    "reason": ""
+  },
+  {
+    "handle": "orchids",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS orchids",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF256 (Gorgeous Orchids), FBF473 (Blue Orchids Vase)",
+    "reason": ""
+  },
+  {
+    "handle": "lilies",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS lilies",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF561 (Lily Rose Elegance), FBF562 (Lily Rose Love Bouquet)",
+    "reason": ""
+  },
+  {
+    "handle": "carnations",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS carnations",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF193 (Bubbly Carnations), FBF173 (Carnations Delight)",
+    "reason": ""
+  },
+  {
+    "handle": "gerberas",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS gerberas",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBV120 (Magnificent Gerbera Mix), FBF589 (Radiant Gerbera & Rose Bouquet)",
+    "reason": ""
+  },
+  {
+    "handle": "sunflowers",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS sunflowers",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF546 (Sunflower Charm), FBF716 (Sunflower Santini Bliss)",
+    "reason": ""
+  },
+  {
+    "handle": "bouquets",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS bouquets",
+    "matchingCount": 1,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF404 (Assorted Roses Bouquet)",
+    "reason": ""
+  },
+  {
+    "handle": "vase",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS vase",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF553 (Graceful Tuberose Vase), FBD144 (Lily Ferrero Vase)",
+    "reason": ""
+  },
+  {
+    "handle": "baskets",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS baskets",
+    "matchingCount": 3,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FRT001 (Fresh Delite Basket), FFB002 (Apple Blossom Basket), FBF610 (Sincere Sympathy Flower Basket)",
+    "reason": ""
+  },
+  {
+    "handle": "box",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS box",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF683 (Pink Cloud Hat Box), FBF205 (Sunlight Grace Flower Box)",
+    "reason": ""
+  },
+  {
+    "handle": "heart-shape",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS heart-shape",
+    "matchingCount": 4,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC208 (Romantic Velvet Heart), FBF429 (Red Ferrero Heart), FBC246 (Heart Shape Chocolate Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "premium-flowers",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS premium-flowers",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF516 (Premium Beauty), FRT009 (Premium Harvest)",
+    "reason": ""
+  },
+  {
+    "handle": "sympathy",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS sympathy",
+    "matchingCount": 1,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBF106 (Sympathy Wreath)",
+    "reason": ""
+  },
+  {
+    "handle": "chocolate-cakes",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS chocolate-cakes",
+    "matchingCount": 3,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC002 (Chocolate Cake), FBC246 (Heart Shape Chocolate Cake), FBC089 (Lip Smacking Chocolate Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "truffle",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS truffle",
+    "matchingCount": 4,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC034 (Rich Truffle Cake), FBC047 (Chocolate Truffle Cake), FBC121 (Chocolate Truffle Cake Eggless)",
+    "reason": ""
+  },
+  {
+    "handle": "black-forest",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS black-forest",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC007 (Black Forest Mini), FBC051 (Black Forest Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "red-velvet",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS red-velvet",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC069 (Red Velvet Heart), FBC084 (Red Velvet Mini)",
+    "reason": ""
+  },
+  {
+    "handle": "pineapple",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS pineapple",
+    "matchingCount": 3,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC006 (Pineapple Cake), FBC001 (Crushed Pineapple Cake), FBC057 (Rich Pineapple Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "butterscotch",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS butterscotch",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC065 (Luscious Butterscotch Cake), FBC130 (Caramel Butterscotch Fantasy)",
+    "reason": ""
+  },
+  {
+    "handle": "photo-cakes",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS photo-cakes",
+    "matchingCount": 2,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC295 (Anniversary Photo Cake), FBPH331 (Square Photo Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "eggless",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS eggless",
+    "matchingCount": 3,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC121 (Chocolate Truffle Cake Eggless), FBC092 (Almond Choco Truffle Cake Eggless), FBC012 (Crushed Pineapple Eggless Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "designer-cakes",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS designer-cakes",
+    "matchingCount": 1,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBDS456 (Barbie Tier Designer Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "kids-cakes",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS kids-cakes",
+    "matchingCount": 1,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBC024 (Fresh Fruits Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "cake-and-flowers",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS cake-and-flowers",
+    "matchingCount": 1,
+    "isExpectedEmpty": false,
+    "sampleMatches": "FBSC155 (Pink and White Roses with Chocolate Cake)",
+    "reason": ""
+  },
+  {
+    "handle": "flowers-and-chocolates",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS flowers-and-chocolates",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "flowers-and-teddies",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS flowers-and-teddies",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "sweets",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS sweets",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "dry-fruits",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS dry-fruits",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "hampers",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS hampers",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "fruits",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS fruits",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "plants",
+    "type": "Sub-collection",
+    "rule": "productTag EQUALS plants",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Products for this sub-collection are in remaining 324 catalog items."
+  },
+  {
+    "handle": "birthday",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS birthday",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "anniversary",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS anniversary",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "christmas",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS christmas",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "new-year",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS new-year",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "romance",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS romance",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "congratulations",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS congratulations",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "thank-you",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS thank-you",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "get-well-soon",
+    "type": "Occasion Hub",
+    "rule": "productTag EQUALS get-well-soon",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Specific holiday/occasion items (e.g. Christmas, New Year) not included in 48 core seed sample."
+  },
+  {
+    "handle": "for-her",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-her",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "for-him",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-him",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "for-mother",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-mother",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "for-father",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-father",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "for-wife",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-wife",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "for-husband",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-husband",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "for-friends",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-friends",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "for-kids",
+    "type": "Relationship",
+    "rule": "productTag EQUALS for-kids",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Relationship tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "red-flowers",
+    "type": "Colour",
+    "rule": "productTag EQUALS red-flowers",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Colour tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "pink-flowers",
+    "type": "Colour",
+    "rule": "productTag EQUALS pink-flowers",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Colour tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "yellow-flowers",
+    "type": "Colour",
+    "rule": "productTag EQUALS yellow-flowers",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Colour tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "white-flowers",
+    "type": "Colour",
+    "rule": "productTag EQUALS white-flowers",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Colour tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  },
+  {
+    "handle": "mixed-flowers",
+    "type": "Colour",
+    "rule": "productTag EQUALS mixed-flowers",
+    "matchingCount": 0,
+    "isExpectedEmpty": true,
+    "sampleMatches": "",
+    "reason": "Colour tag not on 48 seed sample products (tagged during bulk catalog migration)."
+  }
+]

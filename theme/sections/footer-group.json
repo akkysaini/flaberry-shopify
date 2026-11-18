@@ -11,8 +11,32 @@
   "type": "footer",
   "name": "t:names.footer",
   "sections": {
+    "flaberry_footer": {
+      "type": "flaberry-footer",
+      "settings": {
+        "logo": "shopify:\/\/shop_images\/logo.png",
+        "brand_text": "Handcrafted flowers, artisan cakes, and curated gifting experiences for every special moment across 500+ cities in India.",
+        "bg_color": "#151312",
+        "text_color": "#cfc7c2",
+        "heading_color": "#ffffff",
+        "show_newsletter": true,
+        "newsletter_placeholder": "Email for offers",
+        "newsletter_button_text": "Subscribe",
+        "show_support_info": true,
+        "support_hours": "8 AM – midnight IST, every day",
+        "support_phone": "+91 76685 23752",
+        "support_email": "customerservice@flaberry.com",
+        "col2_heading": "Shop Flowers & Cakes",
+        "col2_menu": "footer",
+        "col3_heading": "Occasions & Gifts",
+        "col4_heading": "Customer Service",
+        "show_payment_icons": true,
+        "copyright_text": "© 2026 Flaberry. All rights reserved."
+      }
+    },
     "footer": {
       "type": "footer",
+      "disabled": true,
       "blocks": {
         "group_wErUQf": {
           "type": "group",
@@ -189,6 +213,7 @@
     },
     "utilities": {
       "type": "footer-utilities",
+      "disabled": true,
       "blocks": {
         "copyright": {
           "type": "footer-copyright",
@@ -232,6 +257,7 @@
     }
   },
   "order": [
+    "flaberry_footer",
     "footer",
     "utilities"
   ]

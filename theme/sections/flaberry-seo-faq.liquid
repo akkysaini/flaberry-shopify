@@ -1,0 +1,213 @@
+{% comment %}
+  Flaberry SEO Content & FAQ Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Editorial storytelling, international gifting details, and interactive FAQ accordion.
+{% endcomment %}
+
+<div class="flaberry-seo-faq-section" data-section-id="{{ section.id }}">
+  <div class="flaberry-container">
+    <div class="flaberry-seo-block">
+      <h2 class="flaberry-seo-heading">{{ section.settings.seo_heading | default: 'Send flowers & cakes to India with Flaberry' }}</h2>
+      <div class="flaberry-seo-prose">
+        <p>Fresh flowers leave an enchanting impression with their natural beauty and delicate fragrance. Explore farm-fresh roses, carnations, lilies, orchids, and gerberas hand-crafted by master florists and sent to your loved ones anywhere in India.</p>
+        <p>Flaberry delivers to 500+ cities through its own climate-controlled fulfillment hubs and over 2,500+ vetted local partner merchants, offering Same-Day Delivery, Fixed-Time delivery, and Midnight delivery right to the doorstep.</p>
+        <p><strong>Ordering from USA, UK, Canada, or UAE?</strong> Browse comfortably in your local currency, personalize your order with a free message card printed and placed with the gift, and track your delivery seamlessly.</p>
+      </div>
+    </div>
+
+    <div class="flaberry-faq-block">
+      <h3 class="flaberry-faq-heading">{{ section.settings.faq_heading | default: 'Frequently Asked Questions' }}</h3>
+      <div class="flaberry-accordion">
+        {% for block in section.blocks %}
+          <div class="flaberry-faq-item" {{ block.shopify_attributes }}>
+            <button type="button" class="flaberry-faq-trigger" onclick="flaberryToggleFaq(this)">
+              <span>{{ block.settings.question }}</span>
+              <svg class="flaberry-faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="flaberry-faq-answer">
+              <p>{{ block.settings.answer }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .flaberry-seo-faq-section {
+    padding: 48px 0 60px;
+    background: var(--fl-color-mist, #f5f2f0);
+    border-top: 1px solid var(--fl-color-line, #e7e1dd);
+  }
+  .flaberry-seo-block {
+    max-width: 900px;
+    margin-bottom: 44px;
+  }
+  .flaberry-seo-heading {
+    font-family: var(--fl-font-display, "Inter Tight", sans-serif);
+    font-size: clamp(24px, 3.2vw, 36px);
+    font-weight: 800;
+    color: var(--fl-color-ink, #151312);
+    margin: 0 0 16px;
+    letter-spacing: -0.02em;
+  }
+  .flaberry-seo-prose p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--fl-color-muted, #6f6763);
+    margin: 0 0 12px;
+  }
+  .flaberry-seo-prose strong {
+    color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-faq-block {
+    max-width: 900px;
+  }
+  .flaberry-faq-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--fl-color-ink, #151312);
+    margin: 0 0 20px;
+  }
+  .flaberry-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .flaberry-faq-item {
+    background: #ffffff;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-card, 12px);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .flaberry-faq-item.active {
+    border-color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-faq-trigger {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    background: transparent;
+    border: none;
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--fl-color-ink, #151312);
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .flaberry-faq-trigger:hover {
+    color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-faq-icon {
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .flaberry-faq-item.active .flaberry-faq-icon {
+    transform: rotate(180deg);
+    color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-faq-answer {
+    display: none;
+    padding: 0 20px 20px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .flaberry-faq-item.active .flaberry-faq-answer {
+    display: block;
+  }
+</style>
+
+<script>
+  function flaberryToggleFaq(btn) {
+    const item = btn.closest('.flaberry-faq-item');
+    if (!item) return;
+    const wasActive = item.classList.contains('active');
+    const parent = item.parentElement;
+    parent.querySelectorAll('.flaberry-faq-item').forEach(i => i.classList.remove('active'));
+    if (!wasActive) {
+      item.classList.add('active');
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry SEO & FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "seo_heading",
+      "label": "SEO Section Heading",
+      "default": "Send flowers & cakes to India with Flaberry"
+    },
+    {
+      "type": "text",
+      "id": "faq_heading",
+      "label": "FAQ Section Heading",
+      "default": "Frequently Asked Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How does Same-Day Delivery work?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Orders placed before 4:00 PM IST qualify for same-day delivery across 500+ serviceable cities. You can select your preferred delivery time slot during checkout."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry SEO & FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How does Same-Day Delivery work?",
+            "answer": "Orders placed before 4:00 PM IST qualify for same-day delivery across 500+ serviceable cities. You can select your preferred delivery time slot during checkout."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Are the flowers and cakes fresh?",
+            "answer": "Yes, 100%. Flowers reach our distribution hubs within 2 to 3 days of being hand-picked. Cakes are baked fresh by our partner master bakeries only after your order is confirmed."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I order from outside India?",
+            "answer": "Absolutely. Flaberry serves customers worldwide across the USA, UK, Canada, UAE, Australia, and Europe with international credit card and PayPal support, delivering right to doorsteps across India."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I add a personalized message card?",
+            "answer": "Yes, every gift order comes with a free personalized greeting message card. Simply enter your message on the product page or cart drawer, and our team prints it neatly onto a physical gift card."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

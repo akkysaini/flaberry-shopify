@@ -154,6 +154,7 @@
                       parent_link: link,
                       id: list_id,
                       section: section,
+                      block: block,
                       grid_columns_count: 6,
                       grid_columns_count_tablet: 4,
                       grid_columns_count_collection_images: 8,
@@ -1205,6 +1206,64 @@
       "label": "t:settings.divider_color",
       "placeholder": "t:settings.default",
       "visible_if": "{{ block.settings.drawer_dividers }}"
+    },
+    {
+      "type": "header",
+      "content": "Mega Menu Promotional Card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mega_promo",
+      "label": "Show promo card in mega menu",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "mega_promo_image",
+      "label": "Promo card image"
+    },
+    {
+      "type": "text",
+      "id": "mega_promo_heading",
+      "label": "Promo card heading",
+      "default": "Personalised gifts"
+    },
+    {
+      "type": "url",
+      "id": "mega_promo_link",
+      "label": "Promo card link"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Drawer Enhancements"
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_show_shop_all",
+      "label": "Show 'Shop all' button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "drawer_shop_all_label",
+      "label": "'Shop all' button label",
+      "default": "Shop all gifts"
+    },
+    {
+      "type": "url",
+      "id": "drawer_shop_all_url",
+      "label": "'Shop all' destination URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "drawer_show_utilities",
+      "label": "Show drawer utility links",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "drawer_utility_menu",
+      "label": "Drawer utility links menu"
     }
   ]
 }

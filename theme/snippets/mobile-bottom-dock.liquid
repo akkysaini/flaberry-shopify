@@ -1,0 +1,87 @@
+{{ 'mobile-bottom-dock.css' | asset_url | stylesheet_tag }}
+
+<nav class="dock" aria-label="Mobile quick actions">
+  <!-- 1. Home -->
+  <a
+    href="{{ routes.root_url }}"
+    class="dock-btn{% if request.page_type == 'index' %} is-active{% endif %}"
+    aria-label="Home"
+  >
+    <span class="dock-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </span>
+    <span class="dock-label">Home</span>
+  </a>
+
+  <!-- 2. Categories (Triggers Mobile Menu Drawer) -->
+  <button
+    type="button"
+    class="dock-btn"
+    aria-label="Open categories navigation"
+    onclick="document.querySelector('header-drawer summary')?.click();"
+  >
+    <span class="dock-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+    </span>
+    <span class="dock-label">Categories</span>
+  </button>
+
+  <!-- 3. Search (Triggers Search Modal) -->
+  <button
+    type="button"
+    class="dock-btn"
+    aria-label="Open search"
+    onclick="document.querySelector('#search-modal button, [on\\:click*=\'#search-modal\'], search-button button')?.click();"
+  >
+    <span class="dock-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </span>
+    <span class="dock-label">Search</span>
+  </button>
+
+  <!-- 4. Cart (Triggers Cart Drawer) -->
+  <button
+    type="button"
+    class="dock-btn"
+    aria-label="Open shopping cart"
+    onclick="const btn = document.querySelector('[aria-controls=\'cart-drawer\']'); if(btn) btn.click(); else window.location.href = '{{ routes.cart_url }}';"
+  >
+    <span class="dock-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+    </span>
+    {%- if cart.item_count > 0 -%}
+      <span class="dock-badge">{{ cart.item_count }}</span>
+    {%- endif -%}
+    <span class="dock-label">Cart</span>
+  </button>
+
+  <!-- 5. Account -->
+  <a
+    href="{{ routes.account_url }}"
+    class="dock-btn{% if request.page_type == 'customers/account' or request.page_type == 'customers/login' %} is-active{% endif %}"
+    aria-label="Account"
+  >
+    <span class="dock-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+    </span>
+    <span class="dock-label">Account</span>
+  </a>
+</nav>

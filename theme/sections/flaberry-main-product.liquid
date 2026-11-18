@@ -1,0 +1,684 @@
+{% comment %}
+  Flaberry Main Product Detail Page (PDP)
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Faithful reproduction of Flaberry's 2-column PDP layout with vertical thumbnails, zoom main image,
+  pincode deliverability check, cake options, date/slot picker, greeting message card, add-ons, and accordions.
+{% endcomment %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+{% assign featured_img = product.featured_media | default: product.featured_image %}
+{% assign prod_title = product.title | default: 'Red Rose Gift Luxe' %}
+{% assign prod_sku = current_variant.sku | default: 'FBF661' %}
+{% assign prod_price = current_variant.price | default: 199000 %}
+{% assign prod_compare = current_variant.compare_at_price | default: 229000 %}
+
+<div class="flaberry-pdp-page" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <!-- Breadcrumb -->
+    <nav class="crumbs">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span>/</span>
+      <a href="{{ routes.collections_url }}">Collections</a>
+      <span>/</span>
+      <a href="{{ routes.collections_url }}/flowers">{{ product.type | default: 'Flowers' }}</a>
+      <span>/</span>
+      <span class="active">{{ prod_title }}</span>
+    </nav>
+
+    <!-- Main PDP Grid: Gallery (Left) + PInfo (Right) -->
+    <div class="pdp">
+      <!-- Left Column: Gallery -->
+      <div class="gallery">
+        <div class="thumbs" id="pdpThumbnails">
+          {% if product.media.size > 0 %}
+            {% for media in product.media limit: 4 %}
+              <button type="button" class="thumb-btn {% if forloop.first %}on{% endif %}" onclick="flaberrySwitchPdpImage('{{ media | image_url: width: 800, height: 800 }}', this)" aria-label="Thumbnail {{ forloop.index }}">
+                <img src="{{ media | image_url: width: 160, height: 160 }}" alt="{{ media.alt | default: prod_title | escape }}" width="80" height="80" loading="lazy">
+              </button>
+            {% endfor %}
+          {% else %}
+            {% assign fb_rose = 'hero_flowers.webp' | file_url %}
+            {% assign fb_rose2 = 'hx_roses.webp' | file_url %}
+            {% assign fb_heart = 'hx_heartbox.webp' | file_url %}
+            {% assign fb_box = 'hx_mixbox.webp' | file_url %}
+            <button type="button" class="thumb-btn on" onclick="flaberrySwitchPdpImage('{{ fb_rose }}', this)"><img src="{{ fb_rose }}" alt="Thumbnail 1" width="80" height="80" loading="lazy"></button>
+            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpImage('{{ fb_rose2 }}', this)"><img src="{{ fb_rose2 }}" alt="Thumbnail 2" width="80" height="80" loading="lazy"></button>
+            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpImage('{{ fb_heart }}', this)"><img src="{{ fb_heart }}" alt="Thumbnail 3" width="80" height="80" loading="lazy"></button>
+            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpImage('{{ fb_box }}', this)"><img src="{{ fb_box }}" alt="Thumbnail 4" width="80" height="80" loading="lazy"></button>
+          {% endif %}
+          <button type="button" class="thumb-btn vid-btn" onclick="alert('Playing 360° product video preview.')" aria-label="Play product video">
+            <div class="vid-overlay">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </button>
+        </div>
+
+        <div class="mainimg" id="mainimgContainer">
+          {% if featured_img != blank %}
+            <img id="pdpMainImg" src="{{ featured_img | image_url: width: 800, height: 800 }}" alt="{{ prod_title | escape }}" width="600" height="600">
+          {% else %}
+            <img id="pdpMainImg" src="{{ 'hero_flowers.webp' | file_url }}" alt="{{ prod_title | escape }}" width="600" height="600">
+          {% endif %}
+          <span class="pdp-deal-tag">Fresh Harvest</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Product Information & Purchase Flow -->
+      <div class="pinfo">
+        <div class="pdp-header-meta">
+          <span class="muted" style="font-size: 13px;">Item code: <b id="pdpSkuDisplay">{{ prod_sku }}</b></span>
+          <h1 class="pdp-title">{{ prod_title }}</h1>
+          <div class="pdp-rating-row">
+            <span class="rate">4.8 ★</span>
+            <a href="#reviews" class="muted" style="font-size: 13px;">85 customer reviews</a>
+            <span class="pill info">Handcrafted</span>
+          </div>
+        </div>
+
+        <!-- Price Display -->
+        <div class="price-big">
+          <b class="tab-nums" id="pdpPriceDisplay">{{ prod_price | money }}</b>
+          {% if prod_compare > prod_price %}
+            <s class="muted" id="pdpCompareDisplay">{{ prod_compare | money }}</s>
+          {% endif %}
+          <span class="flaberry-unapproved-chip" title="Price is an internal reference value pending client commercial confirmation">
+            Ref Price
+          </span>
+          <span class="muted" style="font-size: 13px; display: block; margin-top: 4px;">Inclusive of all taxes & free standard greeting card</span>
+        </div>
+
+        <!-- 1. Delivery Pincode Checker -->
+        <div class="box">
+          <h5>Delivery pincode <span id="pdpPinStatusPill" class="pill ok"><span class="dot"></span>Delhi 110001 (Available)</span></h5>
+          <div class="pinform">
+            <input type="text" class="inp" id="pdpPincodeInput" maxlength="6" value="110001" placeholder="Enter Receiver's Pincode">
+            <button type="button" class="btn" onclick="flaberryPdpCheckPin()">Check</button>
+          </div>
+          <div id="pdpPinFeedback" class="notice ok" style="margin-top: 10px;">
+            <span>✓ Available for <b>Same Day Delivery</b> and <b>Midnight Delivery</b> in Delhi.</span>
+          </div>
+        </div>
+
+        <!-- 2. Cake Customization Options (if cake) -->
+        <div class="box" id="cakeOptionsBox">
+          <h5>Customization options</h5>
+          <div class="optrow">
+            <button type="button" class="chip on" onclick="flaberryToggleChip(this, 'egg')">With Egg</button>
+            <button type="button" class="chip" onclick="flaberryToggleChip(this, 'egg')">100% Eggless</button>
+          </div>
+          <div class="optrow" style="margin-top: 8px;">
+            <button type="button" class="chip on" onclick="flaberrySelectWeight(this, '0.5 kg', 199000)">Standard Size (Bouquet / 0.5 kg)</button>
+            <button type="button" class="chip" onclick="flaberrySelectWeight(this, '1 kg', 289000)">Medium (20 Blooms / 1 kg) · ₹2,890</button>
+            <button type="button" class="chip" onclick="flaberrySelectWeight(this, '2 kg', 489000)">Luxury (50 Blooms / 2 kg) · ₹4,890</button>
+          </div>
+        </div>
+
+        <!-- 3. Delivery Date & Time Slot Picker -->
+        <div class="box">
+          <h5>Delivery date <span class="muted" id="selectedDateLabel" style="font-weight: 500;">Today</span></h5>
+          <div class="dates" id="pdpDateRow">
+            <button type="button" class="date-btn on" onclick="flaberryPickDate(this, 'Today')"><span>Today</span><b>18</b><span>Nov</span></button>
+            <button type="button" class="date-btn" onclick="flaberryPickDate(this, 'Tomorrow')"><span>Tomorrow</span><b>19</b><span>Nov</span></button>
+            <button type="button" class="date-btn" onclick="flaberryPickDate(this, 'Thu')"><span>Thu</span><b>20</b><span>Nov</span></button>
+            <button type="button" class="date-btn" onclick="flaberryPickDate(this, 'Fri')"><span>Fri</span><b>21</b><span>Nov</span></button>
+          </div>
+
+          <h5 style="margin-top: 16px;">Delivery time slot</h5>
+          <div class="slots" id="pdpSlotRow">
+            <button type="button" class="slot on" onclick="flaberryPickSlot(this, 'Standard Delivery', 0)">
+              <b>Standard · Free</b>
+              <span class="muted">9:00 AM – 9:00 PM</span>
+            </button>
+            <button type="button" class="slot" onclick="flaberryPickSlot(this, 'Fixed Time', 150)">
+              <b>Fixed Time · ₹150</b>
+              <span class="muted">Pick 1-hr window</span>
+            </button>
+            <button type="button" class="slot" onclick="flaberryPickSlot(this, 'Midnight Delivery', 250)">
+              <b>Midnight · ₹250</b>
+              <span class="muted">11:00 PM – 11:59 PM</span>
+            </button>
+          </div>
+          <div class="notice info" style="margin-top: 12px;">
+            Order within <b>2 hours 15 mins</b> for today's delivery guaranteed.
+          </div>
+        </div>
+
+        <!-- 4. Personalized Message Card -->
+        <div class="box">
+          <h5>Complimentary message card <span class="muted" style="font-weight: 500;">Printed & placed with gift</span></h5>
+          <div class="field" style="margin-bottom: 10px;">
+            <label for="pdpOccasion" style="font-size: 13px; font-weight: 600;">Occasion</label>
+            <select class="inp" id="pdpOccasion" onchange="flaberrySuggestMessage(this.value)">
+              <option value="">Select occasion for ready message</option>
+              <option value="Birthday">Birthday</option>
+              <option value="Anniversary">Anniversary</option>
+              <option value="Love & Romance">Love & Romance</option>
+              <option value="Congratulations">Congratulations</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="pdpCardMessage" style="font-size: 13px; font-weight: 600;">Your Message</label>
+            <textarea class="inp" id="pdpCardMessage" maxlength="250" placeholder="Write a warm personalized message..." oninput="document.getElementById('pdpMsgLen').textContent = this.value.length">Wishing you joy, smiles, and endless happiness on your special day!</textarea>
+            <div style="text-align: right; font-size: 11px; color: var(--fl-color-muted, #6f6763); margin-top: 4px;">
+              <span id="pdpMsgLen">68</span>/250 characters
+            </div>
+          </div>
+
+          <div class="row2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+            <div class="field">
+              <label for="pdpSenderName" style="font-size: 13px; font-weight: 600;">From (Sender Name)</label>
+              <input type="text" class="inp" id="pdpSenderName" placeholder="Your name">
+            </div>
+            <div class="field">
+              <label for="pdpCakeMessage" style="font-size: 13px; font-weight: 600;">Message on Cake (Max 30 chars)</label>
+              <input type="text" class="inp" id="pdpCakeMessage" maxlength="30" placeholder="e.g. Happy Birthday Riya">
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Add-ons Upsells -->
+        <div class="box">
+          <h5>Make it extra special <span class="muted" style="font-weight: 500;">Add-ons</span></h5>
+          <div class="addons" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px;">
+            <button type="button" class="addon-btn" onclick="flaberryToggleAddon(this, 499)">
+              <span class="addon-check">+</span>
+              <img src="{{ 'hx_ferrero.webp' | file_url }}" alt="Ferrero" width="32" height="32" loading="lazy">
+              <span class="addon-text">Ferrero Rocher (16pc) · ₹599</span>
+            </button>
+            <button type="button" class="addon-btn" onclick="flaberryToggleAddon(this, 350)">
+              <span class="addon-check">+</span>
+              <img src="{{ 'hx_truffle.webp' | file_url }}" alt="Choco Box" width="32" height="32" loading="lazy">
+              <span class="addon-text">Cadbury Celebration · ₹350</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 6. Buy Row: Quantity + Add to Cart + Buy Now -->
+        <div class="buyrow">
+          <div class="qty">
+            <button type="button" onclick="flaberryChangeQty(-1)" aria-label="Decrease quantity">−</button>
+            <span id="pdpQtyDisplay">1</span>
+            <button type="button" onclick="flaberryChangeQty(1)" aria-label="Increase quantity">+</button>
+          </div>
+          <button type="button" class="btn" style="flex: 1;" onclick="flaberryAddToCartPdp()">Add to Cart</button>
+          <button type="button" class="btn flora" style="flex: 1;" onclick="flaberryBuyNowPdp()">Buy Now</button>
+        </div>
+
+        <!-- Dual Trust Badges -->
+        <div class="trust" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px;">
+          <div style="display: flex; gap: 10px; align-items: center; background: var(--fl-color-mist, #f5f2f0); padding: 12px; border-radius: var(--fl-radius-md, 16px);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <div>
+              <strong style="display: block; font-size: 13.5px;">100% Secure Payment</strong>
+              <small class="muted" style="font-size: 11.5px;">UPI, Cards & Net Banking</small>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; background: var(--fl-color-mist, #f5f2f0); padding: 12px; border-radius: var(--fl-radius-md, 16px);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div>
+              <strong style="display: block; font-size: 13.5px;">Gifting Help & Support</strong>
+              <small class="muted" style="font-size: 11.5px;">8:00 AM – Midnight Daily</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordions: Description, Delivery details, Care instructions -->
+        <div class="pdp-accordions" style="margin-top: 32px; display: grid; gap: 10px;">
+          <details class="flaberry-faq-item" open>
+            <summary>Product Description</summary>
+            <p>{{ product.description | default: 'A majestic arrangement of fresh hand-picked flowers, crafted to perfection with lush green fillers and wrapped in luxury eco-friendly kraft paper. Perfect for expressing love, joy, and celebration.' }}</p>
+          </details>
+          <details class="flaberry-faq-item">
+            <summary>Delivery Information & Guarantees</summary>
+            <p>Every order is dispatched in temperature-controlled vans to maintain optimal bloom freshness. The delivery will be attempted once to the address provided. Deliveries are made by certified Flaberry delivery executives.</p>
+          </details>
+          <details class="flaberry-faq-item">
+            <summary>Care Instructions</summary>
+            <p>Trim flower stems diagonally by 1-2 inches upon arrival. Place in a clean vase filled with cold water. Keep away from direct sunlight and air conditioning drafts. For cakes, refrigerate immediately upon delivery.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .flaberry-pdp-page {
+    background: var(--fl-color-paper, #ffffff);
+    padding: 24px 0 60px;
+  }
+  .pdp {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 44px;
+    align-items: start;
+    margin-top: 14px;
+  }
+  @media (max-width: 900px) {
+    .pdp {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 14px;
+    position: sticky;
+    top: 120px;
+  }
+  @media (max-width: 600px) {
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+    .thumbs {
+      order: 2;
+      display: flex !important;
+      overflow-x: auto;
+    }
+  }
+  .thumbs {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .thumb-btn {
+    border: 2px solid transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 0;
+    background: var(--fl-color-mist, #f5f2f0);
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .thumb-btn.on, .thumb-btn:hover {
+    border-color: var(--fl-color-ink, #151312);
+  }
+  .thumb-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .vid-btn {
+    position: relative;
+    background: var(--fl-color-ink, #151312) !important;
+  }
+  .vid-overlay {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+  }
+  .mainimg {
+    border-radius: var(--fl-radius-lg, 24px);
+    overflow: hidden;
+    background: var(--fl-color-mist, #f5f2f0);
+    aspect-ratio: 1;
+    position: relative;
+  }
+  .mainimg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .mainimg:hover img {
+    transform: scale(1.04);
+  }
+  .pdp-deal-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: var(--fl-radius-pill, 999px);
+  }
+  .pdp-title {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 6px 0;
+    color: var(--fl-color-ink, #151312);
+  }
+  .pdp-rating-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .rate {
+    background: #f0a722;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12.5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .pill.info {
+    background: var(--fl-color-mist, #f5f2f0);
+    color: var(--fl-color-ink, #151312);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .pill.ok {
+    background: #e9f8ef;
+    color: #1f7a4d;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #1f7a4d;
+  }
+  .price-big {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--fl-color-ink, #151312);
+    margin: 16px 0 20px;
+  }
+  .price-big s {
+    font-size: 18px;
+    color: var(--fl-color-muted, #6f6763);
+    margin-left: 8px;
+    font-weight: 400;
+  }
+  .box {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 18px;
+    margin-bottom: 16px;
+    background: #ffffff;
+  }
+  .box h5 {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--fl-color-ink, #151312);
+    margin: 0 0 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pinform {
+    display: flex;
+    gap: 8px;
+  }
+  .inp {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 10px 16px;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+  }
+  textarea.inp {
+    border-radius: 12px;
+    min-height: 70px;
+    resize: vertical;
+  }
+  .notice {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .notice.ok {
+    background: #e9f8ef;
+    color: #1f7a4d;
+  }
+  .notice.info {
+    background: #eef5fc;
+    color: #1e5ba3;
+  }
+  .optrow {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 8px 16px;
+    border-radius: var(--fl-radius-pill, 999px);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .chip.on, .chip:hover {
+    background: var(--fl-color-ink, #151312);
+    color: #ffffff;
+    border-color: var(--fl-color-ink, #151312);
+  }
+  .dates {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+  .date-btn {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 8px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 68px;
+    cursor: pointer;
+  }
+  .date-btn.on {
+    border-color: var(--fl-color-flora, #e2522c);
+    background: var(--fl-color-blush, #fde8e6);
+  }
+  .date-btn b {
+    font-size: 18px;
+    color: var(--fl-color-ink, #151312);
+  }
+  .date-btn span {
+    font-size: 11px;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .slot {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: left;
+    background: #ffffff;
+    cursor: pointer;
+  }
+  .slot.on {
+    border-color: var(--fl-color-ink, #151312);
+    background: var(--fl-color-mist, #f5f2f0);
+  }
+  .slot b {
+    display: block;
+    font-size: 13.5px;
+  }
+  .slot span {
+    font-size: 11px;
+  }
+  .addon-btn {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .addon-btn.on {
+    border-color: var(--fl-color-leaf, #1f7a4d);
+    background: #e9f8ef;
+  }
+  .addon-btn img {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  .addon-check {
+    font-weight: 700;
+    color: var(--fl-color-leaf, #1f7a4d);
+  }
+  .buyrow {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    align-items: center;
+  }
+  .qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-pill, 999px);
+    overflow: hidden;
+  }
+  .qty button {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .qty span {
+    padding: 0 10px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .btn.flora {
+    background: var(--fl-color-flora, #e2522c);
+    border-color: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+  }
+  .btn.flora:hover {
+    background: var(--fl-color-flora-deep, #c23e1b);
+  }
+</style>
+
+<script>
+  var currentPdpPrice = {{ prod_price | default: 199000 }};
+  var currentPdpQty = 1;
+
+  function flaberrySwitchPdpImage(url, btn) {
+    document.getElementById('pdpMainImg').src = url;
+    document.querySelectorAll('#pdpThumbnails .thumb-btn').forEach(function(b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+  }
+
+  function flaberryPdpCheckPin() {
+    var val = document.getElementById('pdpPincodeInput').value.trim();
+    var fb = document.getElementById('pdpPinFeedback');
+    var pill = document.getElementById('pdpPinStatusPill');
+    if (!val || val.length !== 6 || isNaN(val)) {
+      fb.className = 'notice no';
+      fb.innerHTML = '<span style="color: #b42318;">Please enter a valid 6-digit Indian pincode.</span>';
+      pill.innerHTML = '<span style="color: #b42318;">Invalid Pincode</span>';
+      return;
+    }
+    fb.className = 'notice ok';
+    fb.innerHTML = '<span>✓ Delivery Available at <b>' + val + '</b>: Earliest delivery <b>Today</b> with Midnight slot.</span>';
+    pill.innerHTML = '<span class="dot"></span>' + val + ' (Deliverable)';
+  }
+
+  function flaberryToggleChip(btn, group) {
+    btn.parentElement.querySelectorAll('.chip').forEach(function(b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+  }
+
+  function flaberrySelectWeight(btn, wt, price) {
+    btn.parentElement.querySelectorAll('.chip').forEach(function(b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+    currentPdpPrice = price;
+    updatePdpPrice();
+  }
+
+  function flaberryPickDate(btn, label) {
+    document.querySelectorAll('#pdpDateRow .date-btn').forEach(function(b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+    document.getElementById('selectedDateLabel').textContent = label;
+  }
+
+  function flaberryPickSlot(btn, name, fee) {
+    document.querySelectorAll('#pdpSlotRow .slot').forEach(function(b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+  }
+
+  function flaberrySuggestMessage(val) {
+    var msgs = {
+      'Birthday': 'Wishing you a very Happy Birthday filled with joy, laughter, and your favorite treats!',
+      'Anniversary': 'Happy Anniversary to the most wonderful couple! Wishing you a lifetime of love and togetherness.',
+      'Love & Romance': 'Every moment with you is special. Sending you all my love today and forever.',
+      'Congratulations': 'Heartiest congratulations on your tremendous achievement! So proud of you.'
+    };
+    if (msgs[val]) {
+      var tx = document.getElementById('pdpCardMessage');
+      tx.value = msgs[val];
+      document.getElementById('pdpMsgLen').textContent = tx.value.length;
+    }
+  }
+
+  function flaberryToggleAddon(btn, price) {
+    btn.classList.toggle('on');
+    var check = btn.querySelector('.addon-check');
+    if (btn.classList.contains('on')) {
+      check.textContent = '✓';
+    } else {
+      check.textContent = '+';
+    }
+  }
+
+  function flaberryChangeQty(delta) {
+    currentPdpQty = Math.max(1, currentPdpQty + delta);
+    document.getElementById('pdpQtyDisplay').textContent = currentPdpQty;
+    updatePdpPrice();
+  }
+
+  function updatePdpPrice() {
+    var total = (currentPdpPrice * currentPdpQty) / 100;
+    document.getElementById('pdpPriceDisplay').textContent = '₹' + total.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+  }
+
+  function flaberryAddToCartPdp() {
+    alert('Added to cart! Delivery scheduled with complimentary message card.');
+  }
+
+  function flaberryBuyNowPdp() {
+    window.location.href = '/checkout';
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Main Product",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Flaberry Main Product"
+    }
+  ]
+}
+{% endschema %}

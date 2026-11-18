@@ -2117,5 +2117,47 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "WhatsApp Support",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Floating WhatsApp Support"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_phone",
+        "label": "WhatsApp phone number",
+        "info": "Include international country code without spaces or dashes (e.g. 17135550142). Leave blank to disable widget."
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_greeting",
+        "label": "Default greeting message",
+        "default": "Hi Flaberry, I have an inquiry about my order."
+      }
+    ]
+  },
+  {
+    "name": "Header & Utility Links",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Flaberry Header Actions"
+      },
+      {
+        "type": "url",
+        "id": "track_order_url",
+        "label": "Track order page link",
+        "info": "Destination for the Track Order button. Defaults to #track if left blank."
+      },
+      {
+        "type": "url",
+        "id": "help_url",
+        "label": "Help & support page link",
+        "info": "Destination for the Help button. Defaults to #page-contact if left blank."
+      }
+    ]
   }
 ]

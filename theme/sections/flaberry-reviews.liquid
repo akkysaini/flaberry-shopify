@@ -1,0 +1,219 @@
+{% comment %}
+  Flaberry Customer Reviews & Testimonials Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Displays verified customer testimonials, star ratings, and cities with editorial presentation.
+{% endcomment %}
+
+<div class="flaberry-reviews-section" data-section-id="{{ section.id }}">
+  <div class="flaberry-container">
+    <div class="flaberry-sec-header">
+      <div>
+        <h2 class="flaberry-sec-title">{{ section.settings.title | default: 'Loved by 2 million+ senders' }}</h2>
+        <p class="flaberry-sec-subtitle">{{ section.settings.subtitle | default: 'Real reviews from customers who trust Flaberry for their most memorable occasions.' }}</p>
+      </div>
+      <div class="flaberry-overall-rating">
+        <div class="flaberry-stars">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <span><strong>4.8 / 5</strong> Rating</span>
+      </div>
+    </div>
+
+    <div class="flaberry-reviews-grid">
+      {% for block in section.blocks %}
+        <div class="flaberry-review-card" {{ block.shopify_attributes }}>
+          <div class="flaberry-review-top">
+            <div class="flaberry-card-stars">
+              {% for i in (1..block.settings.stars) %}
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              {% endfor %}
+            </div>
+            <span class="flaberry-verified-tag">✓ Verified Buyer</span>
+          </div>
+
+          <p class="flaberry-review-quote">"{{ block.settings.quote }}"</p>
+
+          <div class="flaberry-reviewer">
+            <strong>{{ block.settings.author }}</strong>
+            <span>{{ block.settings.city }} • Ordered {{ block.settings.product_name }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .flaberry-reviews-section {
+    padding: 44px 0;
+    background: #ffffff;
+  }
+  .flaberry-overall-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--fl-color-mist, #f5f2f0);
+    padding: 8px 16px;
+    border-radius: var(--fl-radius-pill, 999px);
+    font-size: 14px;
+    color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-stars {
+    display: flex;
+    gap: 2px;
+  }
+  .flaberry-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .flaberry-reviews-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+  .flaberry-review-card {
+    background: var(--fl-color-mist, #f5f2f0);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .flaberry-review-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .flaberry-card-stars {
+    display: flex;
+    gap: 2px;
+  }
+  .flaberry-verified-tag {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--fl-color-leaf, #1f7a4d);
+  }
+  .flaberry-review-quote {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--fl-color-ink, #151312);
+    margin: 0 0 18px;
+    flex-grow: 1;
+    font-style: italic;
+  }
+  .flaberry-reviewer {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--fl-color-line, #e7e1dd);
+    padding-top: 12px;
+  }
+  .flaberry-reviewer strong {
+    font-size: 13.5px;
+    color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-reviewer span {
+    font-size: 12px;
+    color: var(--fl-color-muted, #6f6763);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Flaberry Customer Reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Loved by 2 million+ senders"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Real reviews from customers who trust Flaberry for their most memorable occasions."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Customer Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Rating Stars",
+          "min": 1,
+          "max": 5,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Testimonial Quote",
+          "default": "The flowers arrived in Bangalore right at midnight. My mother was so touched by the fresh lilies!"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Customer Name",
+          "default": "Priya S."
+        },
+        {
+          "type": "text",
+          "id": "city",
+          "label": "City / Location",
+          "default": "Bengaluru"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Product Ordered",
+          "default": "Pink Lily Bouquet"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Customer Reviews",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "quote": "The flowers arrived in Bangalore right at midnight. My mother was so touched by the fresh lilies!",
+            "author": "Priya S.",
+            "city": "Bengaluru",
+            "product_name": "Serene Pink Lilies"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Ordered a photo cake for my nephew's birthday in Pune. Freshly baked, moist and delivered exactly on time.",
+            "author": "Rohan M.",
+            "city": "Pune",
+            "product_name": "Personalized Photo Cake"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Best gifting service from USA to Delhi. Payment in USD was smooth and the bouquet was gorgeous.",
+            "author": "Ananya K.",
+            "city": "New Jersey (Sender to Delhi)",
+            "product_name": "Red Rose Gift Luxe"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

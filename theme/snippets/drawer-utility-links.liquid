@@ -1,0 +1,25 @@
+{%- doc -%}
+  Renders Flaberry quick utility links in mobile drawer navigation.
+  Matching prototype `reference/Flaberry_Design1_Classic.html` #mobmenu
+
+  @param {object} block_settings - The block settings object.
+{%- enddoc -%}
+
+{% if block_settings.drawer_show_utilities != false %}
+  <div class="menu-drawer__flaberry-utilities">
+    {% if block_settings.drawer_utility_menu != blank and block_settings.drawer_utility_menu.links.size > 0 %}
+      {% for link in block_settings.drawer_utility_menu.links %}
+        <a href="{{ link.url }}" class="menu-drawer__flaberry-utility-item">{{ link.title }}</a>
+      {% endfor %}
+    {% else %}
+      <a href="{{ settings.track_order_url | default: '#track' }}" class="menu-drawer__flaberry-utility-item">Track order</a>
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}" class="menu-drawer__flaberry-utility-item">My account</a>
+      {% endif %}
+      <a href="{{ settings.help_url | default: '#page-contact' }}" class="menu-drawer__flaberry-utility-item">Support</a>
+      <a href="{{ routes.root_url }}#page-pincodes" class="menu-drawer__flaberry-utility-item">Serviceable pincodes</a>
+      <a href="{{ routes.root_url }}#page-corporate" class="menu-drawer__flaberry-utility-item">Corporate gifting</a>
+      <a href="{{ routes.root_url }}#page-partner" class="menu-drawer__flaberry-utility-item">Become a partner</a>
+    {% endif %}
+  </div>
+{% endif %}

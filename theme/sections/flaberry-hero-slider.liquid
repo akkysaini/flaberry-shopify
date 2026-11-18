@@ -1,0 +1,441 @@
+{% comment %}
+  Flaberry Hero Slider Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Admin-first, fully responsive with desktop (1440px) and mobile (375px) support.
+{% endcomment %}
+
+<div class="flaberry-hero-wrapper" data-section-id="{{ section.id }}">
+  <div class="flaberry-hero-container">
+    <div class="flaberry-hero-track" id="flaberry-hero-track-{{ section.id }}">
+      {% for block in section.blocks %}
+        {% assign slide_img = block.settings.image %}
+        <div class="flaberry-hero-slide {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <div class="flaberry-hero-media">
+            {% if slide_img != blank %}
+              {{ slide_img | image_url: width: 1600 | image_tag: 
+                loading: 'eager', 
+                fetchpriority: 'high', 
+                class: 'flaberry-hero-img', 
+                widths: '375, 768, 1200, 1600',
+                sizes: '100vw',
+                alt: block.settings.heading | escape 
+              }}
+            {% else %}
+              <div class="flaberry-hero-placeholder"></div>
+            {% endif %}
+            <div class="flaberry-hero-overlay"></div>
+          </div>
+
+          <div class="flaberry-hero-content">
+            <div class="flaberry-hero-inner">
+              {% if block.settings.eyebrow != blank %}
+                <span class="flaberry-hero-eyebrow">{{ block.settings.eyebrow }}</span>
+              {% endif %}
+              {% if block.settings.heading != blank %}
+                <h1 class="flaberry-hero-title">{{ block.settings.heading }}</h1>
+              {% endif %}
+              {% if block.settings.subheading != blank %}
+                <p class="flaberry-hero-subtitle">{{ block.settings.subheading }}</p>
+              {% endif %}
+              <div class="flaberry-hero-actions">
+                {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                  <a href="{{ block.settings.button_link }}" class="flaberry-btn flaberry-btn-primary">
+                    {{ block.settings.button_label }}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </a>
+                {% endif %}
+                {% if block.settings.secondary_button_label != blank and block.settings.secondary_button_link != blank %}
+                  <a href="{{ block.settings.secondary_button_link }}" class="flaberry-btn flaberry-btn-outline">
+                    {{ block.settings.secondary_button_label }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size > 1 %}
+      <div class="flaberry-hero-controls">
+        <button class="flaberry-hero-prev" aria-label="Previous slide" onclick="flaberryPrevHero('{{ section.id }}')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="flaberry-hero-dots">
+          {% for block in section.blocks %}
+            <button class="flaberry-hero-dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}" onclick="flaberryGoHero('{{ section.id }}', {{ forloop.index0 }})"></button>
+          {% endfor %}
+        </div>
+        <button class="flaberry-hero-next" aria-label="Next slide" onclick="flaberryNextHero('{{ section.id }}')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_trust_pill %}
+      <div class="flaberry-hero-trust-pill">
+        {% if section.settings.trust_badge_image != blank %}
+          {{ section.settings.trust_badge_image | image_url: width: 44, height: 44 | image_tag: width: 44, height: 44, loading: 'lazy', alt: 'Trust Badge' }}
+        {% endif %}
+        <div class="flaberry-trust-text">
+          <strong>20 Years of Trust</strong>
+          <span>Delivering smiles across 500+ Indian cities</span>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .flaberry-hero-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-hero-container {
+    position: relative;
+    width: 100%;
+    min-height: 480px;
+    max-height: 640px;
+    height: 65vh;
+  }
+  @media (max-width: 768px) {
+    .flaberry-hero-container {
+      height: 75vh;
+      min-height: 420px;
+    }
+  }
+  .flaberry-hero-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .flaberry-hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+    z-index: 1;
+  }
+  .flaberry-hero-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
+  }
+  .flaberry-hero-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .flaberry-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .flaberry-hero-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2b2624 0%, #151312 100%);
+  }
+  .flaberry-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(21, 19, 18, 0.78) 0%, rgba(21, 19, 18, 0.45) 50%, rgba(21, 19, 18, 0.1) 100%);
+  }
+  @media (max-width: 768px) {
+    .flaberry-hero-overlay {
+      background: linear-gradient(180deg, rgba(21, 19, 18, 0.25) 0%, rgba(21, 19, 18, 0.85) 100%);
+    }
+  }
+  .flaberry-hero-content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: var(--fl-max-width-page, 1440px);
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+  }
+  @media (max-width: 768px) {
+    .flaberry-hero-content {
+      align-items: flex-end;
+      padding: 0 20px 48px;
+    }
+  }
+  .flaberry-hero-inner {
+    max-width: 580px;
+    color: #ffffff;
+  }
+  .flaberry-hero-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ff9d85;
+    margin-bottom: 12px;
+  }
+  .flaberry-hero-title {
+    font-family: var(--fl-font-display, "Inter Tight", sans-serif);
+    font-size: clamp(32px, 4.5vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin: 0 0 16px;
+  }
+  .flaberry-hero-subtitle {
+    font-size: clamp(15px, 1.8vw, 18px);
+    line-height: 1.5;
+    color: #ded9d5;
+    margin: 0 0 28px;
+  }
+  .flaberry-hero-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .flaberry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--fl-radius-pill, 999px);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .flaberry-btn-primary {
+    background-color: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+    border: 2px solid var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-btn-primary:hover {
+    background-color: var(--fl-color-flora-deep, #c23e1b);
+    border-color: var(--fl-color-flora-deep, #c23e1b);
+    transform: translateY(-2px);
+  }
+  .flaberry-btn-outline {
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+  }
+  .flaberry-btn-outline:hover {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .flaberry-hero-controls {
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(21, 19, 18, 0.6);
+    backdrop-filter: blur(8px);
+    padding: 8px 14px;
+    border-radius: var(--fl-radius-pill, 999px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  @media (max-width: 768px) {
+    .flaberry-hero-controls {
+      display: none;
+    }
+  }
+  .flaberry-hero-prev, .flaberry-hero-next {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+  .flaberry-hero-prev:hover, .flaberry-hero-next:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .flaberry-hero-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .flaberry-hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .flaberry-hero-dot.active {
+    width: 22px;
+    border-radius: 4px;
+    background: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-hero-trust-pill {
+    position: absolute;
+    bottom: 24px;
+    left: 32px;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 8px 18px 8px 12px;
+    border-radius: var(--fl-radius-pill, 999px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+  @media (max-width: 768px) {
+    .flaberry-hero-trust-pill {
+      display: none;
+    }
+  }
+  .flaberry-trust-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+  .flaberry-trust-text strong {
+    font-size: 13.5px;
+    color: var(--fl-color-ink, #151312);
+    font-weight: 700;
+  }
+  .flaberry-trust-text span {
+    font-size: 11.5px;
+    color: var(--fl-color-muted, #6f6763);
+  }
+</style>
+
+<script>
+  function flaberryGoHero(sectionId, idx) {
+    const track = document.getElementById('flaberry-hero-track-' + sectionId);
+    if (!track) return;
+    const slides = track.querySelectorAll('.flaberry-hero-slide');
+    const dots = track.parentElement.querySelectorAll('.flaberry-hero-dot');
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+  function flaberryNextHero(sectionId) {
+    const track = document.getElementById('flaberry-hero-track-' + sectionId);
+    if (!track) return;
+    const slides = track.querySelectorAll('.flaberry-hero-slide');
+    let cur = 0;
+    slides.forEach((s, i) => { if (s.classList.contains('active')) cur = i; });
+    flaberryGoHero(sectionId, (cur + 1) % slides.length);
+  }
+  function flaberryPrevHero(sectionId) {
+    const track = document.getElementById('flaberry-hero-track-' + sectionId);
+    if (!track) return;
+    const slides = track.querySelectorAll('.flaberry-hero-slide');
+    let cur = 0;
+    slides.forEach((s, i) => { if (s.classList.contains('active')) cur = i; });
+    flaberryGoHero(sectionId, (cur - 1 + slides.length) % slides.length);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Hero Slider",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_trust_pill",
+      "label": "Show Trust Pill Badge",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "trust_badge_image",
+      "label": "Trust Badge Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero_slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide Background Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow Tag",
+          "default": "Express Delivery"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Hand-tied bouquets, delivered fresh"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Farm-fresh flowers hand-picked daily and delivered on your schedule across 500+ cities."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Primary Button Label",
+          "default": "Explore Bouquets"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Primary Button Link"
+        },
+        {
+          "type": "text",
+          "id": "secondary_button_label",
+          "label": "Secondary Button Label",
+          "default": "Order Cakes"
+        },
+        {
+          "type": "url",
+          "id": "secondary_button_link",
+          "label": "Secondary Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Hero Slider",
+      "blocks": [
+        {
+          "type": "hero_slide",
+          "settings": {
+            "eyebrow": "Express Delivery Across India",
+            "heading": "Hand-tied bouquets, delivered fresh",
+            "subheading": "Farm-fresh flowers hand-picked daily and delivered on your schedule across 500+ cities.",
+            "button_label": "Shop Flowers",
+            "secondary_button_label": "Order Cakes"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

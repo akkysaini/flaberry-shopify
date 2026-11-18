@@ -1,0 +1,76 @@
+{
+  "flowers": {
+    "title": "Flowers",
+    "sub": [
+      "roses",
+      "orchids",
+      "lilies",
+      "carnations",
+      "gerberas",
+      "sunflowers",
+      "bouquets",
+      "vase",
+      "baskets",
+      "box",
+      "heart-shape",
+      "premium-flowers",
+      "sympathy"
+    ],
+    "img": "t_bouquets",
+    "blurb": "Hand-tied bouquets, baskets and vases"
+  },
+  "cakes": {
+    "title": "Cakes",
+    "sub": [
+      "chocolate-cakes",
+      "truffle",
+      "black-forest",
+      "red-velvet",
+      "pineapple",
+      "butterscotch",
+      "photo-cakes",
+      "eggless",
+      "designer-cakes",
+      "kids-cakes"
+    ],
+    "img": "t_premiumcake",
+    "blurb": "Baked fresh on order, eggless options"
+  },
+  "combos": {
+    "title": "Combos",
+    "sub": [
+      "cake-and-flowers",
+      "flowers-and-chocolates",
+      "flowers-and-teddies"
+    ],
+    "img": "t_cakeflowers",
+    "blurb": "Flowers with cake, chocolates and teddies"
+  },
+  "gifts": {
+    "title": "Gifts",
+    "sub": [
+      "hampers",
+      "sweets",
+      "dry-fruits",
+      "fruits",
+      "plants"
+    ],
+    "img": "t_congrats",
+    "blurb": "Hampers, mithai, dry fruits and plants"
+  },
+  "occasions": {
+    "title": "Occasions",
+    "sub": [
+      "birthday",
+      "anniversary",
+      "christmas",
+      "new-year",
+      "romance",
+      "congratulations",
+      "thank-you",
+      "get-well-soon"
+    ],
+    "img": "t_birthday",
+    "blurb": "Gifts picked for the moment"
+  }
+}

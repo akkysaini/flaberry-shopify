@@ -1,0 +1,578 @@
+{%- comment -%}
+  Flaberry 4-Column Footer Section
+  Matching prototype `reference/Flaberry_Design1_Classic.html` #footer
+  - 4 Configurable columns via Shopify Admin link_list settings
+  - Native Shopify newsletter signup form
+  - Actual shop.enabled_payment_types payment icons
+  - Customer support contact with copyable phone/email
+  - Fully responsive desktop and mobile layouts
+{%- endcomment -%}
+
+<footer
+  class="flaberry-footer"
+  style="
+    --fb-footer-bg: {{ section.settings.bg_color | default: '#151312' }};
+    --fb-footer-text: {{ section.settings.text_color | default: '#cfc7c2' }};
+    --fb-footer-heading: {{ section.settings.heading_color | default: '#ffffff' }};
+  "
+>
+  <div class="flaberry-footer__container">
+    <div class="flaberry-footer__grid">
+      {%- comment -%} Column 1: Brand, Newsletter & Customer Support {%- endcomment -%}
+      <div class="flaberry-footer__col flaberry-footer__col--brand">
+        <a href="{{ routes.root_url }}" class="flaberry-footer__logo-link" aria-label="{{ shop.name }}">
+          {% if section.settings.logo != blank %}
+            {{
+              section.settings.logo
+              | image_url: width: 220
+              | image_tag: class: 'flaberry-footer__logo-img', alt: shop.name
+            }}
+          {% else %}
+            <span class="flaberry-footer__logo-badge">{{ shop.name }}</span>
+          {% endif %}
+        </a>
+
+        {% if section.settings.brand_text != blank %}
+          <p class="flaberry-footer__brand-text">
+            {{ section.settings.brand_text }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.show_newsletter %}
+          <div class="flaberry-footer__newsletter">
+            {% form 'customer', id: 'FlaberryFooterNewsletterForm', class: 'flaberry-footer__form' %}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <label for="FlaberryFooterEmail" class="visually-hidden">Email for offers</label>
+              <div class="flaberry-footer__input-row">
+                <input
+                  id="FlaberryFooterEmail"
+                  type="email"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  placeholder="{{ section.settings.newsletter_placeholder | default: 'Email for offers' }}"
+                  required
+                  aria-required="true"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  class="flaberry-footer__input"
+                >
+                <button type="submit" class="flaberry-footer__btn" aria-label="Subscribe to newsletter">
+                  {{ section.settings.newsletter_button_text | default: 'Subscribe' }}
+                </button>
+              </div>
+
+              {% if form.posted_successfully? %}
+                <p class="flaberry-footer__status-msg flaberry-footer__status-msg--success" role="status">
+                  Subscribed. Watch your inbox for offers.
+                </p>
+              {% endif %}
+
+              {% if form.errors %}
+                <p class="flaberry-footer__status-msg flaberry-footer__status-msg--error" role="alert">
+                  {{ form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email }}
+                </p>
+              {% endif %}
+            {% endform %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_support_info %}
+          {% if section.settings.support_hours != blank or section.settings.support_phone != blank or section.settings.support_email != blank %}
+            <div class="flaberry-footer__support">
+              {% if section.settings.support_hours != blank %}
+                <p class="flaberry-footer__support-hours">
+                  {{ section.settings.support_hours }}
+                </p>
+              {% endif %}
+              <p class="flaberry-footer__support-links">
+                {% if section.settings.support_phone != blank %}
+                  <a href="tel:{{ section.settings.support_phone | replace: ' ', '' }}" class="flaberry-footer__contact-val">
+                    {{- section.settings.support_phone -}}
+                  </a>
+                {% endif %}
+                {% if section.settings.support_phone != blank and section.settings.support_email != blank %}
+                  <span class="flaberry-footer__dot">·</span>
+                {% endif %}
+                {% if section.settings.support_email != blank %}
+                  <a href="mailto:{{ section.settings.support_email }}" class="flaberry-footer__contact-val">
+                    {{- section.settings.support_email -}}
+                  </a>
+                {% endif %}
+              </p>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      {%- comment -%} Column 2: Navigation Column 1 (Shop) {%- endcomment -%}
+      <div class="flaberry-footer__col">
+        <h6 class="flaberry-footer__col-title">{{ section.settings.col2_heading | default: 'Shop' }}</h6>
+        <ul class="flaberry-footer__menu list-unstyled">
+          {% if section.settings.col2_menu != blank and section.settings.col2_menu.links.size > 0 %}
+            {% for link in section.settings.col2_menu.links %}
+              <li><a href="{{ link.url }}" class="flaberry-footer__link">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Flowers</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Cakes</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Combos</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Gifts</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Same day delivery</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Midnight delivery</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      {%- comment -%} Column 3: Navigation Column 2 (Occasions) {%- endcomment -%}
+      <div class="flaberry-footer__col">
+        <h6 class="flaberry-footer__col-title">{{ section.settings.col3_heading | default: 'Occasions' }}</h6>
+        <ul class="flaberry-footer__menu list-unstyled">
+          {% if section.settings.col3_menu != blank and section.settings.col3_menu.links.size > 0 %}
+            {% for link in section.settings.col3_menu.links %}
+              <li><a href="{{ link.url }}" class="flaberry-footer__link">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Birthday</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Anniversary</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Love & Romance</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Congratulations</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Get Well Soon</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Thank You</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      {%- comment -%} Column 4: Navigation Column 3 (Company & Help) {%- endcomment -%}
+      <div class="flaberry-footer__col">
+        <h6 class="flaberry-footer__col-title">{{ section.settings.col4_heading | default: 'Company' }}</h6>
+        <ul class="flaberry-footer__menu list-unstyled">
+          {% if section.settings.col4_menu != blank and section.settings.col4_menu.links.size > 0 %}
+            {% for link in section.settings.col4_menu.links %}
+              <li><a href="{{ link.url }}" class="flaberry-footer__link">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="{{ routes.root_url }}#page-about" class="flaberry-footer__link">About Us</a></li>
+            <li><a href="{{ settings.track_order_url | default: '#track' }}" class="flaberry-footer__link">Track Order</a></li>
+            <li><a href="{{ settings.help_url | default: '#page-contact' }}" class="flaberry-footer__link">Contact & FAQs</a></li>
+            <li><a href="{{ routes.root_url }}#page-corporate" class="flaberry-footer__link">Corporate Gifting</a></li>
+            <li><a href="{{ routes.root_url }}#page-partner" class="flaberry-footer__link">Become a Partner</a></li>
+            <li><a href="{{ routes.root_url }}#page-terms" class="flaberry-footer__link">Terms & Privacy</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    {%- comment -%} Bottom Bar: Copyright & Real Payment Icons {%- endcomment -%}
+    <div class="flaberry-footer__bottom">
+      <div class="flaberry-footer__copyright">
+        {{ section.settings.copyright_text | default: "© 2026 Flaberry. All rights reserved. India's trusted online florist & gift shop." }}
+      </div>
+
+      {% if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 %}
+        <div class="flaberry-footer__payments" aria-label="Accepted payment methods">
+          {% for type in shop.enabled_payment_types %}
+            {{ type | payment_type_svg_tag: class: 'flaberry-footer__payment-svg' }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .flaberry-footer {
+    background-color: var(--fb-footer-bg, #151312);
+    color: var(--fb-footer-text, #cfc7c2);
+    font-size: 14px;
+    line-height: 1.6;
+    padding-top: 48px;
+    padding-bottom: 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .flaberry-footer__container {
+    max-width: var(--fl-max-width-page, 1440px);
+    margin: 0 auto;
+    padding-left: var(--fl-gutter, max(16px, env(safe-area-inset-left, 0px)));
+    padding-right: var(--fl-gutter-r, max(16px, env(safe-area-inset-right, 0px)));
+  }
+
+  .flaberry-footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .flaberry-footer__col--brand {
+    max-width: 400px;
+  }
+
+  .flaberry-footer__logo-link {
+    display: inline-block;
+    margin-bottom: 16px;
+    text-decoration: none;
+  }
+
+  .flaberry-footer__logo-img {
+    height: 40px;
+    width: auto;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 4px 10px;
+    display: block;
+  }
+
+  .flaberry-footer__logo-badge {
+    display: inline-block;
+    background: #ffffff;
+    color: var(--fl-color-ink, #151312);
+    font-weight: 700;
+    font-size: 18px;
+    padding: 6px 14px;
+    border-radius: 8px;
+  }
+
+  .flaberry-footer__brand-text {
+    color: var(--fb-footer-text, #cfc7c2);
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .flaberry-footer__form {
+    margin-bottom: 16px;
+  }
+
+  .flaberry-footer__input-row {
+    display: flex;
+    gap: 8px;
+    max-width: 360px;
+  }
+
+  .flaberry-footer__input {
+    flex: 1;
+    min-width: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 8px 16px;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .flaberry-footer__input:focus {
+    border-color: var(--fl-color-flora, #e2522c);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .flaberry-footer__input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .flaberry-footer__btn {
+    background: #ffffff;
+    color: var(--fl-color-ink, #151312);
+    border: none;
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  .flaberry-footer__btn:hover {
+    background: var(--fl-color-mist, #f5f2f0);
+  }
+
+  .flaberry-footer__btn:active {
+    transform: scale(0.98);
+  }
+
+  .flaberry-footer__status-msg {
+    margin: 8px 0 0;
+    font-size: 13px;
+  }
+
+  .flaberry-footer__status-msg--success {
+    color: #4ade80;
+  }
+
+  .flaberry-footer__status-msg--error {
+    color: #f87171;
+  }
+
+  .flaberry-footer__support {
+    font-size: 13px;
+    color: var(--fb-footer-text, #cfc7c2);
+    margin-top: 12px;
+  }
+
+  .flaberry-footer__support-hours {
+    margin: 0 0 4px;
+  }
+
+  .flaberry-footer__support-links {
+    margin: 0;
+  }
+
+  .flaberry-footer__contact-val {
+    color: var(--fb-footer-text, #cfc7c2);
+    text-decoration: none;
+    user-select: all;
+    transition: color 0.15s ease;
+  }
+
+  .flaberry-footer__contact-val:hover {
+    color: #ffffff;
+  }
+
+  .flaberry-footer__dot {
+    margin: 0 4px;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .flaberry-footer__col-title {
+    color: var(--fb-footer-heading, #ffffff);
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  .flaberry-footer__menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .flaberry-footer__menu li {
+    margin-bottom: 10px;
+  }
+
+  .flaberry-footer__link {
+    color: var(--fb-footer-text, #cfc7c2);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.15s ease, transform 0.15s ease;
+    display: inline-block;
+  }
+
+  .flaberry-footer__link:hover {
+    color: #ffffff;
+    transform: translateX(2px);
+  }
+
+  .flaberry-footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    flex-wrap: wrap;
+  }
+
+  .flaberry-footer__payments {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .flaberry-footer__payment-svg {
+    height: 24px;
+    width: auto;
+    border-radius: 4px;
+  }
+
+  @media screen and (max-width: 960px) {
+    .flaberry-footer {
+      padding-top: 36px;
+      padding-bottom: 84px; /* Clearance for mobile bottom dock */
+    }
+
+    .flaberry-footer__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .flaberry-footer__col--brand {
+      max-width: 100%;
+    }
+
+    .flaberry-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Flaberry Footer",
+  "class": "section-flaberry-footer",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand & Colors"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer logo"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_text",
+      "label": "Brand description",
+      "default": "Handcrafted flowers, artisan cakes, and curated gifting experiences for every special moment."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#151312"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#cfc7c2"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter Signup"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup form",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Newsletter placeholder",
+      "default": "Email for offers"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_text",
+      "label": "Subscribe button text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "header",
+      "content": "Customer Support Contact"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_support_info",
+      "label": "Show customer support details",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "support_hours",
+      "label": "Support hours text"
+    },
+    {
+      "type": "text",
+      "id": "support_phone",
+      "label": "Support phone number"
+    },
+    {
+      "type": "text",
+      "id": "support_email",
+      "label": "Support email address",
+      "default": "customerservice@flaberry.com"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Column 2"
+    },
+    {
+      "type": "text",
+      "id": "col2_heading",
+      "label": "Column 2 heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "col2_menu",
+      "label": "Column 2 menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Column 3"
+    },
+    {
+      "type": "text",
+      "id": "col3_heading",
+      "label": "Column 3 heading",
+      "default": "Occasions"
+    },
+    {
+      "type": "link_list",
+      "id": "col3_menu",
+      "label": "Column 3 menu"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Column 4"
+    },
+    {
+      "type": "text",
+      "id": "col4_heading",
+      "label": "Column 4 heading",
+      "default": "Company"
+    },
+    {
+      "type": "link_list",
+      "id": "col4_menu",
+      "label": "Column 4 menu"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show enabled payment method icons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "© 2026 Flaberry. All rights reserved."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Footer"
+    }
+  ]
+}
+{% endschema %}

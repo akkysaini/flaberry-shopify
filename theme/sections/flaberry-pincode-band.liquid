@@ -1,0 +1,130 @@
+{% comment %}
+  Flaberry Pincode Delivery Band
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Blush-colored banner located directly below Hero Slider with pincode checker and quick city chips.
+{% endcomment %}
+
+<div class="flaberry-pinband-section" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <div class="pinband">
+      <div class="pinband-copy">
+        <h3>Check delivery in your city</h3>
+        <p class="muted">Enter your pincode to check instant same-day delivery, midnight slots, and florist availability.</p>
+      </div>
+      <div class="pinband-form-wrapper">
+        <form class="pinform" onsubmit="event.preventDefault(); flaberryCheckHeroPin();">
+          <input type="text" class="inp" id="heroPincodeInp" maxlength="6" placeholder="Enter 6-digit Pincode" aria-label="Receiver's pincode">
+          <button type="submit" class="btn">Check</button>
+        </form>
+        <div class="quickpins">
+          <small class="muted" style="margin-right: 4px; line-height: 28px; font-weight: 600;">Popular:</small>
+          <button type="button" class="chip" onclick="flaberrySetHeroPin('Delhi', '110001')">Delhi</button>
+          <button type="button" class="chip" onclick="flaberrySetHeroPin('Mumbai', '400001')">Mumbai</button>
+          <button type="button" class="chip" onclick="flaberrySetHeroPin('Bengaluru', '560001')">Bengaluru</button>
+          <button type="button" class="chip" onclick="flaberrySetHeroPin('Pune', '411001')">Pune</button>
+          <button type="button" class="chip" onclick="flaberrySetHeroPin('Hyderabad', '500001')">Hyderabad</button>
+        </div>
+        <div id="heroPinStatus" class="pinstatus" style="display: none; margin-top: 10px; font-size: 13.5px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .flaberry-pinband-section {
+    padding: 0 0 32px;
+    background: #ffffff;
+  }
+  .pinband {
+    border-radius: var(--fl-radius-lg, 24px);
+    background: var(--fl-color-blush, #fde8e6);
+    padding: 26px 32px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+    gap: 28px;
+    align-items: center;
+  }
+  @media (max-width: 860px) {
+    .pinband {
+      grid-template-columns: 1fr;
+      padding: 20px;
+      gap: 16px;
+    }
+  }
+  .pinband-copy h3 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--fl-color-ink, #151312);
+    margin-bottom: 6px;
+  }
+  .pinband-copy p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .pinform {
+    display: flex;
+    gap: 10px;
+  }
+  .pinform .inp {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    border-radius: var(--fl-radius-pill, 999px);
+    padding: 12px 20px;
+    font-size: 15px;
+    flex: 1;
+    outline: none;
+  }
+  .quickpins {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    align-items: center;
+  }
+  .quickpins .chip {
+    padding: 5px 12px;
+    font-size: 12px;
+    background: #ffffff;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-pill, 999px);
+    cursor: pointer;
+  }
+  .quickpins .chip:hover {
+    background: var(--fl-color-ink, #151312);
+    color: #ffffff;
+    border-color: var(--fl-color-ink, #151312);
+  }
+</style>
+
+<script>
+  function flaberryCheckHeroPin() {
+    var val = document.getElementById('heroPincodeInp').value.trim();
+    var st = document.getElementById('heroPinStatus');
+    if (!val || val.length !== 6 || isNaN(val)) {
+      st.style.display = 'block';
+      st.style.color = '#b42318';
+      st.innerHTML = 'Please enter a valid 6-digit Indian pincode.';
+      return;
+    }
+    st.style.display = 'block';
+    st.style.color = '#1f7a4d';
+    st.innerHTML = '<b>✓ Delivery Available:</b> Same Day & Midnight Delivery active in pincode ' + val + '.';
+  }
+
+  function flaberrySetHeroPin(city, pin) {
+    document.getElementById('heroPincodeInp').value = pin;
+    flaberryCheckHeroPin();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Pincode Band",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Flaberry Pincode Band"
+    }
+  ]
+}
+{% endschema %}

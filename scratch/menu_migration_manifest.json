@@ -1,0 +1,343 @@
+{
+  "manifest_version": "1.0.0",
+  "store_domain": "flaberry-pps4i03n.myshopify.com",
+  "api_version": "2026-10",
+  "updated_at": "2026-11-18T00:23:38.171Z",
+  "menu": {
+    "id": "gid://shopify/Menu/259466559679",
+    "handle": "flaberry-nav-full-dev",
+    "title": "Flaberry Navigation (Full Dev)",
+    "itemsCount": 8,
+    "items": [
+      {
+        "id": "gid://shopify/MenuItem/653749420223",
+        "title": "Flowers",
+        "url": "/collections/flowers",
+        "items": [
+          {
+            "id": "gid://shopify/MenuItem/653749452991",
+            "title": "All Flowers",
+            "url": "/collections/flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749485759",
+            "title": "Roses",
+            "url": "/collections/roses"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749518527",
+            "title": "Orchids",
+            "url": "/collections/orchids"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749551295",
+            "title": "Lilies",
+            "url": "/collections/lilies"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749584063",
+            "title": "Carnations",
+            "url": "/collections/carnations"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749616831",
+            "title": "Gerberas",
+            "url": "/collections/gerberas"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749649599",
+            "title": "Sunflowers",
+            "url": "/collections/sunflowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749682367",
+            "title": "Flower Bouquets",
+            "url": "/collections/bouquets"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749715135",
+            "title": "Vase Arrangements",
+            "url": "/collections/vase"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749747903",
+            "title": "Flower Baskets",
+            "url": "/collections/baskets"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749780671",
+            "title": "Flowers in Box",
+            "url": "/collections/box"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749813439",
+            "title": "Heart Shaped",
+            "url": "/collections/heart-shape"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749846207",
+            "title": "Premium & Exotic",
+            "url": "/collections/premium-flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749878975",
+            "title": "Red Flowers",
+            "url": "/collections/red-flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749911743",
+            "title": "Pink Flowers",
+            "url": "/collections/pink-flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749944511",
+            "title": "Yellow Flowers",
+            "url": "/collections/yellow-flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653749977279",
+            "title": "White Flowers",
+            "url": "/collections/white-flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750010047",
+            "title": "Mixed Colour Flowers",
+            "url": "/collections/mixed-flowers"
+          }
+        ]
+      },
+      {
+        "id": "gid://shopify/MenuItem/653750042815",
+        "title": "Cakes",
+        "url": "/collections/cakes",
+        "items": [
+          {
+            "id": "gid://shopify/MenuItem/653750075583",
+            "title": "All Cakes",
+            "url": "/collections/cakes"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750108351",
+            "title": "Chocolate Cakes",
+            "url": "/collections/chocolate-cakes"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750141119",
+            "title": "Truffle Cakes",
+            "url": "/collections/truffle"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750173887",
+            "title": "Black Forest",
+            "url": "/collections/black-forest"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750206655",
+            "title": "Red Velvet",
+            "url": "/collections/red-velvet"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750239423",
+            "title": "Pineapple Cakes",
+            "url": "/collections/pineapple"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750272191",
+            "title": "Butterscotch Cakes",
+            "url": "/collections/butterscotch"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750304959",
+            "title": "Photo Cakes",
+            "url": "/collections/photo-cakes"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750337727",
+            "title": "Eggless Cakes",
+            "url": "/collections/eggless"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750370495",
+            "title": "Designer & Tier Cakes",
+            "url": "/collections/designer-cakes"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750403263",
+            "title": "Kids Cakes",
+            "url": "/collections/kids-cakes"
+          }
+        ]
+      },
+      {
+        "id": "gid://shopify/MenuItem/653750436031",
+        "title": "Combos",
+        "url": "/collections/combos",
+        "items": [
+          {
+            "id": "gid://shopify/MenuItem/653750468799",
+            "title": "All Combos",
+            "url": "/collections/combos"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750501567",
+            "title": "Flowers with Cake",
+            "url": "/collections/cake-and-flowers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750534335",
+            "title": "Flowers with Chocolates",
+            "url": "/collections/flowers-and-chocolates"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750567103",
+            "title": "Flowers with Teddy",
+            "url": "/collections/flowers-and-teddies"
+          }
+        ]
+      },
+      {
+        "id": "gid://shopify/MenuItem/653750599871",
+        "title": "Gifts",
+        "url": "/collections/gifts",
+        "items": [
+          {
+            "id": "gid://shopify/MenuItem/653750632639",
+            "title": "All Gifts",
+            "url": "/collections/gifts"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750665407",
+            "title": "Sweets & Mithai",
+            "url": "/collections/sweets"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750698175",
+            "title": "Dry Fruits",
+            "url": "/collections/dry-fruits"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750730943",
+            "title": "Gift Hampers",
+            "url": "/collections/hampers"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750763711",
+            "title": "Fresh Fruit Baskets",
+            "url": "/collections/fruits"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750796479",
+            "title": "Plants",
+            "url": "/collections/plants"
+          }
+        ]
+      },
+      {
+        "id": "gid://shopify/MenuItem/653750829247",
+        "title": "Occasions",
+        "url": "/collections/occasions",
+        "items": [
+          {
+            "id": "gid://shopify/MenuItem/653750862015",
+            "title": "Birthday",
+            "url": "/collections/birthday"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750894783",
+            "title": "Anniversary",
+            "url": "/collections/anniversary"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750927551",
+            "title": "Love & Romance",
+            "url": "/collections/romance"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750960319",
+            "title": "Congratulations",
+            "url": "/collections/congratulations"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653750993087",
+            "title": "Thank You",
+            "url": "/collections/thank-you"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751025855",
+            "title": "Get Well Soon",
+            "url": "/collections/get-well-soon"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751058623",
+            "title": "Christmas Gifts",
+            "url": "/collections/christmas"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751091391",
+            "title": "New Year Gifts",
+            "url": "/collections/new-year"
+          }
+        ]
+      },
+      {
+        "id": "gid://shopify/MenuItem/653751124159",
+        "title": "Recipient",
+        "url": "/collections/for-her",
+        "items": [
+          {
+            "id": "gid://shopify/MenuItem/653751156927",
+            "title": "Gifts for Her",
+            "url": "/collections/for-her"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751189695",
+            "title": "Gifts for Him",
+            "url": "/collections/for-him"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751222463",
+            "title": "Gifts for Mother",
+            "url": "/collections/for-mother"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751255231",
+            "title": "Gifts for Father",
+            "url": "/collections/for-father"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751287999",
+            "title": "Gifts for Wife",
+            "url": "/collections/for-wife"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751320767",
+            "title": "Gifts for Husband",
+            "url": "/collections/for-husband"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751353535",
+            "title": "Gifts for Friends",
+            "url": "/collections/for-friends"
+          },
+          {
+            "id": "gid://shopify/MenuItem/653751386303",
+            "title": "Gifts for Kids",
+            "url": "/collections/for-kids"
+          }
+        ]
+      },
+      {
+        "id": "gid://shopify/MenuItem/653751419071",
+        "title": "Advance Orders",
+        "url": "/pages/advance-orders",
+        "items": []
+      },
+      {
+        "id": "gid://shopify/MenuItem/653751451839",
+        "title": "Corporate",
+        "url": "/pages/corporate-gifting",
+        "items": []
+      }
+    ]
+  }
+}

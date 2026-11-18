@@ -1,0 +1,23 @@
+{
+  "totalAssets": 426,
+  "uniqueImages": 424,
+  "duplicateCount": 2,
+  "duplicates": [
+    {
+      "originalKey": "p136",
+      "duplicateKey": "p141",
+      "filename": "p141.webp",
+      "size": "12.9",
+      "hash": "6d2f5dc314e4f856e2dcd6c8d7008b2d6b52afae53038d37a2a1dc91b61cce2a"
+    },
+    {
+      "originalKey": "p163",
+      "duplicateKey": "p192",
+      "filename": "p192.webp",
+      "size": "16.0",
+      "hash": "0da551e4713589e6b02eaf0e819769a00f5d73a4fe1862d7baadc5fb6a57318f"
+    }
+  ],
+  "brokenCount": 0,
+  "broken": []
+}

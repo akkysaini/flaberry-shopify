@@ -1,0 +1,196 @@
+{% comment %}
+  Flaberry Tabbed Cakes Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Interactive tabs for Chocolate, Truffle, Photo, Eggless, and Designer cakes.
+{% endcomment %}
+
+<div class="flaberry-tabbed-cakes-section" data-section-id="{{ section.id }}">
+  <div class="flaberry-container">
+    <div class="flaberry-sec-header">
+      <div>
+        <h2 class="flaberry-sec-title">{{ section.settings.title | default: 'Cakes for every celebration' }}</h2>
+        <p class="flaberry-sec-subtitle">{{ section.settings.subtitle | default: 'Baked fresh on order. Choose eggless, pick a weight and add an icing message.' }}</p>
+      </div>
+      <div class="flaberry-header-actions">
+        <a href="{{ routes.collections_url }}/cakes" class="flaberry-view-all-link">
+          All cakes
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="flaberry-cake-tabs">
+      {% for block in section.blocks %}
+        <button 
+          type="button" 
+          class="flaberry-cake-tab-btn {% if forloop.first %}active{% endif %}" 
+          onclick="flaberrySwitchCakeTab('{{ section.id }}', {{ forloop.index0 }})"
+          data-tab-index="{{ forloop.index0 }}"
+          {{ block.shopify_attributes }}
+        >
+          {{ block.settings.tab_title }}
+        </button>
+      {% endfor %}
+    </div>
+
+    <div class="flaberry-cake-tab-contents">
+      {% for block in section.blocks %}
+        {% assign tab_coll = block.settings.collection %}
+        <div 
+          class="flaberry-cake-tab-panel {% if forloop.first %}active{% endif %}" 
+          id="flaberry-cake-tab-{{ section.id }}-{{ forloop.index0 }}"
+        >
+          <div class="flaberry-cake-grid">
+            {% if tab_coll != blank and tab_coll.products.size > 0 %}
+              {% for prod in tab_coll.products limit: 4 %}
+                {% render 'flaberry-product-card', product: prod %}
+              {% endfor %}
+            {% else %}
+              {% comment %} Preview Fallback Cakes {% endcomment %}
+              {% assign cake_img_1 = 'hero_cake.webp' | file_url %}
+              {% assign cake_img_2 = 'hx_truffle.webp' | file_url %}
+              {% assign cake_img_3 = 't_photocake.webp' | file_url %}
+              {% assign cake_img_4 = 't_heartcake.webp' | file_url %}
+              {% render 'flaberry-product-card', title: 'Belgian Chocolate Truffle Cake', price_formatted: '₹849.00', compare_price_formatted: '₹999.00', price: 849, compare_at_price: 999, image: cake_img_1, rating: '4.9', reviews_count: 215, category: 'Cakes', link: '/products/chocolate-cake' %}
+              {% render 'flaberry-product-card', title: 'Dutch Chocolate Delight Cake', price_formatted: '₹899.00', compare_price_formatted: '₹1,050.00', price: 899, compare_at_price: 1050, image: cake_img_2, rating: '4.8', reviews_count: 142, category: 'Cakes', link: '/products/chocolate-cake' %}
+              {% render 'flaberry-product-card', title: 'Classic Black Forest Photo Cake', price_formatted: '₹929.00', compare_price_formatted: '₹1,099.00', price: 929, compare_at_price: 1099, image: cake_img_3, rating: '4.9', reviews_count: 88, category: 'Photo Cakes', link: '/products/chocolate-cake' %}
+              {% render 'flaberry-product-card', title: 'Heartfelt Red Velvet Heart Cake', price_formatted: '₹999.00', compare_price_formatted: '₹1,199.00', price: 999, compare_at_price: 1199, image: cake_img_4, rating: '5.0', reviews_count: 94, category: 'Designer Cakes', link: '/products/chocolate-cake' %}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .flaberry-tabbed-cakes-section {
+    padding: 38px 0;
+    background: #ffffff;
+  }
+  .flaberry-cake-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .flaberry-cake-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .flaberry-cake-tab-btn {
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--fl-radius-pill, 999px);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: var(--fl-color-mist, #f5f2f0);
+    color: var(--fl-color-ink, #151312);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .flaberry-cake-tab-btn:hover {
+    border-color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-cake-tab-btn.active {
+    background: var(--fl-color-ink, #151312);
+    border-color: var(--fl-color-ink, #151312);
+    color: #ffffff;
+  }
+  .flaberry-cake-tab-panel {
+    display: none;
+  }
+  .flaberry-cake-tab-panel.active {
+    display: block;
+  }
+  .flaberry-cake-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 1024px) {
+    .flaberry-cake-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .flaberry-cake-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 16px;
+    }
+  }
+  .flaberry-empty-state {
+    grid-column: 1 / -1;
+    padding: 30px;
+    text-align: center;
+    background: var(--fl-color-mist, #f5f2f0);
+    border-radius: 12px;
+    color: var(--fl-color-muted, #6f6763);
+  }
+</style>
+
+<script>
+  function flaberrySwitchCakeTab(secId, idx) {
+    const parent = document.querySelector(`[data-section-id="${secId}"]`);
+    if (!parent) return;
+    const btns = parent.querySelectorAll('.flaberry-cake-tab-btn');
+    const panels = parent.querySelectorAll('.flaberry-cake-tab-panel');
+    btns.forEach((b, i) => b.classList.toggle('active', i === idx));
+    panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Tabbed Cakes",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Cakes for every celebration"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Baked fresh on order. Choose eggless, pick a weight and add an icing message."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Cake Category Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab Label",
+          "default": "Chocolate"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Tabbed Cakes",
+      "blocks": [
+        { "type": "tab", "settings": { "tab_title": "Chocolate" } },
+        { "type": "tab", "settings": { "tab_title": "Truffle" } },
+        { "type": "tab", "settings": { "tab_title": "Photo Cakes" } },
+        { "type": "tab", "settings": { "tab_title": "Eggless" } },
+        { "type": "tab", "settings": { "tab_title": "Designer" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

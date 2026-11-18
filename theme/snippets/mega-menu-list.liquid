@@ -16,6 +16,7 @@
 {%- enddoc -%}
 
 {% liquid
+  assign block_settings = block.settings
   comment
     open_column_span tracks when a vertical column in the mega menu is open. Links will be stacked
     in the column until the code closes the column span.
@@ -180,6 +181,35 @@
       endif
     %}
   {% endfor %}
+
+  {% if block_settings.show_mega_promo and block_settings.mega_promo_heading != blank %}
+    <li class="mega-menu__column mega-menu__column--promo">
+      <a
+        href="{{ block_settings.mega_promo_link | default: routes.all_products_collection_url }}"
+        class="mega-menu__promo-card"
+      >
+        <div class="mega-menu__promo-media">
+          {% if block_settings.mega_promo_image != blank %}
+            {{
+              block_settings.mega_promo_image
+              | image_url: width: 400
+              | image_tag: class: 'mega-menu__promo-img', loading: 'lazy', alt: block_settings.mega_promo_heading
+            }}
+          {% else %}
+            <div class="mega-menu__promo-placeholder">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 9 2 2 4-4"/><circle cx="8" cy="16" r="1"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+        <div class="mega-menu__promo-content">
+          <span class="mega-menu__promo-title">{{ block_settings.mega_promo_heading }}</span>
+          <span class="mega-menu__promo-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+    </li>
+  {% endif %}
 </ul>
 
 {% liquid

@@ -1,0 +1,249 @@
+{% comment %}
+  Flaberry Shop by Category Rail Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Circular category tiles with smooth scroll rail and admin-first block settings.
+{% endcomment %}
+
+<div class="flaberry-cat-rail-section" data-section-id="{{ section.id }}">
+  <div class="flaberry-container">
+    <div class="flaberry-sec-header">
+      <div>
+        <h2 class="flaberry-sec-title">{{ section.settings.title | default: 'Shop by category' }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="flaberry-sec-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+      <div class="flaberry-rail-arrows">
+        <button class="flaberry-arrow-btn" onclick="flaberryScrollRail('{{ section.id }}', -1)" aria-label="Previous categories">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="flaberry-arrow-btn" onclick="flaberryScrollRail('{{ section.id }}', 1)" aria-label="Next categories">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="flaberry-cat-rail" id="flaberry-rail-{{ section.id }}">
+      {% for block in section.blocks %}
+        {% assign cat_img = block.settings.image %}
+        <a href="{{ block.settings.link | default: routes.all_products_collection_url }}" class="flaberry-cat-tile" {{ block.shopify_attributes }}>
+          <div class="flaberry-cat-circle">
+            {% if cat_img != blank %}
+              {{ cat_img | image_url: width: 220, height: 220 | image_tag: 
+                width: 110, 
+                height: 110, 
+                loading: 'lazy', 
+                class: 'flaberry-cat-img', 
+                alt: block.settings.title | escape 
+              }}
+            {% else %}
+              <div class="flaberry-cat-fallback">{{ block.settings.title | slice: 0, 1 }}</div>
+            {% endif %}
+          </div>
+          <span class="flaberry-cat-label">{{ block.settings.title }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .flaberry-cat-rail-section {
+    padding: 36px 0 28px;
+    background-color: #ffffff;
+  }
+  .flaberry-container {
+    max-width: var(--fl-max-width-page, 1440px);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  @media (max-width: 768px) {
+    .flaberry-container {
+      padding: 0 16px;
+    }
+  }
+  .flaberry-sec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 22px;
+  }
+  .flaberry-sec-title {
+    font-family: var(--fl-font-display, "Inter Tight", sans-serif);
+    font-size: clamp(22px, 2.8vw, 32px);
+    font-weight: 800;
+    color: var(--fl-color-ink, #151312);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .flaberry-sec-subtitle {
+    font-size: 14.5px;
+    color: var(--fl-color-muted, #6f6763);
+    margin: 4px 0 0;
+  }
+  .flaberry-rail-arrows {
+    display: flex;
+    gap: 8px;
+  }
+  @media (max-width: 768px) {
+    .flaberry-rail-arrows {
+      display: none;
+    }
+  }
+  .flaberry-arrow-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fl-color-ink, #151312);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .flaberry-arrow-btn:hover {
+    background: var(--fl-color-mist, #f5f2f0);
+    border-color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-cat-rail {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .flaberry-cat-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .flaberry-cat-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    width: 110px;
+    transition: transform 0.2s;
+  }
+  @media (max-width: 768px) {
+    .flaberry-cat-tile {
+      width: 88px;
+    }
+  }
+  .flaberry-cat-tile:hover {
+    transform: translateY(-4px);
+  }
+  .flaberry-cat-circle {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--fl-color-mist, #f5f2f0);
+    border: 2px solid var(--fl-color-line, #e7e1dd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  @media (max-width: 768px) {
+    .flaberry-cat-circle {
+      width: 84px;
+      height: 84px;
+    }
+  }
+  .flaberry-cat-tile:hover .flaberry-cat-circle {
+    border-color: var(--fl-color-flora, #e2522c);
+    box-shadow: 0 6px 18px rgba(226, 82, 44, 0.18);
+  }
+  .flaberry-cat-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .flaberry-cat-fallback {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-cat-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+    text-align: center;
+    line-height: 1.25;
+  }
+  @media (max-width: 768px) {
+    .flaberry-cat-label {
+      font-size: 12px;
+    }
+  }
+</style>
+
+<script>
+  function flaberryScrollRail(secId, dir) {
+    const rail = document.getElementById('flaberry-rail-' + secId);
+    if (!rail) return;
+    rail.scrollBy({ left: dir * 320, behavior: 'smooth' });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Category Rail",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop by category"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Tile",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Category Circle Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Name",
+          "default": "Roses"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Category Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Category Rail",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Roses" } },
+        { "type": "category", "settings": { "title": "Cakes" } },
+        { "type": "category", "settings": { "title": "Combos" } },
+        { "type": "category", "settings": { "title": "Orchids" } },
+        { "type": "category", "settings": { "title": "Bouquets" } },
+        { "type": "category", "settings": { "title": "Plants" } },
+        { "type": "category", "settings": { "title": "Gourmet" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

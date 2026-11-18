@@ -1,0 +1,272 @@
+/**
+ * Flaberry Pincode & Delivery Location Modal Styles
+ * Source of Truth: reference/Flaberry_Design1_Classic.html
+ */
+
+/* Header Pincode Chip */
+.pinchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--fl-color-line, #e7e1dd);
+  border-radius: var(--fl-radius-pill, 999px);
+  padding: 6px 14px 6px 10px;
+  background-color: var(--fl-color-paper, #ffffff);
+  color: var(--fl-color-ink, #151312);
+  white-space: nowrap;
+  font-family: var(--fl-font-body, inherit);
+  font-size: 13px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  text-align: left;
+}
+
+.pinchip:hover,
+.pinchip:focus-visible {
+  border-color: var(--fl-color-ink, #151312);
+  outline: none;
+}
+
+.pinchip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fl-color-flora, #e2522c);
+  flex-shrink: 0;
+}
+
+.pinchip-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.pinchip-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--fl-color-muted, #6f6763);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.pinchip-val {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fl-color-ink, #151312);
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 749px) {
+  .pinchip {
+    padding: 4px 8px;
+    gap: 4px;
+    max-width: 110px;
+  }
+  .pinchip-sub {
+    display: none;
+  }
+  .pinchip-val {
+    font-size: 11px;
+    max-width: 75px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Modal Overlay & Dialog */
+.pinmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.pinmodal[hidden] {
+  display: none !important;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.pinmodal-scrim {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(21, 19, 18, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.pinmodal-dialog {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--fl-color-paper, #ffffff);
+  border-radius: var(--fl-radius-card, 16px);
+  box-shadow: 0 18px 40px rgba(21, 19, 18, 0.16);
+  padding: 24px;
+  box-sizing: border-box;
+  animation: pinmodalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pinmodalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pinmodal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pinmodal-title {
+  margin: 0;
+  font-family: var(--fl-font-display, inherit);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fl-color-ink, #151312);
+  line-height: 1.3;
+}
+
+.pinmodal-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: var(--fl-color-muted, #6f6763);
+  line-height: 1.4;
+}
+
+.pinmodal-close-btn {
+  background: none;
+  border: 0;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--fl-color-muted, #6f6763);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.pinmodal-close-btn:hover {
+  background-color: var(--fl-color-mist, #f5f2f0);
+  color: var(--fl-color-ink, #151312);
+}
+
+.pinmodal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pinmodal-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.pinmodal-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 16px;
+  border: 1px solid var(--fl-color-line, #e7e1dd);
+  border-radius: var(--fl-radius-pill, 999px);
+  font-family: var(--fl-font-body, inherit);
+  font-size: 14px;
+  color: var(--fl-color-ink, #151312);
+  background-color: var(--fl-color-mist, #f5f2f0);
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.pinmodal-input:focus {
+  border-color: var(--fl-color-flora, #e2522c);
+  background-color: #ffffff;
+}
+
+.pinmodal-submit-btn {
+  padding: 10px 20px;
+  background-color: var(--fl-color-ink, #151312);
+  color: #ffffff;
+  border: 0;
+  border-radius: var(--fl-radius-pill, 999px);
+  font-family: var(--fl-font-body, inherit);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.pinmodal-submit-btn:hover {
+  background-color: var(--fl-color-flora, #e2522c);
+}
+
+/* Status message box */
+.pinmodal-status-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background-color: var(--fl-color-mist, #f5f2f0);
+  border: 1px solid var(--fl-color-line, #e7e1dd);
+}
+
+.pinmodal-status--unverified {
+  border-color: rgba(180, 84, 10, 0.3);
+  background-color: #fff9f2;
+}
+
+.pinmodal-status-badge {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--fl-color-warn, #b4540a);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.pinmodal-status-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--fl-color-muted, #6f6763);
+}
+
+.pinmodal-footer {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.pinmodal-reset-btn {
+  background: none;
+  border: 0;
+  color: var(--fl-color-muted, #6f6763);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+.pinmodal-reset-btn:hover {
+  color: var(--fl-color-bad, #b42318);
+}

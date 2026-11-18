@@ -127,3 +127,314 @@
   --fl-btn-circle-wa: 54px;          /* WhatsApp floating button (.wa) */
   --fl-tile-circle-category: 84px;   /* Circular category tiles (.rail.tilerail) */
 }
+
+/* ==========================================================================
+   8. Header, Navigation & Badge Enhancements (Flaberry Shell)
+   ========================================================================== */
+
+/* Top level nav links - pill styling matching prototype .nav .nl */
+.menu-list__link {
+  border-radius: var(--fl-radius-pill, 999px);
+  padding: 8px 14px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menu-list__list-item:hover > .menu-list__trigger .menu-list__link,
+.menu-list__list-item:hover > .menu-list__link,
+.menu-list__link:hover {
+  background-color: var(--fl-color-mist, #f5f2f0);
+}
+
+/* Cart bubble count badge */
+.cart-bubble {
+  --cart-bubble-background: var(--fl-color-flora, #e2522c) !important;
+  --cart-bubble-text: #ffffff !important;
+}
+
+.cart-bubble__background {
+  background-color: var(--fl-color-flora, #e2522c) !important;
+}
+
+.cart-bubble__text-count {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   9. Header Persistent Inline Search (Flaberry Shell)
+   ========================================================================== */
+.header-search-inline {
+  display: none;
+  align-items: center;
+  background: var(--fl-color-mist, #f5f2f0);
+  border-radius: var(--fl-radius-pill, 999px);
+  padding: 8px 16px;
+  gap: 10px;
+  flex: 1;
+  max-width: 440px;
+  min-width: 220px;
+  border: 1px solid transparent;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+@media screen and (min-width: 961px) {
+  .header-search-inline {
+    display: flex;
+  }
+}
+
+.header-search-inline:focus-within {
+  border-color: var(--fl-color-flora, #e2522c);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(226, 82, 44, 0.12);
+}
+
+.header-search-inline__icon {
+  display: flex;
+  align-items: center;
+  color: var(--fl-color-muted, #736b63);
+}
+
+.header-search-inline__input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--fl-color-ink, #151312);
+  width: 100%;
+}
+
+.header-search-inline__input::placeholder {
+  color: var(--fl-color-muted, #736b63);
+}
+
+@media screen and (min-width: 961px) {
+  .search-action--mobile {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   10. Header Action Links (Track Order & Help)
+   ========================================================================== */
+.header-actions__action.header-actions__track-order,
+.header-actions__action.header-actions__help {
+  display: none !important;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--fl-color-ink, #151312);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--fl-radius-pill, 999px);
+  transition: background-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 1024px) {
+  .header-actions__action.header-actions__track-order,
+  .header-actions__action.header-actions__help {
+    display: inline-flex !important;
+  }
+}
+
+.header-actions__track-order:hover,
+.header-actions__help:hover {
+  background-color: var(--fl-color-mist, #f5f2f0);
+}
+
+.header-actions__action-lbl {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   11. Mega Menu Promotional Card Block
+   ========================================================================== */
+.mega-menu__column--promo {
+  grid-column: span 1;
+  min-width: 180px;
+  max-width: 240px;
+}
+
+.mega-menu__promo-card {
+  display: block;
+  text-decoration: none;
+  background: var(--fl-color-mist, #f5f2f0);
+  border-radius: var(--fl-radius-card, 12px);
+  overflow: hidden;
+  border: 1px solid var(--fl-color-border, #eeebe8);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mega-menu__promo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mega-menu__promo-media {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: var(--fl-color-mist, #f5f2f0);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mega-menu__promo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mega-menu__promo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fl-color-muted, #736b63);
+  width: 100%;
+  height: 100%;
+}
+
+.mega-menu__promo-content {
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--fl-color-ink, #151312);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+}
+
+.mega-menu__promo-title {
+  color: var(--fl-color-ink, #151312);
+}
+
+.mega-menu__promo-arrow {
+  color: var(--fl-color-flora, #e2522c);
+  font-weight: 700;
+  transition: transform 0.15s ease;
+}
+
+.mega-menu__promo-card:hover .mega-menu__promo-arrow {
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   12. Mobile Drawer Enhancements
+   ========================================================================== */
+.menu-drawer__shop-all-wrapper {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fl-color-border, #eeebe8);
+  margin-bottom: 8px;
+}
+
+.menu-drawer__shop-all-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 10px 16px;
+  border: 1px solid var(--fl-color-ink, #151312);
+  border-radius: var(--fl-radius-pill, 999px);
+  color: var(--fl-color-ink, #151312);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  background: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menu-drawer__shop-all-btn:hover {
+  background-color: var(--fl-color-mist, #f5f2f0);
+}
+
+.menu-drawer__flaberry-utilities {
+  padding: 16px;
+  border-top: 1px solid var(--fl-color-border, #eeebe8);
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-drawer__flaberry-utility-item {
+  color: var(--fl-color-muted, #736b63);
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.menu-drawer__flaberry-utility-item:hover {
+  color: var(--fl-color-flora, #e2522c);
+}
+
+/* ==========================================================================
+   13. Content Pages (About, Corporate, Pincodes, FAQ, Terms)
+   ========================================================================== */
+.flaberry-page-content {
+  max-width: var(--fl-max-width-narrow, 860px);
+  margin: 0 auto;
+  padding: 24px 0 48px;
+  color: var(--fl-color-ink, #151312);
+  line-height: var(--fl-line-height-body, 1.55);
+}
+
+.flaberry-page-content h2 {
+  font-family: var(--fl-font-display, "Inter Tight", sans-serif);
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 800;
+  margin: 32px 0 14px;
+  color: var(--fl-color-ink, #151312);
+  letter-spacing: -0.02em;
+}
+
+.flaberry-page-content h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 24px 0 10px;
+  color: var(--fl-color-ink, #151312);
+}
+
+.flaberry-page-content p {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--fl-color-muted, #6f6763);
+  margin: 0 0 16px;
+}
+
+.flaberry-page-content p.lead {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--fl-color-ink, #151312);
+  font-weight: 500;
+}
+
+.flaberry-page-content ul {
+  padding-left: 20px;
+  margin: 0 0 24px;
+  color: var(--fl-color-muted, #6f6763);
+}
+
+.flaberry-page-content li {
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.flaberry-page-content a {
+  color: var(--fl-color-flora, #e2522c);
+  text-decoration: underline;
+}
+
+.flaberry-page-content a:hover {
+  color: var(--fl-color-flora-deep, #c23e1b);
+}
+
+
+

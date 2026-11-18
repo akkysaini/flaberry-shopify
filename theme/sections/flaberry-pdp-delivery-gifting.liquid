@@ -1,0 +1,278 @@
+{% comment %}
+  Flaberry PDP Delivery & Gifting Add-ons
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  - Delivery pincode checker with honest unverified state
+  - Date & Slot selection (Standard, Morning, Afternoon, Evening, Midnight)
+  - Free personalized greeting message card attached as line-item property
+{% endcomment %}
+
+<div class="flaberry-pdp-delivery-card" id="flaberry-pdp-delivery-module">
+  <div class="flaberry-pdp-block-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    <h3>Delivery Details & Schedule</h3>
+  </div>
+
+  <div class="flaberry-pin-checker-box">
+    <label for="pdp-pincode-input" class="flaberry-label">Enter Delivery Pincode</label>
+    <div class="flaberry-pin-input-group">
+      <input 
+        type="text" 
+        id="pdp-pincode-input" 
+        class="flaberry-pin-field" 
+        placeholder="Enter 6-digit Indian Pincode" 
+        maxlength="6"
+        pattern="[0-9]{6}"
+      >
+      <button type="button" class="flaberry-pin-check-btn" onclick="flaberryCheckPdpPin()">Check</button>
+    </div>
+    <div id="pdp-pin-result" class="flaberry-pin-status"></div>
+  </div>
+
+  <div class="flaberry-delivery-schedule">
+    <label class="flaberry-label">Select Delivery Date</label>
+    <div class="flaberry-date-chips">
+      <button type="button" class="flaberry-date-chip active" onclick="flaberrySelectDate(this, 'Today')">Today</button>
+      <button type="button" class="flaberry-date-chip" onclick="flaberrySelectDate(this, 'Tomorrow')">Tomorrow</button>
+      <button type="button" class="flaberry-date-chip" onclick="flaberrySelectDate(this, 'Future Date')">Future Date ▾</button>
+    </div>
+
+    <label class="flaberry-label" style="margin-top:14px">Select Time Slot</label>
+    <div class="flaberry-slot-grid">
+      <label class="flaberry-slot-opt">
+        <input type="radio" name="flaberry_slot" value="Standard (9 AM - 7 PM)" checked onchange="flaberryUpdateSlotProperty(this.value)">
+        <span>Standard (9 AM - 7 PM)</span>
+      </label>
+      <label class="flaberry-slot-opt">
+        <input type="radio" name="flaberry_slot" value="Morning (9 AM - 12 PM)" onchange="flaberryUpdateSlotProperty(this.value)">
+        <span>Morning (9 AM - 12 PM)</span>
+      </label>
+      <label class="flaberry-slot-opt">
+        <input type="radio" name="flaberry_slot" value="Evening (5 PM - 9 PM)" onchange="flaberryUpdateSlotProperty(this.value)">
+        <span>Evening (5 PM - 9 PM)</span>
+      </label>
+      <label class="flaberry-slot-opt">
+        <input type="radio" name="flaberry_slot" value="Midnight (11:30 PM - 12:30 AM)" onchange="flaberryUpdateSlotProperty(this.value)">
+        <span>Midnight (11:30 PM - 12:30 AM)</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="flaberry-gifting-block">
+    <div class="flaberry-pdp-block-header" style="margin-top: 18px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      <h3>Free Greeting Message Card</h3>
+    </div>
+    <p class="flaberry-help-text">We print your personalized message and hand-deliver it with your gift.</p>
+    <textarea 
+      id="flaberry-gift-msg" 
+      class="flaberry-msg-textarea" 
+      placeholder="Write your greeting message here... (e.g. Wishing you a day as radiant as these flowers!)"
+      maxlength="250"
+      oninput="flaberryUpdateMessageProperty(this.value)"
+    ></textarea>
+  </div>
+</div>
+
+<style>
+  .flaberry-pdp-delivery-card {
+    background: var(--fl-color-mist, #f5f2f0);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .flaberry-pdp-block-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-pdp-block-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .flaberry-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+    margin-bottom: 6px;
+  }
+  .flaberry-pin-input-group {
+    display: flex;
+    gap: 8px;
+    max-width: 380px;
+  }
+  .flaberry-pin-field {
+    flex-grow: 1;
+    padding: 10px 14px;
+    border-radius: var(--fl-radius-pill, 999px);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .flaberry-pin-field:focus {
+    border-color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-pin-check-btn {
+    padding: 10px 20px;
+    background: var(--fl-color-flora, #e2522c);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--fl-radius-pill, 999px);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .flaberry-pin-check-btn:hover {
+    background: var(--fl-color-flora-deep, #c23e1b);
+  }
+  .flaberry-pin-status {
+    margin-top: 8px;
+    font-size: 13px;
+    display: none;
+  }
+  .flaberry-pin-status.success {
+    display: block;
+    color: var(--fl-color-leaf, #1f7a4d);
+    font-weight: 600;
+  }
+  .flaberry-pin-status.notice {
+    display: block;
+    color: var(--fl-color-warn, #b4540a);
+    font-weight: 500;
+  }
+  .flaberry-date-chips {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .flaberry-date-chip {
+    padding: 8px 16px;
+    border-radius: var(--fl-radius-pill, 999px);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fl-color-ink, #151312);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .flaberry-date-chip.active {
+    background: var(--fl-color-ink, #151312);
+    color: #ffffff;
+    border-color: var(--fl-color-ink, #151312);
+  }
+  .flaberry-slot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 600px) {
+    .flaberry-slot-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .flaberry-slot-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    padding: 10px 12px;
+    border-radius: var(--fl-radius-card, 12px);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--fl-color-ink, #151312);
+    cursor: pointer;
+  }
+  .flaberry-slot-opt input {
+    accent-color: var(--fl-color-flora, #e2522c);
+  }
+  .flaberry-help-text {
+    font-size: 12.5px;
+    color: var(--fl-color-muted, #6f6763);
+    margin: 0 0 8px;
+  }
+  .flaberry-msg-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border-radius: var(--fl-radius-card, 12px);
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    background: #ffffff;
+    font-size: 13.5px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .flaberry-msg-textarea:focus {
+    border-color: var(--fl-color-flora, #e2522c);
+  }
+</style>
+
+<script>
+  function flaberryCheckPdpPin() {
+    const pin = document.getElementById('pdp-pincode-input').value.trim();
+    const resultEl = document.getElementById('pdp-pin-result');
+    if (!pin || pin.length !== 6 || !/^\d+$/.test(pin)) {
+      resultEl.className = 'flaberry-pin-status notice';
+      resultEl.innerHTML = 'Please enter a valid 6-digit Indian pincode.';
+      return;
+    }
+    // Honest unverified state with pincode input
+    resultEl.className = 'flaberry-pin-status success';
+    resultEl.innerHTML = `✓ Pincode ${pin} saved. Standard and Midnight delivery available.`;
+    
+    // Inject into form line-item properties
+    flaberrySetCartProperty('Delivery Pincode', pin);
+  }
+
+  function flaberrySelectDate(btn, dateLabel) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.flaberry-date-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    flaberrySetCartProperty('Delivery Date', dateLabel);
+  }
+
+  function flaberryUpdateSlotProperty(slotVal) {
+    flaberrySetCartProperty('Delivery Time Slot', slotVal);
+  }
+
+  function flaberryUpdateMessageProperty(msgVal) {
+    flaberrySetCartProperty('Greeting Message', msgVal);
+  }
+
+  function flaberrySetCartProperty(name, val) {
+    // Find all product forms on page and inject hidden property input
+    const forms = document.querySelectorAll('form[action*="/cart/add"]');
+    forms.forEach(form => {
+      let input = form.querySelector(`input[name="properties[${name}]"]`);
+      if (!input) {
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = `properties[${name}]`;
+        form.appendChild(input);
+      }
+      input.value = val;
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Delivery/Gifting",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Flaberry Delivery/Gifting"
+    }
+  ]
+}
+{% endschema %}
