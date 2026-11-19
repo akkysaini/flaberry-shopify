@@ -3,54 +3,77 @@
     "flaberry_hero_slider": {
       "type": "flaberry-hero-slider",
       "settings": {
-        "show_trust_pill": true,
-        "trust_badge_image": "shopify:\/\/shop_images\/i_20yrs.png"
+        "autoplay": true,
+        "autoplay_speed": 5
       },
       "blocks": {
         "slide_1": {
           "type": "hero_slide",
           "settings": {
-            "image": "shopify:\/\/shop_images\/hero_flowers.webp",
-            "eyebrow": "Express Delivery Across India",
-            "heading": "Hand-tied bouquets, delivered fresh",
-            "subheading": "Farm-fresh flowers hand-picked daily and delivered on your schedule across 500+ cities.",
-            "button_label": "Shop Flowers",
-            "button_link": "shopify:\/\/collections\/flowers",
-            "secondary_button_label": "Order Cakes",
-            "secondary_button_link": "shopify:\/\/collections\/cakes"
+            "image_asset_fallback": "hero_flowers.webp",
+            "bg_color": "#e8f1f5",
+            "is_dark_text": true,
+            "heading": "Fresh flowers, delivered today",
+            "description": "Hand-arranged by local florists and delivered the same day in 500+ cities. Order by 4 PM.",
+            "button_label": "Shop flowers",
+            "button_link": "shopify:\/\/collections\/flowers"
           }
         },
         "slide_2": {
           "type": "hero_slide",
           "settings": {
-            "image": "shopify:\/\/shop_images\/hero_cake.webp",
-            "eyebrow": "Freshly Baked on Order",
-            "heading": "Artisan cakes for every celebration",
-            "subheading": "Choose eggless, pick your weight and write a custom message on the cake.",
-            "button_label": "Explore Cakes",
-            "button_link": "shopify:\/\/collections\/cakes",
-            "secondary_button_label": "Combo Gifts",
-            "secondary_button_link": "shopify:\/\/collections\/combos"
+            "image_asset_fallback": "hero_cake.webp",
+            "bg_color": "#9dddf0",
+            "is_dark_text": true,
+            "heading": "Cakes baked fresh on order",
+            "description": "Eggless, photo and designer cakes — with midnight delivery for the big moment.",
+            "button_label": "Order a cake",
+            "button_link": "shopify:\/\/collections\/cakes"
           }
         },
         "slide_3": {
           "type": "hero_slide",
           "settings": {
-            "image": "shopify:\/\/shop_images\/hero_anniv.webp",
-            "eyebrow": "Milestones & Anniversaries",
-            "heading": "Celebrate like the first time",
-            "subheading": "Grand rose arrangements, luxury chocolates, and midnight surprise delivery.",
-            "button_label": "Anniversary Gifts",
-            "button_link": "shopify:\/\/collections\/anniversary",
-            "secondary_button_label": "View All",
-            "secondary_button_link": "shopify:\/\/collections\/occasions"
+            "image_asset_fallback": "hero_bday.webp",
+            "bg_color": "#e4eff6",
+            "is_dark_text": true,
+            "heading": "Flowers & chocolates, together",
+            "description": "Lilies, carnations and Ferrero Rocher in one delivery, with your message printed.",
+            "button_label": "Shop combos",
+            "button_link": "shopify:\/\/collections\/combos"
+          }
+        },
+        "slide_4": {
+          "type": "hero_slide",
+          "settings": {
+            "image_asset_fallback": "hero_anniv.webp",
+            "bg_color": "#fdf3e6",
+            "is_dark_text": true,
+            "heading": "Brighten someone's day",
+            "description": "Sunny gerberas for birthdays, thank-yous and get-wells.",
+            "button_label": "Shop gerberas",
+            "button_link": "shopify:\/\/collections\/flowers"
+          }
+        },
+        "slide_5": {
+          "type": "hero_slide",
+          "settings": {
+            "image_asset_fallback": "hero_fruits.webp",
+            "bg_color": "#fbefc4",
+            "is_dark_text": true,
+            "heading": "Fresh fruit baskets",
+            "description": "Seasonal fruit, packed the morning of delivery.",
+            "button_label": "Shop fruit baskets",
+            "button_link": "shopify:\/\/collections\/all"
           }
         }
       },
       "block_order": [
         "slide_1",
         "slide_2",
-        "slide_3"
+        "slide_3",
+        "slide_4",
+        "slide_5"
       ]
     },
     "flaberry_pincode_band": {
