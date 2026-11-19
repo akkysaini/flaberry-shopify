@@ -238,9 +238,87 @@
         "cat_combo2"
       ]
     },
-    "flaberry_trust_bar": {
-      "type": "flaberry-trust-bar",
-      "settings": {}
+    "flaberry_brand_intro": {
+      "type": "flaberry-brand-intro",
+      "settings": {
+        "heading_prefix": "Delivering",
+        "heading_accent": "smiles",
+        "heading_suffix": "across India",
+        "story_label": "Our story",
+        "story_link": "\/pages\/about-us",
+        "stat_1_val": "500+",
+        "stat_1_lbl": "cities served",
+        "stat_2_val": "2,500+",
+        "stat_2_lbl": "partner merchants",
+        "stat_3_val": "2–3 days",
+        "stat_3_lbl": "from hand-picking to you",
+        "stat_4_val": "Same day",
+        "stat_4_lbl": "& midnight delivery"
+      },
+      "blocks": {
+        "card_all": {
+          "type": "card",
+          "settings": {
+            "is_dark_card": true,
+            "image_asset_fallback": "hx_velvet.webp",
+            "title": "All gifts",
+            "count_badge": "372",
+            "subtitle": "Everything we deliver to 201301",
+            "link": "shopify:\/\/collections\/all"
+          }
+        },
+        "card_flowers": {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "hx_roses.webp",
+            "title": "Flowers",
+            "count_badge": "125",
+            "subtitle": "Hand-tied bouquets, baskets and vases",
+            "link": "shopify:\/\/collections\/flowers"
+          }
+        },
+        "card_cakes": {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "hx_truffle.webp",
+            "title": "Cakes",
+            "count_badge": "90",
+            "subtitle": "Baked fresh on order, eggless options",
+            "link": "shopify:\/\/collections\/cakes"
+          }
+        },
+        "card_combos": {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "t_cakeflower2.webp",
+            "title": "Combos",
+            "count_badge": "34",
+            "subtitle": "Flowers with cake, chocolates and teddies",
+            "link": "shopify:\/\/collections\/combos"
+          }
+        },
+        "card_gifts": {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "hx_dryfruit.webp",
+            "title": "Gifts",
+            "count_badge": "50",
+            "subtitle": "Hampers, mithai, dry fruits and plants",
+            "link": "shopify:\/\/collections\/all"
+          }
+        }
+      },
+      "block_order": [
+        "card_all",
+        "card_flowers",
+        "card_cakes",
+        "card_combos",
+        "card_gifts"
+      ]
     },
     "flaberry_best_sellers": {
       "type": "flaberry-product-rail",
@@ -414,7 +492,7 @@
     "flaberry_hero_slider",
     "flaberry_pincode_band",
     "flaberry_category_rail",
-    "flaberry_trust_bar",
+    "flaberry_brand_intro",
     "flaberry_best_sellers",
     "flaberry_split_banner",
     "flaberry_tabbed_cakes",

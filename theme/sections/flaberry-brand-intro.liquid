@@ -1,0 +1,651 @@
+{% comment %}
+  Flaberry Brand Story & Category Cards Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html
+  - "Delivering smiles across India" headline with red scribble accent.
+  - Brand copy, "Our story" button, and 4-metric trust counters.
+  - 5 Featured category cards with dark active card and dynamic pincode synchronization.
+  - Fully responsive and 100% editable in Shopify Theme Customizer.
+{% endcomment %}
+
+<section class="fl-intro-section" id="fl-intro-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="fl-intro-container">
+    <!-- Top Row: Brand Story & Trust Stats -->
+    <div class="fl-intro-row">
+      <div class="fl-intro-left">
+        <h2 class="fl-intro-heading">
+          {{ section.settings.heading_prefix | default: 'Delivering' }}
+          <span class="fl-scribble">{{ section.settings.heading_accent | default: 'smiles' }}</span>
+          {{ section.settings.heading_suffix | default: 'across India' }}
+        </h2>
+        {%- if section.settings.story_label != blank -%}
+          <div>
+            <a href="{{ section.settings.story_link | default: '/pages/about-us' }}" class="fl-story-btn">
+              <span>{{ section.settings.story_label | escape }}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="fl-intro-right">
+        <div class="fl-intro-copy">
+          {%- if section.settings.paragraph_1 != blank -%}
+            <p>{{ section.settings.paragraph_1 }}</p>
+          {%- else -%}
+            <p><b>Flaberry</b> is India's leading brand for flowers, cakes, plants and gifts. Our own warehouses in major cities and 2,500+ partner merchants deliver across 500+ cities.</p>
+          {%- endif -%}
+          {%- if section.settings.paragraph_2 != blank -%}
+            <p>{{ section.settings.paragraph_2 }}</p>
+          {%- else -%}
+            <p>We understand the emotions you trust us with. Every bouquet is hand-tied, every cake is baked on order, and every message is printed and placed with the gift.</p>
+          {%- endif -%}
+        </div>
+
+        <div class="fl-stats-grid">
+          <div class="fl-stat-item">
+            <b>{{ section.settings.stat_1_val | default: '500+' }}</b>
+            <span>{{ section.settings.stat_1_lbl | default: 'cities served' }}</span>
+          </div>
+          <div class="fl-stat-item">
+            <b>{{ section.settings.stat_2_val | default: '2,500+' }}</b>
+            <span>{{ section.settings.stat_2_lbl | default: 'partner merchants' }}</span>
+          </div>
+          <div class="fl-stat-item">
+            <b>{{ section.settings.stat_3_val | default: '2–3 days' }}</b>
+            <span>{{ section.settings.stat_3_lbl | default: 'from hand-picking to you' }}</span>
+          </div>
+          <div class="fl-stat-item">
+            <b>{{ section.settings.stat_4_val | default: 'Same day' }}</b>
+            <span>{{ section.settings.stat_4_lbl | default: '& midnight delivery' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row: 5 Featured Category Cards -->
+    <div class="fl-ccards-grid" id="fl-ccards-{{ section.id }}">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign is_dark = block.settings.is_dark_card
+          assign card_img = block.settings.image
+          assign fallback_img = block.settings.image_asset_fallback | default: 'hx_velvet.webp'
+          assign link_url = block.settings.link | default: routes.all_products_collection_url
+          assign count = block.settings.count_badge
+        -%}
+        <a
+          href="{{ link_url }}"
+          class="fl-ccard {% if is_dark %}fl-ccard-dark{% endif %}"
+          {% if forloop.first %}id="flIntroAllGiftsCard"{% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <div class="fl-ccard-media">
+            {%- if card_img != blank -%}
+              {{ card_img | image_url: width: 600, height: 600 | image_tag:
+                loading: 'lazy',
+                class: 'fl-ccard-img',
+                alt: block.settings.title | escape
+              }}
+            {%- else -%}
+              <img
+                src="{{ fallback_img | asset_url }}"
+                class="fl-ccard-img"
+                alt="{{ block.settings.title | escape }}"
+                loading="lazy"
+                width="340"
+                height="340"
+              >
+            {%- endif -%}
+          </div>
+
+          <div class="fl-ccard-info">
+            <div class="fl-ccard-text">
+              <h3 class="fl-ccard-title">
+                {{ block.settings.title | escape }}
+                {%- if count != blank -%}
+                  <sup class="fl-ccard-sup">{{ count }}</sup>
+                {%- endif -%}
+              </h3>
+              <small class="fl-ccard-sub" {% if forloop.first %}id="flIntroAllGiftsSub"{% endif %}>
+                {{ block.settings.subtitle | default: 'Everything we deliver' }}
+              </small>
+            </div>
+            <span class="fl-ccard-arrow" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .fl-intro-section {
+    padding-top: 32px;
+    padding-bottom: 28px;
+    background-color: transparent;
+    width: 100%;
+  }
+  .fl-intro-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 48px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 960px) {
+    .fl-intro-container {
+      padding: 0 14px;
+    }
+  }
+  @media (max-width: 480px) {
+    .fl-intro-container {
+      padding: 0 10px;
+    }
+  }
+
+  /* Intro Top Row */
+  .fl-intro-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 48px;
+    align-items: flex-start;
+  }
+  .fl-intro-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .fl-intro-heading {
+    font-size: clamp(34px, 4.2vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    color: #1b2141;
+    margin: 0;
+  }
+
+  /* Red Scribble Accent */
+  .fl-scribble {
+    position: relative;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .fl-scribble::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.1em;
+    height: 0.25em;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C 50 2, 120 2, 198 7' stroke='%23e2522c' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  }
+
+  /* Outline Story Button */
+  .fl-story-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    border: 1px solid #1b2141;
+    background: transparent;
+    color: #1b2141;
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .fl-story-btn:hover {
+    background: #1b2141;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+  .fl-story-btn svg {
+    transition: transform 0.2s ease;
+  }
+  .fl-story-btn:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* Intro Copy & Stats */
+  .fl-intro-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .fl-intro-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: #3d425a;
+    font-size: 15.5px;
+    line-height: 1.5;
+    max-width: 62ch;
+  }
+  .fl-intro-copy p {
+    margin: 0;
+  }
+  .fl-intro-copy b {
+    color: #1b2141;
+    font-weight: 700;
+  }
+
+  .fl-stats-grid {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    padding-top: 4px;
+  }
+  .fl-stat-item b {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    display: block;
+    color: #1b2141;
+    line-height: 1.1;
+  }
+  .fl-stat-item span {
+    font-size: 13px;
+    color: #6f6763;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* Bottom Row: 5 Cards Grid */
+  .fl-ccards-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 36px;
+  }
+  .fl-ccard {
+    border-radius: 20px;
+    background: #f7f5f3;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 330px;
+    position: relative;
+    text-decoration: none;
+    color: #1b2141;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-sizing: border-box;
+  }
+  .fl-ccard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Card Image */
+  .fl-ccard-media {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #ebe7e3;
+    position: relative;
+  }
+  .fl-ccard-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .fl-ccard:hover .fl-ccard-img {
+    transform: scale(1.05);
+  }
+
+  /* Dark Card (First Card: All Gifts) */
+  .fl-ccard.fl-ccard-dark {
+    background: #1b2141;
+    color: #ffffff;
+  }
+  .fl-ccard.fl-ccard-dark .fl-ccard-media {
+    background: #141830;
+  }
+  .fl-ccard.fl-ccard-dark .fl-ccard-img {
+    opacity: 0.95;
+  }
+  .fl-ccard.fl-ccard-dark .fl-ccard-sub {
+    color: #cfd4e6;
+  }
+
+  /* Card Text Footer */
+  .fl-ccard-info {
+    padding: 16px 18px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .fl-ccard-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: inherit;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    letter-spacing: -0.02em;
+  }
+  .fl-ccard-sup {
+    font-size: 11.5px;
+    font-weight: 600;
+    opacity: 0.8;
+    vertical-align: super;
+  }
+  .fl-ccard-sub {
+    display: block;
+    color: #6f6763;
+    font-size: 13px;
+    margin-top: 4px;
+    line-height: 1.35;
+  }
+  .fl-ccard-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    opacity: 0.85;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .fl-ccard:hover .fl-ccard-arrow {
+    transform: translateX(4px);
+    opacity: 1;
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 1100px) {
+    .fl-ccards-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .fl-intro-row {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .fl-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .fl-ccards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .fl-ccard {
+      min-height: auto;
+      border-radius: 16px;
+    }
+    .fl-ccard-info {
+      padding: 12px 14px 14px;
+    }
+    .fl-ccard-title {
+      font-size: 17px;
+    }
+    .fl-ccard-sub {
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .fl-ccards-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+    .fl-ccards-grid::-webkit-scrollbar {
+      display: none;
+    }
+    .fl-ccard {
+      flex: 0 0 72%;
+      scroll-snap-align: start;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    function updateAllGiftsPincode() {
+      var sub = document.getElementById('flIntroAllGiftsSub');
+      if (!sub) return;
+      var pin = '';
+      try {
+        pin = localStorage.getItem('flaberry_pincode') || '201301';
+      } catch(e) {
+        pin = '201301';
+      }
+      if (pin && pin.length === 6) {
+        sub.textContent = 'Everything we deliver to ' + pin;
+      } else {
+        sub.textContent = 'Everything we deliver across India';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateAllGiftsPincode);
+    window.addEventListener('storage', updateAllGiftsPincode);
+    // Listen for custom pincode change events
+    window.addEventListener('flaberry:pincode_changed', updateAllGiftsPincode);
+    updateAllGiftsPincode();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Flaberry Brand Story",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_prefix",
+      "label": "Heading Prefix",
+      "default": "Delivering"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading Accent (With Scribble)",
+      "default": "smiles"
+    },
+    {
+      "type": "text",
+      "id": "heading_suffix",
+      "label": "Heading Suffix",
+      "default": "across India"
+    },
+    {
+      "type": "text",
+      "id": "story_label",
+      "label": "Story Button Label",
+      "default": "Our story"
+    },
+    {
+      "type": "url",
+      "id": "story_link",
+      "label": "Story Button Link"
+    },
+    {
+      "type": "html",
+      "id": "paragraph_1",
+      "label": "First Paragraph",
+      "default": "<b>Flaberry</b> is India's leading brand for flowers, cakes, plants and gifts. Our own warehouses in major cities and 2,500+ partner merchants deliver across 500+ cities."
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph_2",
+      "label": "Second Paragraph",
+      "default": "We understand the emotions you trust us with. Every bouquet is hand-tied, every cake is baked on order, and every message is printed and placed with the gift."
+    },
+    {
+      "type": "header",
+      "content": "Trust Stats"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_val",
+      "label": "Stat 1 Number",
+      "default": "500+"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_lbl",
+      "label": "Stat 1 Label",
+      "default": "cities served"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_val",
+      "label": "Stat 2 Number",
+      "default": "2,500+"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_lbl",
+      "label": "Stat 2 Label",
+      "default": "partner merchants"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_val",
+      "label": "Stat 3 Number",
+      "default": "2–3 days"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_lbl",
+      "label": "Stat 3 Label",
+      "default": "from hand-picking to you"
+    },
+    {
+      "type": "text",
+      "id": "stat_4_val",
+      "label": "Stat 4 Number",
+      "default": "Same day"
+    },
+    {
+      "type": "text",
+      "id": "stat_4_lbl",
+      "label": "Stat 4 Label",
+      "default": "& midnight delivery"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "is_dark_card",
+          "label": "Dark Navy Background",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "image_asset_fallback",
+          "label": "Fallback Asset Filename",
+          "default": "hx_velvet.webp"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card Title",
+          "default": "Flowers"
+        },
+        {
+          "type": "text",
+          "id": "count_badge",
+          "label": "Count Superscript",
+          "default": "125"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Hand-tied bouquets, baskets and vases"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Card Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Brand Story",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "is_dark_card": true,
+            "image_asset_fallback": "hx_velvet.webp",
+            "title": "All gifts",
+            "count_badge": "372",
+            "subtitle": "Everything we deliver to 201301"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "hx_roses.webp",
+            "title": "Flowers",
+            "count_badge": "125",
+            "subtitle": "Hand-tied bouquets, baskets and vases"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "hx_truffle.webp",
+            "title": "Cakes",
+            "count_badge": "90",
+            "subtitle": "Baked fresh on order, eggless options"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "t_cakeflower2.webp",
+            "title": "Combos",
+            "count_badge": "34",
+            "subtitle": "Flowers with cake, chocolates and teddies"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "is_dark_card": false,
+            "image_asset_fallback": "hx_dryfruit.webp",
+            "title": "Gifts",
+            "count_badge": "50",
+            "subtitle": "Hampers, mithai, dry fruits and plants"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
