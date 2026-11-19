@@ -78,89 +78,164 @@
     },
     "flaberry_pincode_band": {
       "type": "flaberry-pincode-band",
-      "settings": {}
+      "settings": {
+        "bg_color": "#fef5e7",
+        "eyebrow": "PINCODE-FIRST ORDERING",
+        "default_pincode": "201301"
+      }
     },
     "flaberry_category_rail": {
       "type": "flaberry-category-rail",
       "settings": {
-        "title": "Shop by category",
-        "subtitle": "Explore our signature floral collections, bakery delights, and gifting hampers."
+        "title": "Shop by category"
       },
       "blocks": {
         "cat_roses": {
           "type": "category",
           "settings": {
-            "image": "shopify:\/\/shop_images\/t_roses.webp",
-            "title": "Roses",
+            "image_asset_fallback": "t_roses.webp",
+            "title": "Fresh Roses",
             "link": "shopify:\/\/collections\/roses"
-          }
-        },
-        "cat_cakes": {
-          "type": "category",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/t_cakeflower2.webp",
-            "title": "Cakes",
-            "link": "shopify:\/\/collections\/cakes"
-          }
-        },
-        "cat_combos": {
-          "type": "category",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/t_cakeflowers.webp",
-            "title": "Combos",
-            "link": "shopify:\/\/collections\/combos"
-          }
-        },
-        "cat_photocakes": {
-          "type": "category",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/t_photocake.webp",
-            "title": "Photo Cakes",
-            "link": "shopify:\/\/collections\/photo-cakes"
           }
         },
         "cat_bouquets": {
           "type": "category",
           "settings": {
-            "image": "shopify:\/\/shop_images\/t_bouquets.webp",
-            "title": "Bouquets",
+            "image_asset_fallback": "t_bouquets.webp",
+            "title": "Flower Bouquets",
             "link": "shopify:\/\/collections\/bouquets"
           }
         },
         "cat_orchids": {
           "type": "category",
           "settings": {
-            "image": "shopify:\/\/shop_images\/t_orchids.webp",
-            "title": "Orchids",
+            "image_asset_fallback": "t_orchids.webp",
+            "title": "Exotic Orchids",
             "link": "shopify:\/\/collections\/orchids"
+          }
+        },
+        "cat_vase": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_vase.webp",
+            "title": "Luxury Vases",
+            "link": "shopify:\/\/collections\/flowers"
           }
         },
         "cat_heart": {
           "type": "category",
           "settings": {
-            "image": "shopify:\/\/shop_images\/t_heartcake.webp",
-            "title": "Heart Shaped",
+            "image_asset_fallback": "t_heart.webp",
+            "title": "Heart Arrangements",
             "link": "shopify:\/\/collections\/heart-shape"
           }
         },
-        "cat_gourmet": {
+        "cat_combos": {
           "type": "category",
           "settings": {
-            "image": "shopify:\/\/shop_images\/t_thankyou.webp",
-            "title": "Gifts & Hampers",
-            "link": "shopify:\/\/collections\/gifts"
+            "image_asset_fallback": "t_cakeflowers.webp",
+            "title": "Cake & Flowers",
+            "link": "shopify:\/\/collections\/combos"
+          }
+        },
+        "cat_designer": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_premiumcake.webp",
+            "title": "Designer Cakes",
+            "link": "shopify:\/\/collections\/designer-cakes"
+          }
+        },
+        "cat_photocakes": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_photocake.webp",
+            "title": "Photo Cakes",
+            "link": "shopify:\/\/collections\/photo-cakes"
+          }
+        },
+        "cat_eggless": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_eggless.webp",
+            "title": "Eggless Cakes",
+            "link": "shopify:\/\/collections\/eggless"
+          }
+        },
+        "cat_redvelvet": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_heartcake.webp",
+            "title": "Red Velvet",
+            "link": "shopify:\/\/collections\/cakes"
+          }
+        },
+        "cat_kidscake": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_kidscake.webp",
+            "title": "Kids Cakes",
+            "link": "shopify:\/\/collections\/cakes"
+          }
+        },
+        "cat_birthday": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_birthday.webp",
+            "title": "Birthday",
+            "link": "shopify:\/\/collections\/birthday"
+          }
+        },
+        "cat_anniv": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_anniv.webp",
+            "title": "Anniversary",
+            "link": "shopify:\/\/collections\/anniversary"
+          }
+        },
+        "cat_congrats": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_congrats.webp",
+            "title": "Congratulations",
+            "link": "shopify:\/\/collections\/occasions"
+          }
+        },
+        "cat_thankyou": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_thankyou.webp",
+            "title": "Thank You",
+            "link": "shopify:\/\/collections\/occasions"
+          }
+        },
+        "cat_combo2": {
+          "type": "category",
+          "settings": {
+            "image_asset_fallback": "t_cakeflower2.webp",
+            "title": "Combos",
+            "link": "shopify:\/\/collections\/combos"
           }
         }
       },
       "block_order": [
         "cat_roses",
-        "cat_cakes",
-        "cat_combos",
-        "cat_photocakes",
         "cat_bouquets",
         "cat_orchids",
+        "cat_vase",
         "cat_heart",
-        "cat_gourmet"
+        "cat_combos",
+        "cat_designer",
+        "cat_photocakes",
+        "cat_eggless",
+        "cat_redvelvet",
+        "cat_kidscake",
+        "cat_birthday",
+        "cat_anniv",
+        "cat_congrats",
+        "cat_thankyou",
+        "cat_combo2"
       ]
     },
     "flaberry_trust_bar": {
