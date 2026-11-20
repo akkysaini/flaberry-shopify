@@ -14,24 +14,27 @@
     "flaberry_footer": {
       "type": "flaberry-footer",
       "settings": {
-        "logo": "shopify:\/\/shop_images\/logo.png",
-        "brand_text": "Handcrafted flowers, artisan cakes, and curated gifting experiences for every special moment across 500+ cities in India.",
-        "bg_color": "#151312",
-        "text_color": "#cfc7c2",
-        "heading_color": "#ffffff",
+        "bg_color": "#1e1b4b",
+        "brand_text": "India's leading brand for flowers, cakes, plants and gifts. Same-day, midnight and advance-date delivery to 500+ cities.",
         "show_newsletter": true,
         "newsletter_placeholder": "Email for offers",
-        "newsletter_button_text": "Subscribe",
-        "show_support_info": true,
-        "support_hours": "8 AM – midnight IST, every day",
+        "newsletter_btn_text": "Subscribe",
+        "support_hours": "Help 8 AM – midnight IST",
         "support_phone": "+91 76685 23752",
         "support_email": "customerservice@flaberry.com",
-        "col2_heading": "Shop Flowers & Cakes",
-        "col2_menu": "footer",
-        "col3_heading": "Occasions & Gifts",
-        "col4_heading": "Customer Service",
-        "show_payment_icons": true,
-        "copyright_text": "© 2026 Flaberry. All rights reserved."
+        "facebook_url": "https://www.facebook.com/flaberry",
+        "twitter_url": "https://twitter.com/iamflaberry",
+        "instagram_url": "https://www.instagram.com/flaberryofficial",
+        "col1_heading": "INFORMATION",
+        "col2_heading": "HELP SERVICES",
+        "col3_heading": "SUPPORT",
+        "col4_heading": "POLICIES",
+        "show_payment_badge": true,
+        "payment_methods_text": "UPI · RuPay · Net banking · Wallets",
+        "copyright_text": "© 2026 Flaberry. All rights reserved.",
+        "credit_text": "Website by",
+        "credit_name": "Probey Services",
+        "credit_url": "https://www.probeyservices.com"
       }
     },
     "footer": {
@@ -257,8 +260,6 @@
     }
   },
   "order": [
-    "flaberry_footer",
-    "footer",
-    "utilities"
+    "flaberry_footer"
   ]
 }

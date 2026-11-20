@@ -1,111 +1,262 @@
 {% comment %}
-  Flaberry Promotional Split Banner Section
-  Source of Truth: reference/Flaberry_Design1_Classic.html
-  Highlights combo gifting: Flowers with Cake, Chocolates, and Teddies.
+  Flaberry Split Promotional Banner Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.split, .big, .grid, .pcard)
+  Left: Large featured banner card with artwork, text overlay, and CTA.
+  Right: 6-product combo grid (3 columns x 2 rows on desktop, 2 columns on mobile).
+  Max-width matches homepage standard (1440px).
 {% endcomment %}
 
-<div class="flaberry-split-banner-section" data-section-id="{{ section.id }}">
-  <div class="flaberry-container">
-    <div class="flaberry-split-card">
-      <div class="flaberry-split-media">
-        {% if section.settings.image != blank %}
-          {{ section.settings.image | image_url: width: 1000 | image_tag: 
-            width: 600, 
-            height: 400, 
-            loading: 'lazy', 
-            class: 'flaberry-split-img', 
-            alt: section.settings.heading | escape 
-          }}
-        {% else %}
-          <div class="flaberry-split-placeholder"></div>
-        {% endif %}
-      </div>
+<section class="flaberry-split-section sec" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <div class="split-layout">
+      <!-- Left Featured Banner Card -->
+      {%- liquid
+        assign banner_img = ''
+        if section.settings.banner_image != blank
+          assign banner_img = section.settings.banner_image | image_url: width: 1200
+        elsif section.settings.banner_image_fallback != blank
+          assign banner_img = section.settings.banner_image_fallback | asset_url
+        else
+          assign banner_img = 't_cakeflowers.webp' | asset_url
+        endif
 
-      <div class="flaberry-split-content">
-        {% if section.settings.eyebrow != blank %}
-          <span class="flaberry-split-eyebrow">{{ section.settings.eyebrow }}</span>
-        {% endif %}
-        <h2 class="flaberry-split-title">{{ section.settings.heading | default: 'Flowers are better with cake' }}</h2>
-        <p class="flaberry-split-desc">{{ section.settings.description | default: 'Bouquets paired with cakes, chocolates and teddies — one delivery, one message card.' }}</p>
-        <div class="flaberry-split-action">
-          <a href="{{ section.settings.button_link | default: routes.collections_url | append: '/combos' }}" class="flaberry-btn flaberry-btn-primary">
-            {{ section.settings.button_label | default: 'Shop Combos' }}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+        assign cta_url = section.settings.button_link | default: routes.collections_url | append: '/combos'
+      -%}
+
+      <a class="big" href="{{ cta_url }}">
+        <img loading="lazy" src="{{ banner_img }}" alt="{{ section.settings.heading | escape }}" width="600" height="700">
+        <div class="ov">
+          {% if section.settings.eyebrow != blank %}
+            <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+          {% endif %}
+          <h3>{{ section.settings.heading | default: 'Flowers are better with cake' }}</h3>
+          <p>{{ section.settings.description | default: 'Bouquets paired with cakes, chocolates and teddies — one delivery, one message card.' }}</p>
+          <div>
+            <span class="btn white">
+              {{ section.settings.button_label | default: 'Shop combos' }}
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </div>
         </div>
+      </a>
+
+      <!-- Right 6-Product Combo Grid -->
+      {%- liquid
+        assign coll_handle = section.settings.collection.handle | default: section.settings.collection
+        assign target_coll = collections[coll_handle]
+      -%}
+
+      <div class="split-pgrid">
+        {% if target_coll != blank and target_coll.products.size >= 6 %}
+          {% for prod in target_coll.products limit: 6 %}
+            {% render 'flaberry-product-card', product: prod %}
+          {% endfor %}
+        {% elsif section.blocks.size > 0 %}
+          {% for block in section.blocks limit: 6 %}
+            {% if block.settings.product != blank %}
+              {% render 'flaberry-product-card', 
+                product: block.settings.product,
+                title: block.settings.title,
+                price: block.settings.price,
+                compare_at_price: block.settings.compare_at_price,
+                rating: block.settings.rating,
+                reviews_count: block.settings.reviews_count,
+                tag: block.settings.tag,
+                image_asset: block.settings.image_asset,
+                link: block.settings.link
+              %}
+            {% else %}
+              {% assign block_img = '' %}
+              {% if block.settings.custom_image != blank %}
+                {% assign block_img = block.settings.custom_image | image_url: width: 600, height: 600 %}
+              {% endif %}
+              {% render 'flaberry-product-card', 
+                title: block.settings.title,
+                price: block.settings.price,
+                compare_at_price: block.settings.compare_at_price,
+                rating: block.settings.rating,
+                reviews_count: block.settings.reviews_count,
+                tag: block.settings.tag,
+                image: block_img,
+                image_asset: block.settings.image_asset,
+                link: block.settings.link
+              %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% comment %} Prototype Default Curated Combos (6 Items, 2 Rows of 3) {% endcomment %}
+          {% render 'flaberry-product-card', title: 'Pink and White Roses with Chocolate Cake', price: 1990, rating: '4.9', reviews_count: 210, tag: 'Bestseller', image_asset: 'p214.webp', link: '/products/pink-and-white-roses-with-chocolate-cake' %}
+          {% render 'flaberry-product-card', title: 'Mixed Roses with Chocolate Cake', price: 1599, rating: '4.5', reviews_count: 86, tag: '', image_asset: 'p215.webp', link: '/products/mixed-roses-with-chocolate-cake' %}
+          {% render 'flaberry-product-card', title: 'Rainbow Roses with Chocolate Cake', price: 1770, rating: '5.0', reviews_count: 187, tag: 'Bestseller', image_asset: 'p216.webp', link: '/products/rainbow-roses-with-chocolate-cake' %}
+          {% render 'flaberry-product-card', title: 'Mesmerizing roses +delicious cake', price: 1890, rating: '4.9', reviews_count: 242, tag: 'Bestseller', image_asset: 'p217.webp', link: '/products/mesmerizing-roses-delicious-cake' %}
+          {% render 'flaberry-product-card', title: '12 Roses Bouquet with 1 kg Rosy Pineapple Cake', price: 2550, rating: '4.5', reviews_count: 46, tag: '', image_asset: 'p218.webp', link: '/products/12-roses-bouquet-with-1-kg-rosy-pineapple-cake' %}
+          {% render 'flaberry-product-card', title: 'Pink Pearl Roses and Cake', price: 2200, rating: '4.5', reviews_count: 166, tag: '', image_asset: 'p219.webp', link: '/products/pink-pearl-roses-and-cake' %}
+        {% endif %}
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <style>
-  .flaberry-split-banner-section {
-    padding: 30px 0 40px;
-  }
-  .flaberry-split-card {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    background: #1c1715;
-    border-radius: var(--fl-radius-lg, 24px);
-    overflow: hidden;
-    min-height: 380px;
-    box-shadow: 0 16px 40px rgba(21, 19, 18, 0.12);
-  }
-  @media (max-width: 900px) {
-    .flaberry-split-card {
-      grid-template-columns: 1fr;
-    }
-  }
-  .flaberry-split-media {
-    position: relative;
+  .flaberry-split-section {
+    padding: 36px 0 44px;
+    background: #ffffff;
     width: 100%;
-    height: 100%;
-    min-height: 280px;
   }
-  .flaberry-split-img {
+  .flaberry-split-section .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* Split Layout: 1fr Left Banner, 1.3fr Right Product Grid */
+  .flaberry-split-section .split-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  /* Left Big Card */
+  .flaberry-split-section .big {
+    border-radius: var(--r-lg, 24px);
+    overflow: hidden;
+    position: relative;
+    min-height: 480px;
+    background: var(--mist, #f7f5f3);
+    text-decoration: none;
+    display: block;
+    box-sizing: border-box;
+  }
+  .flaberry-split-section .big img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s ease;
+    display: block;
   }
-  .flaberry-split-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #3d322e 0%, #1c1715 100%);
+  .flaberry-split-section .big:hover img {
+    transform: scale(1.03);
   }
-  .flaberry-split-content {
-    padding: 48px;
+  .flaberry-split-section .big .ov {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 32px 28px;
+    background: linear-gradient(transparent, rgba(21, 19, 18, 0.72) 45%, rgba(21, 19, 18, 0.92) 100%);
+    color: #ffffff;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    color: #ffffff;
+    gap: 10px;
+    z-index: 2;
   }
-  @media (max-width: 600px) {
-    .flaberry-split-content {
-      padding: 28px 20px;
-    }
-  }
-  .flaberry-split-eyebrow {
-    font-size: 13px;
+  .flaberry-split-section .big .ov .eyebrow {
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #ff9d85;
-    margin-bottom: 12px;
+    color: #ffd9cc;
+    line-height: 1.2;
   }
-  .flaberry-split-title {
-    font-family: var(--fl-font-display, "Inter Tight", sans-serif);
-    font-size: clamp(26px, 3.4vw, 42px);
-    font-weight: 800;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+  .flaberry-split-section .big h3 {
+    font-family: var(--display, inherit);
+    font-size: clamp(24px, 2.5vw, 32px);
+    font-weight: 700;
     color: #ffffff;
-    margin: 0 0 16px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0;
   }
-  .flaberry-split-desc {
-    font-size: 16px;
-    line-height: 1.55;
-    color: #d1cbc7;
-    margin: 0 0 28px;
+  .flaberry-split-section .big p {
+    color: #e5e0dc;
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 0 0 6px;
+  }
+  .flaberry-split-section .big .btn.white {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--flaberry-navy, #1e1b4b);
+    font-weight: 600;
+    font-size: 13.5px;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+    transition: all 0.2s ease;
+    width: fit-content;
+  }
+  .flaberry-split-section .big .btn.white:hover {
+    background: #f1ece9;
+  }
+
+  /* Right Side Scoped Grid: 3 columns x 2 rows (6 cards) */
+  .flaberry-split-section .split-pgrid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 20px 14px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    align-content: stretch;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 1100px) {
+    .flaberry-split-section .split-layout {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .flaberry-split-section .big {
+      min-height: 380px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .flaberry-split-section {
+      padding: 24px 0 32px;
+    }
+    .flaberry-split-section .wrap {
+      padding: 0 16px;
+    }
+    .flaberry-split-section .split-layout {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .flaberry-split-section .big {
+      min-height: 320px;
+      border-radius: 18px;
+    }
+    .flaberry-split-section .big .ov {
+      padding: 22px 18px;
+      gap: 8px;
+    }
+    .flaberry-split-section .big h3 {
+      font-size: 22px;
+    }
+    .flaberry-split-section .big p {
+      font-size: 13px;
+    }
+    .flaberry-split-section .big .btn.white {
+      padding: 8px 18px;
+      font-size: 12.5px;
+    }
+
+    /* 2 Columns on Mobile for right grid */
+    .flaberry-split-section .split-pgrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 16px 12px !important;
+    }
   }
 </style>
 
@@ -115,14 +266,20 @@
   "settings": [
     {
       "type": "image_picker",
-      "id": "image",
-      "label": "Banner Image"
+      "id": "banner_image",
+      "label": "Left Banner Image"
+    },
+    {
+      "type": "text",
+      "id": "banner_image_fallback",
+      "label": "Fallback Asset Name in assets/ (e.g. t_cakeflowers.webp)",
+      "default": "t_cakeflowers.webp"
     },
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Flower Combos"
+      "default": "Flower combos"
     },
     {
       "type": "text",
@@ -140,17 +297,167 @@
       "type": "text",
       "id": "button_label",
       "label": "Button Label",
-      "default": "Shop Combos"
+      "default": "Shop combos"
     },
     {
       "type": "url",
       "id": "button_link",
       "label": "Button Link"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Source Collection for Grid (Optional)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "combo_product",
+      "name": "Combo Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Shopify Product (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Pink and White Roses with Chocolate Cake"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price in INR (e.g. 1990)",
+          "default": "1990"
+        },
+        {
+          "type": "text",
+          "id": "compare_at_price",
+          "label": "Compare Price (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating",
+          "default": "4.9"
+        },
+        {
+          "type": "number",
+          "id": "reviews_count",
+          "label": "Reviews Count",
+          "default": 210
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Badge Tag",
+          "default": "Bestseller"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Asset Filename in assets/ (e.g. p214.webp)",
+          "default": "p214.webp"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Image (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Product Detail Page (PDP) Link"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Flaberry Split Banner"
+      "name": "Flaberry Split Banner",
+      "settings": {
+        "eyebrow": "Flower combos",
+        "heading": "Flowers are better with cake",
+        "description": "Bouquets paired with cakes, chocolates and teddies — one delivery, one message card.",
+        "button_label": "Shop combos",
+        "banner_image_fallback": "t_cakeflowers.webp"
+      },
+      "blocks": [
+        {
+          "type": "combo_product",
+          "settings": {
+            "title": "Pink and White Roses with Chocolate Cake",
+            "price": "1990",
+            "rating": "4.9",
+            "reviews_count": 210,
+            "tag": "Bestseller",
+            "image_asset": "p214.webp",
+            "link": "/products/pink-and-white-roses-with-chocolate-cake"
+          }
+        },
+        {
+          "type": "combo_product",
+          "settings": {
+            "title": "Mixed Roses with Chocolate Cake",
+            "price": "1599",
+            "rating": "4.5",
+            "reviews_count": 86,
+            "tag": "",
+            "image_asset": "p215.webp",
+            "link": "/products/mixed-roses-with-chocolate-cake"
+          }
+        },
+        {
+          "type": "combo_product",
+          "settings": {
+            "title": "Rainbow Roses with Chocolate Cake",
+            "price": "1770",
+            "rating": "5.0",
+            "reviews_count": 187,
+            "tag": "Bestseller",
+            "image_asset": "p216.webp",
+            "link": "/products/rainbow-roses-with-chocolate-cake"
+          }
+        },
+        {
+          "type": "combo_product",
+          "settings": {
+            "title": "Mesmerizing roses +delicious cake",
+            "price": "1890",
+            "rating": "4.9",
+            "reviews_count": 242,
+            "tag": "Bestseller",
+            "image_asset": "p217.webp",
+            "link": "/products/mesmerizing-roses-delicious-cake"
+          }
+        },
+        {
+          "type": "combo_product",
+          "settings": {
+            "title": "12 Roses Bouquet with 1 kg Rosy Pineapple Cake",
+            "price": "2550",
+            "rating": "4.5",
+            "reviews_count": 46,
+            "tag": "",
+            "image_asset": "p218.webp",
+            "link": "/products/12-roses-bouquet-with-1-kg-rosy-pineapple-cake"
+          }
+        },
+        {
+          "type": "combo_product",
+          "settings": {
+            "title": "Pink Pearl Roses and Cake",
+            "price": "2200",
+            "rating": "4.5",
+            "reviews_count": 166,
+            "tag": "",
+            "image_asset": "p219.webp",
+            "link": "/products/pink-pearl-roses-and-cake"
+          }
+        }
+      ]
     }
   ]
 }

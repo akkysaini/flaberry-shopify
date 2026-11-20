@@ -1,0 +1,220 @@
+{% comment %}
+  Flaberry Features Strip Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.feat)
+  5-column promotional feature cards: Same-Day Delivery, Freshly Baked Cakes,
+  Hand-Picked Florals, MidNight Delivery, Serving 500+ Cities.
+{% endcomment %}
+
+<section class="flaberry-feat-section sec" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <div class="feat">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {%- liquid
+            assign img_url = ''
+            if block.settings.custom_image != blank
+              assign img_url = block.settings.custom_image | image_url: width: 600
+            elsif block.settings.image_asset_fallback != blank
+              assign img_url = block.settings.image_asset_fallback | asset_url
+            endif
+          -%}
+          <a href="{{ block.settings.link | default: '#' }}" class="feat-card" {{ block.shopify_attributes }}>
+            {% if img_url != blank %}
+              <img loading="lazy" src="{{ img_url }}" alt="{{ block.settings.title | escape }}" width="529" height="317">
+            {% else %}
+              <div class="feat-placeholder">{{ block.settings.title }}</div>
+            {% endif %}
+          </a>
+        {% endfor %}
+      {% else %}
+        {% comment %} Prototype Default 5 Feature Cards {% endcomment %}
+        <a href="{{ routes.collections_url }}/same-day-delivery" class="feat-card">
+          <img loading="lazy" src="{{ 'f_sameday.webp' | asset_url }}" alt="Same-Day Delivery" width="529" height="317">
+        </a>
+        <a href="{{ routes.collections_url }}/cakes" class="feat-card">
+          <img loading="lazy" src="{{ 'f_fresh.webp' | asset_url }}" alt="Freshly Baked Cakes" width="529" height="317">
+        </a>
+        <a href="{{ routes.collections_url }}/flowers" class="feat-card">
+          <img loading="lazy" src="{{ 'f_handcrafted.webp' | asset_url }}" alt="Hand-Picked Florals" width="529" height="317">
+        </a>
+        <a href="{{ routes.collections_url }}/midnight-delivery" class="feat-card">
+          <img loading="lazy" src="{{ 'f_midnight.webp' | asset_url }}" alt="MidNight Delivery" width="529" height="317">
+        </a>
+        <a href="/pages/pincodes" class="feat-card">
+          <img loading="lazy" src="{{ 'f_support.webp' | asset_url }}" alt="Serving 500+ Cities" width="529" height="317">
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .flaberry-feat-section {
+    padding-top: 0;
+    padding-bottom: 28px;
+    background: #ffffff;
+  }
+  .flaberry-feat-section .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--gutter, 20px);
+    box-sizing: border-box;
+  }
+  .flaberry-feat-section .feat {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .flaberry-feat-section .feat a,
+  .flaberry-feat-section .feat-card {
+    border-radius: var(--r-md, 16px);
+    overflow: hidden;
+    display: block;
+    background: var(--mist, #f7f5f3);
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .flaberry-feat-section .feat a:hover,
+  .flaberry-feat-section .feat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+  .flaberry-feat-section .feat img {
+    width: 100%;
+    aspect-ratio: 529 / 317;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .flaberry-feat-section .feat a:hover img,
+  .flaberry-feat-section .feat-card:hover img {
+    transform: scale(1.03);
+  }
+  .flaberry-feat-section .feat-placeholder {
+    width: 100%;
+    aspect-ratio: 529 / 317;
+    display: grid;
+    place-items: center;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 960px) {
+    .flaberry-feat-section .feat {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      gap: 12px;
+      margin: 0 calc(-1 * var(--gutter, 16px));
+      padding: 0 var(--gutter, 16px) 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .flaberry-feat-section .feat::-webkit-scrollbar {
+      display: none;
+    }
+    .flaberry-feat-section .feat a,
+    .flaberry-feat-section .feat-card {
+      flex: 0 0 66%;
+      scroll-snap-align: start;
+      border-radius: 14px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .flaberry-feat-section {
+      padding-bottom: 20px;
+    }
+    .flaberry-feat-section .feat a,
+    .flaberry-feat-section .feat-card {
+      flex: 0 0 72%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Flaberry Features Strip",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title / Alt Text",
+          "default": "Same-Day Delivery"
+        },
+        {
+          "type": "text",
+          "id": "image_asset_fallback",
+          "label": "Fallback Asset Name in assets/ (e.g. f_sameday.webp)",
+          "default": "f_sameday.webp"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Image (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flaberry Features Strip",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Same-Day Delivery",
+            "image_asset_fallback": "f_sameday.webp",
+            "link": "shopify:\/\/collections\/same-day-delivery"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Freshly Baked Cakes",
+            "image_asset_fallback": "f_fresh.webp",
+            "link": "shopify:\/\/collections\/cakes"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Hand-Picked Florals",
+            "image_asset_fallback": "f_handcrafted.webp",
+            "link": "shopify:\/\/collections\/flowers"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "MidNight Delivery",
+            "image_asset_fallback": "f_midnight.webp",
+            "link": "shopify:\/\/collections\/midnight-delivery"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Serving 500+ Cities",
+            "image_asset_fallback": "f_support.webp",
+            "link": "\/pages\/pincodes"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

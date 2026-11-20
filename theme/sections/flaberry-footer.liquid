@@ -1,462 +1,609 @@
-{%- comment -%}
-  Flaberry 4-Column Footer Section
-  Matching prototype `reference/Flaberry_Design1_Classic.html` #footer
-  - 4 Configurable columns via Shopify Admin link_list settings
-  - Native Shopify newsletter signup form
-  - Actual shop.enabled_payment_types payment icons
-  - Customer support contact with copyable phone/email
-  - Fully responsive desktop and mobile layouts
-{%- endcomment -%}
+{% comment %}
+  Flaberry Production Footer Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.foot, .cols, .flogo, .ftag, .news, .fcontact, .social, .base, .paywrap)
+  Matching uploaded screenshot: media_1795138545572_2359bf27.png
+  - 5-Column desktop grid (Brand & Newsletter + Information + Help Services + Support + Policies)
+  - Dynamic link_list binding from Shopify Admin Navigation for each column, with prototype fallbacks
+  - Native Shopify newsletter customer form with pill styling
+  - Social icons (Facebook, X, Instagram)
+  - 100% Purchase Protection badge with payment options
+  - Highly responsive mobile & tablet layouts
+{% endcomment %}
 
-<footer
-  class="flaberry-footer"
-  style="
-    --fb-footer-bg: {{ section.settings.bg_color | default: '#151312' }};
-    --fb-footer-text: {{ section.settings.text_color | default: '#cfc7c2' }};
-    --fb-footer-heading: {{ section.settings.heading_color | default: '#ffffff' }};
-  "
->
-  <div class="flaberry-footer__container">
-    <div class="flaberry-footer__grid">
-      {%- comment -%} Column 1: Brand, Newsletter & Customer Support {%- endcomment -%}
-      <div class="flaberry-footer__col flaberry-footer__col--brand">
-        <a href="{{ routes.root_url }}" class="flaberry-footer__logo-link" aria-label="{{ shop.name }}">
+<footer class="flaberry-footer-section foot" style="--fb-footer-bg: {{ section.settings.bg_color | default: '#1e1b4b' }};">
+  <div class="wrap">
+    <div class="cols">
+      <!-- Column 1: Brand Info, Newsletter & Support -->
+      <div class="col-brand">
+        <a href="{{ routes.root_url }}" class="flogo-link" aria-label="Flaberry home">
           {% if section.settings.logo != blank %}
-            {{
-              section.settings.logo
-              | image_url: width: 220
-              | image_tag: class: 'flaberry-footer__logo-img', alt: shop.name
-            }}
+            <img src="{{ section.settings.logo | image_url: width: 240 }}" alt="{{ shop.name }}" class="flogo" height="42" width="auto">
           {% else %}
-            <span class="flaberry-footer__logo-badge">{{ shop.name }}</span>
+            <img src="{{ 'flaberry-logo-prototype.png' | asset_url }}" alt="Flaberry" class="flogo" height="42" width="auto">
           {% endif %}
         </a>
 
-        {% if section.settings.brand_text != blank %}
-          <p class="flaberry-footer__brand-text">
-            {{ section.settings.brand_text }}
-          </p>
-        {% endif %}
+        <p class="ftag">
+          {{ section.settings.brand_text | default: "India's leading brand for flowers, cakes, plants and gifts. Same-day, midnight and advance-date delivery to 500+ cities." }}
+        </p>
 
         {% if section.settings.show_newsletter %}
-          <div class="flaberry-footer__newsletter">
-            {% form 'customer', id: 'FlaberryFooterNewsletterForm', class: 'flaberry-footer__form' %}
+          <div class="news-wrap">
+            {% form 'customer', id: 'FlaberryFooterNewsletterForm', class: 'news-form' %}
               <input type="hidden" name="contact[tags]" value="newsletter">
-              <label for="FlaberryFooterEmail" class="visually-hidden">Email for offers</label>
-              <div class="flaberry-footer__input-row">
+              <div class="news">
+                <label class="sr-only" for="flaberry-newsletter-email">Email</label>
                 <input
-                  id="FlaberryFooterEmail"
+                  id="flaberry-newsletter-email"
                   type="email"
                   name="contact[email]"
                   value="{{ form.email }}"
                   placeholder="{{ section.settings.newsletter_placeholder | default: 'Email for offers' }}"
                   required
-                  aria-required="true"
-                  autocorrect="off"
+                  autocomplete="email"
                   autocapitalize="off"
-                  class="flaberry-footer__input"
                 >
-                <button type="submit" class="flaberry-footer__btn" aria-label="Subscribe to newsletter">
-                  {{ section.settings.newsletter_button_text | default: 'Subscribe' }}
+                <button type="submit" class="btn white sm">
+                  {{ section.settings.newsletter_btn_text | default: 'Subscribe' }}
                 </button>
               </div>
-
               {% if form.posted_successfully? %}
-                <p class="flaberry-footer__status-msg flaberry-footer__status-msg--success" role="status">
-                  Subscribed. Watch your inbox for offers.
-                </p>
+                <p class="news-status success" role="status">Subscribed. Watch your inbox for offers.</p>
               {% endif %}
-
               {% if form.errors %}
-                <p class="flaberry-footer__status-msg flaberry-footer__status-msg--error" role="alert">
-                  {{ form.errors.translated_fields.email | capitalize }}
-                  {{ form.errors.messages.email }}
-                </p>
+                <p class="news-status error" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
               {% endif %}
             {% endform %}
           </div>
         {% endif %}
 
-        {% if section.settings.show_support_info %}
-          {% if section.settings.support_hours != blank or section.settings.support_phone != blank or section.settings.support_email != blank %}
-            <div class="flaberry-footer__support">
-              {% if section.settings.support_hours != blank %}
-                <p class="flaberry-footer__support-hours">
-                  {{ section.settings.support_hours }}
-                </p>
-              {% endif %}
-              <p class="flaberry-footer__support-links">
-                {% if section.settings.support_phone != blank %}
-                  <a href="tel:{{ section.settings.support_phone | replace: ' ', '' }}" class="flaberry-footer__contact-val">
-                    {{- section.settings.support_phone -}}
-                  </a>
-                {% endif %}
-                {% if section.settings.support_phone != blank and section.settings.support_email != blank %}
-                  <span class="flaberry-footer__dot">·</span>
-                {% endif %}
-                {% if section.settings.support_email != blank %}
-                  <a href="mailto:{{ section.settings.support_email }}" class="flaberry-footer__contact-val">
-                    {{- section.settings.support_email -}}
-                  </a>
-                {% endif %}
-              </p>
-            </div>
+        <div class="fcontact">
+          <p class="fhours">{{ section.settings.support_hours | default: 'Help 8 AM – midnight IST' }}</p>
+          <p class="flinks">
+            {% if section.settings.support_phone != blank %}
+              <a href="tel:{{ section.settings.support_phone | replace: ' ', '' }}">{{ section.settings.support_phone }}</a>
+            {% endif %}
+            {% if section.settings.support_phone != blank and section.settings.support_email != blank %}
+              <span class="fsep">·</span>
+            {% endif %}
+            {% if section.settings.support_email != blank %}
+              <a href="mailto:{{ section.settings.support_email }}">{{ section.settings.support_email }}</a>
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="social">
+          {% if section.settings.facebook_url != blank %}
+            <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" aria-label="Flaberry on Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H8v4h2v8h4v-8h3l1-4h-4V8z"/>
+              </svg>
+            </a>
           {% endif %}
-        {% endif %}
+          {% if section.settings.twitter_url != blank %}
+            <a href="{{ section.settings.twitter_url }}" target="_blank" rel="noopener" aria-label="Flaberry on X">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M4 4l7.2 9.6L4.4 20H6l6-5.6 4.2 5.6H20l-7.5-10L19 4h-1.6l-5.6 5.2L7.8 4z"/>
+              </svg>
+            </a>
+          {% endif %}
+          {% if section.settings.instagram_url != blank %}
+            <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Flaberry on Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/>
+              </svg>
+            </a>
+          {% endif %}
+        </div>
       </div>
 
-      {%- comment -%} Column 2: Navigation Column 1 (Shop) {%- endcomment -%}
-      <div class="flaberry-footer__col">
-        <h6 class="flaberry-footer__col-title">{{ section.settings.col2_heading | default: 'Shop' }}</h6>
-        <ul class="flaberry-footer__menu list-unstyled">
-          {% if section.settings.col2_menu != blank and section.settings.col2_menu.links.size > 0 %}
-            {% for link in section.settings.col2_menu.links %}
-              <li><a href="{{ link.url }}" class="flaberry-footer__link">{{ link.title }}</a></li>
+      <!-- Column 2: INFORMATION -->
+      <div class="col-nav">
+        <h6>{{ section.settings.col1_heading | default: 'INFORMATION' }}</h6>
+        <ul>
+          {% if section.settings.col1_menu != blank and linklists[section.settings.col1_menu].links.size > 0 %}
+            {% for link in linklists[section.settings.col1_menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
           {% else %}
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Flowers</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Cakes</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Combos</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Gifts</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Same day delivery</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Midnight delivery</a></li>
-          {% endif %}
-        </ul>
-      </div>
-
-      {%- comment -%} Column 3: Navigation Column 2 (Occasions) {%- endcomment -%}
-      <div class="flaberry-footer__col">
-        <h6 class="flaberry-footer__col-title">{{ section.settings.col3_heading | default: 'Occasions' }}</h6>
-        <ul class="flaberry-footer__menu list-unstyled">
-          {% if section.settings.col3_menu != blank and section.settings.col3_menu.links.size > 0 %}
-            {% for link in section.settings.col3_menu.links %}
-              <li><a href="{{ link.url }}" class="flaberry-footer__link">{{ link.title }}</a></li>
-            {% endfor %}
-          {% else %}
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Birthday</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Anniversary</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Love & Romance</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Congratulations</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Get Well Soon</a></li>
-            <li><a href="{{ routes.all_products_collection_url }}" class="flaberry-footer__link">Thank You</a></li>
+            <li><a href="/pages/about">About Us</a></li>
+            <li><a href="/pages/careers">Career with Us</a></li>
+            <li><a href="/pages/care">Care Tips</a></li>
+            <li><a href="/pages/corporate">Corporate</a></li>
+            <li><a href="/pages/partner">Become a Partner</a></li>
           {% endif %}
         </ul>
       </div>
 
-      {%- comment -%} Column 4: Navigation Column 3 (Company & Help) {%- endcomment -%}
-      <div class="flaberry-footer__col">
-        <h6 class="flaberry-footer__col-title">{{ section.settings.col4_heading | default: 'Company' }}</h6>
-        <ul class="flaberry-footer__menu list-unstyled">
-          {% if section.settings.col4_menu != blank and section.settings.col4_menu.links.size > 0 %}
-            {% for link in section.settings.col4_menu.links %}
-              <li><a href="{{ link.url }}" class="flaberry-footer__link">{{ link.title }}</a></li>
+      <!-- Column 3: HELP SERVICES -->
+      <div class="col-nav">
+        <h6>{{ section.settings.col2_heading | default: 'HELP SERVICES' }}</h6>
+        <ul>
+          {% if section.settings.col2_menu != blank and linklists[section.settings.col2_menu].links.size > 0 %}
+            {% for link in linklists[section.settings.col2_menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
           {% else %}
-            <li><a href="{{ routes.root_url }}#page-about" class="flaberry-footer__link">About Us</a></li>
-            <li><a href="{{ settings.track_order_url | default: '#track' }}" class="flaberry-footer__link">Track Order</a></li>
-            <li><a href="{{ settings.help_url | default: '#page-contact' }}" class="flaberry-footer__link">Contact & FAQs</a></li>
-            <li><a href="{{ routes.root_url }}#page-corporate" class="flaberry-footer__link">Corporate Gifting</a></li>
-            <li><a href="{{ routes.root_url }}#page-partner" class="flaberry-footer__link">Become a Partner</a></li>
-            <li><a href="{{ routes.root_url }}#page-terms" class="flaberry-footer__link">Terms & Privacy</a></li>
+            <li><a href="/pages/pincodes">Serviceable Pincodes</a></li>
+            <li><a href="/pages/cake-cities">Cake Delivery Cities</a></li>
+            <li><a href="/pages/cities">Flower Delivery Cities</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Column 4: SUPPORT -->
+      <div class="col-nav">
+        <h6>{{ section.settings.col3_heading | default: 'SUPPORT' }}</h6>
+        <ul>
+          {% if section.settings.col3_menu != blank and linklists[section.settings.col3_menu].links.size > 0 %}
+            {% for link in linklists[section.settings.col3_menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="/pages/faq">FAQ</a></li>
+            <li><a href="/blogs/news">Blog</a></li>
+            <li><a href="/pages/track">Track Order</a></li>
+            <li><a href="/pages/contact">Contact Us</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Column 5: POLICIES -->
+      <div class="col-nav">
+        <h6>{{ section.settings.col4_heading | default: 'POLICIES' }}</h6>
+        <ul>
+          {% if section.settings.col4_menu != blank and linklists[section.settings.col4_menu].links.size > 0 %}
+            {% for link in linklists[section.settings.col4_menu].links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="/pages/terms">Terms of Services</a></li>
+            <li><a href="/pages/delivery">Delivery Information</a></li>
+            <li><a href="/pages/substitution">Substitution Policy</a></li>
+            <li><a href="/pages/refund">Refund & Cancellation Policy</a></li>
+            <li><a href="/pages/privacy">Privacy Policy</a></li>
           {% endif %}
         </ul>
       </div>
     </div>
 
-    {%- comment -%} Bottom Bar: Copyright & Real Payment Icons {%- endcomment -%}
-    <div class="flaberry-footer__bottom">
-      <div class="flaberry-footer__copyright">
-        {{ section.settings.copyright_text | default: "© 2026 Flaberry. All rights reserved. India's trusted online florist & gift shop." }}
-      </div>
+    <!-- Divider Line & Bottom Base Bar -->
+    <div class="base">
+      <span class="copyright">
+        {{ section.settings.copyright_text | default: '© 2026 Flaberry. All rights reserved.' }}
+      </span>
 
-      {% if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 %}
-        <div class="flaberry-footer__payments" aria-label="Accepted payment methods">
-          {% for type in shop.enabled_payment_types %}
-            {{ type | payment_type_svg_tag: class: 'flaberry-footer__payment-svg' }}
-          {% endfor %}
+      {% if section.settings.show_payment_badge %}
+        <div class="paywrap">
+          <img
+            class="pay"
+            src="{{ 'flaberry-payments.png' | asset_url }}"
+            alt="100% Purchase Protection - Accepted payments: Visa, Mastercard, PayPal, Maestro"
+            loading="lazy"
+            width="260"
+            height="58"
+          >
+          <span class="paytxt">{{ section.settings.payment_methods_text | default: 'UPI · RuPay · Net banking · Wallets' }}</span>
         </div>
       {% endif %}
+
+      <span class="credits">
+        {{ section.settings.credit_text | default: 'Website by' }}
+        <a href="{{ section.settings.credit_url | default: 'https://www.probeyservices.com' }}" target="_blank" rel="noopener">
+          {{ section.settings.credit_name | default: 'Probey Services' }}
+        </a>
+      </span>
     </div>
   </div>
 </footer>
 
-{% stylesheet %}
-  .flaberry-footer {
-    background-color: var(--fb-footer-bg, #151312);
-    color: var(--fb-footer-text, #cfc7c2);
+<style>
+  .flaberry-footer-section.foot {
+    background: var(--fb-footer-bg, #1e1b4b);
+    color: #e9e3df;
+    padding-top: 56px;
+    padding-bottom: 30px;
     font-size: 14px;
-    line-height: 1.6;
-    padding-top: 48px;
-    padding-bottom: 32px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+    box-sizing: border-box;
   }
-
-  .flaberry-footer__container {
-    max-width: var(--fl-max-width-page, 1440px);
+  .flaberry-footer-section .wrap {
+    max-width: 1440px;
     margin: 0 auto;
-    padding-left: var(--fl-gutter, max(16px, env(safe-area-inset-left, 0px)));
-    padding-right: var(--fl-gutter-r, max(16px, env(safe-area-inset-right, 0px)));
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
   }
 
-  .flaberry-footer__grid {
+  /* 5-Column Grid */
+  .flaberry-footer-section .cols {
     display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 40px;
+    grid-template-columns: 1.5fr repeat(4, minmax(0, 1fr));
+    gap: 32px 28px;
+    align-items: start;
   }
 
-  .flaberry-footer__col--brand {
-    max-width: 400px;
+  /* Column 1: Brand Info */
+  .flaberry-footer-section .col-brand {
+    display: flex;
+    flex-direction: column;
+    max-width: 380px;
   }
-
-  .flaberry-footer__logo-link {
+  .flaberry-footer-section .flogo-link {
     display: inline-block;
-    margin-bottom: 16px;
-    text-decoration: none;
+    width: fit-content;
   }
-
-  .flaberry-footer__logo-img {
-    height: 40px;
+  .flaberry-footer-section .flogo {
+    height: 42px;
     width: auto;
     background: #ffffff;
     border-radius: 10px;
-    padding: 4px 10px;
-    display: block;
-  }
-
-  .flaberry-footer__logo-badge {
+    padding: 5px 10px;
     display: inline-block;
-    background: #ffffff;
-    color: var(--fl-color-ink, #151312);
-    font-weight: 700;
-    font-size: 18px;
-    padding: 6px 14px;
-    border-radius: 8px;
+    object-fit: contain;
+    box-sizing: border-box;
   }
-
-  .flaberry-footer__brand-text {
-    color: var(--fb-footer-text, #cfc7c2);
-    margin: 0 0 16px;
-    font-size: 14px;
+  .flaberry-footer-section .ftag {
+    margin-top: 14px;
+    color: #cfd1ea;
+    max-width: 36ch;
+    font-size: 13.5px;
     line-height: 1.5;
   }
 
-  .flaberry-footer__form {
-    margin-bottom: 16px;
+  /* Newsletter Form */
+  .flaberry-footer-section .news-wrap {
+    margin-top: 14px;
   }
-
-  .flaberry-footer__input-row {
+  .flaberry-footer-section .news {
     display: flex;
     gap: 8px;
+    align-items: center;
     max-width: 360px;
   }
-
-  .flaberry-footer__input {
+  .flaberry-footer-section .news input {
     flex: 1;
     min-width: 0;
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: var(--fl-radius-pill, 999px);
-    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    padding: 10px 18px;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 13.5px;
     outline: none;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, background 0.2s ease;
   }
-
-  .flaberry-footer__input:focus {
-    border-color: var(--fl-color-flora, #e2522c);
+  .flaberry-footer-section .news input:focus {
+    border-color: rgba(255, 255, 255, 0.4);
     background: rgba(255, 255, 255, 0.12);
   }
-
-  .flaberry-footer__input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+  .flaberry-footer-section .news input::placeholder {
+    color: #a9acd3;
   }
-
-  .flaberry-footer__btn {
+  .flaberry-footer-section .news .btn.white.sm {
     background: #ffffff;
-    color: var(--fl-color-ink, #151312);
+    color: var(--fb-footer-bg, #1e1b4b);
     border: none;
-    border-radius: var(--fl-radius-pill, 999px);
-    padding: 8px 18px;
-    font-size: 14px;
+    border-radius: 999px;
+    padding: 10px 22px;
     font-weight: 600;
+    font-size: 13.5px;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.15s ease, transform 0.1s ease;
+    transition: background 0.2s ease, transform 0.1s ease;
+    flex-shrink: 0;
+  }
+  .flaberry-footer-section .news .btn.white.sm:hover {
+    background: #f1ece9;
+    transform: translateY(-1px);
+  }
+  .flaberry-footer-section .news-status {
+    font-size: 12.5px;
+    margin-top: 6px;
+  }
+  .flaberry-footer-section .news-status.success {
+    color: #86efac;
+  }
+  .flaberry-footer-section .news-status.error {
+    color: #fca5a5;
   }
 
-  .flaberry-footer__btn:hover {
-    background: var(--fl-color-mist, #f5f2f0);
-  }
-
-  .flaberry-footer__btn:active {
-    transform: scale(0.98);
-  }
-
-  .flaberry-footer__status-msg {
-    margin: 8px 0 0;
+  /* Support Hours & Contacts */
+  .flaberry-footer-section .fcontact {
+    margin-top: 14px;
+    color: #cfd1ea;
     font-size: 13px;
+    line-height: 1.55;
   }
-
-  .flaberry-footer__status-msg--success {
-    color: #4ade80;
-  }
-
-  .flaberry-footer__status-msg--error {
-    color: #f87171;
-  }
-
-  .flaberry-footer__support {
-    font-size: 13px;
-    color: var(--fb-footer-text, #cfc7c2);
-    margin-top: 12px;
-  }
-
-  .flaberry-footer__support-hours {
-    margin: 0 0 4px;
-  }
-
-  .flaberry-footer__support-links {
+  .flaberry-footer-section .fcontact p {
     margin: 0;
   }
-
-  .flaberry-footer__contact-val {
-    color: var(--fb-footer-text, #cfc7c2);
+  .flaberry-footer-section .fhours {
+    margin-bottom: 2px;
+  }
+  .flaberry-footer-section .fcontact a {
+    color: #cfd1ea;
     text-decoration: none;
     user-select: all;
-    transition: color 0.15s ease;
+    transition: color 0.2s ease;
   }
-
-  .flaberry-footer__contact-val:hover {
+  .flaberry-footer-section .fcontact a:hover {
     color: #ffffff;
+    text-decoration: underline;
   }
-
-  .flaberry-footer__dot {
+  .flaberry-footer-section .fsep {
     margin: 0 4px;
-    color: rgba(255, 255, 255, 0.3);
+    opacity: 0.6;
   }
 
-  .flaberry-footer__col-title {
-    color: var(--fb-footer-heading, #ffffff);
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 16px;
-    letter-spacing: 0.02em;
-    text-transform: none;
-  }
-
-  .flaberry-footer__menu {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .flaberry-footer__menu li {
-    margin-bottom: 10px;
-  }
-
-  .flaberry-footer__link {
-    color: var(--fb-footer-text, #cfc7c2);
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.15s ease, transform 0.15s ease;
-    display: inline-block;
-  }
-
-  .flaberry-footer__link:hover {
-    color: #ffffff;
-    transform: translateX(2px);
-  }
-
-  .flaberry-footer__bottom {
+  /* Social Icons */
+  .flaberry-footer-section .social {
     display: flex;
-    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .flaberry-footer-section .social a {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .flaberry-footer-section .social a:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.45);
+  }
+
+  /* Navigation Columns (2 to 5) */
+  .flaberry-footer-section .col-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .flaberry-footer-section .col-nav h6 {
+    display: block !important;
+    width: 100% !important;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a9acd3;
+    margin: 0 0 14px 0 !important;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .flaberry-footer-section .col-nav ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .flaberry-footer-section .col-nav li {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  .flaberry-footer-section .col-nav a {
+    display: inline-block !important;
+    color: #cfd1ea;
+    text-decoration: none;
+    font-size: 13.5px;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+  }
+  .flaberry-footer-section .col-nav a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+  /* Bottom Bar */
+  .flaberry-footer-section .base {
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    margin-top: 38px;
+    padding-top: 22px;
+    display: flex;
     justify-content: space-between;
     gap: 20px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
     flex-wrap: wrap;
-  }
-
-  .flaberry-footer__payments {
-    display: flex;
     align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    font-size: 13px;
+    color: #b9bbdb;
+  }
+  .flaberry-footer-section .base .copyright,
+  .flaberry-footer-section .base .credits {
+    font-size: 13px;
+  }
+  .flaberry-footer-section .base .credits a {
+    color: inherit;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+  }
+  .flaberry-footer-section .base .credits a:hover {
+    color: #ffffff;
   }
 
-  .flaberry-footer__payment-svg {
-    height: 24px;
+  /* Payment Badge Wrap */
+  .flaberry-footer-section .paywrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+  .flaberry-footer-section .paywrap img.pay {
+    max-height: 52px;
     width: auto;
-    border-radius: 4px;
+    object-fit: contain;
+    display: block;
+  }
+  .flaberry-footer-section .paytxt {
+    font-size: 11.5px;
+    color: #a9acd3;
+    letter-spacing: 0.02em;
   }
 
-  @media screen and (max-width: 960px) {
-    .flaberry-footer {
-      padding-top: 36px;
-      padding-bottom: 84px; /* Clearance for mobile bottom dock */
+  /* Responsive Rules */
+  @media (max-width: 1024px) {
+    .flaberry-footer-section .cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 32px 24px !important;
     }
-
-    .flaberry-footer__grid {
-      grid-template-columns: 1fr;
-      gap: 32px;
+    .flaberry-footer-section .col-brand {
+      grid-column: 1 / -1 !important;
+      max-width: 100% !important;
     }
-
-    .flaberry-footer__col--brand {
-      max-width: 100%;
+    .flaberry-footer-section .col-nav {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
     }
+  }
 
-    .flaberry-footer__bottom {
+  @media (max-width: 680px) {
+    .flaberry-footer-section.foot {
+      padding-top: 36px !important;
+      /* Extra padding to prevent mobile dock overlap */
+      padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+    .flaberry-footer-section .wrap {
+      display: block !important;
+      visibility: visible !important;
+      padding: 0 16px !important;
+    }
+    .flaberry-footer-section .cols {
+      display: grid !important;
+      visibility: visible !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 28px 18px !important;
+    }
+    .flaberry-footer-section .col-brand {
+      grid-column: 1 / -1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      visibility: visible !important;
+    }
+    .flaberry-footer-section .col-nav {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      visibility: visible !important;
+      width: 100% !important;
+    }
+    .flaberry-footer-section .col-nav h6 {
+      display: block !important;
+      width: 100% !important;
+      margin: 0 0 12px 0 !important;
+      font-size: 12px !important;
+    }
+    .flaberry-footer-section .col-nav ul {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 10px !important;
+      width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      list-style: none !important;
+    }
+    .flaberry-footer-section .col-nav li {
+      display: block !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .flaberry-footer-section .col-nav a {
+      display: inline-block !important;
+      font-size: 13.5px !important;
+      line-height: 1.4 !important;
+      color: #cfd1ea !important;
+    }
+    .flaberry-footer-section .news {
+      max-width: 100% !important;
+    }
+    .flaberry-footer-section .base {
+      display: flex !important;
+      flex-direction: column !important;
+      text-align: center !important;
+      gap: 16px !important;
+      margin-top: 30px !important;
+      padding-top: 22px !important;
+    }
+    .flaberry-footer-section .paywrap img.pay {
+      max-width: 240px !important;
+      height: auto !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .flaberry-footer-section .cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 24px 14px !important;
+    }
+    .flaberry-footer-section .col-nav h6 {
+      font-size: 11.5px !important;
+      letter-spacing: 0.06em !important;
+      margin-bottom: 10px !important;
+    }
+    .flaberry-footer-section .col-nav a {
+      font-size: 13px !important;
+    }
+    .flaberry-footer-section .news {
       flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .flaberry-footer-section .news .btn.white.sm {
+      width: 100%;
+      text-align: center;
+      padding: 12px 20px;
     }
   }
-{% endstylesheet %}
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
 
 {% schema %}
 {
   "name": "Flaberry Footer",
-  "class": "section-flaberry-footer",
-  "enabled_on": {
-    "groups": ["footer"]
-  },
   "settings": [
     {
-      "type": "header",
-      "content": "Brand & Colors"
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#1e1b4b"
     },
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Footer logo"
+      "label": "Custom Logo (Optional)"
     },
     {
       "type": "textarea",
       "id": "brand_text",
-      "label": "Brand description",
-      "default": "Handcrafted flowers, artisan cakes, and curated gifting experiences for every special moment."
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Background color",
-      "default": "#151312"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text color",
-      "default": "#cfc7c2"
-    },
-    {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading color",
-      "default": "#ffffff"
+      "label": "Brand Tagline",
+      "default": "India's leading brand for flowers, cakes, plants and gifts. Same-day, midnight and advance-date delivery to 500+ cities."
     },
     {
       "type": "header",
@@ -465,113 +612,161 @@
     {
       "type": "checkbox",
       "id": "show_newsletter",
-      "label": "Show newsletter signup form",
+      "label": "Show Newsletter Signup",
       "default": true
     },
     {
       "type": "text",
       "id": "newsletter_placeholder",
-      "label": "Newsletter placeholder",
+      "label": "Input Placeholder",
       "default": "Email for offers"
     },
     {
       "type": "text",
-      "id": "newsletter_button_text",
-      "label": "Subscribe button text",
+      "id": "newsletter_btn_text",
+      "label": "Button Label",
       "default": "Subscribe"
     },
     {
       "type": "header",
-      "content": "Customer Support Contact"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_support_info",
-      "label": "Show customer support details",
-      "default": true
+      "content": "Customer Support"
     },
     {
       "type": "text",
       "id": "support_hours",
-      "label": "Support hours text"
+      "label": "Support Hours",
+      "default": "Help 8 AM – midnight IST"
     },
     {
       "type": "text",
       "id": "support_phone",
-      "label": "Support phone number"
+      "label": "Phone Number",
+      "default": "+91 76685 23752"
     },
     {
       "type": "text",
       "id": "support_email",
-      "label": "Support email address",
+      "label": "Support Email",
       "default": "customerservice@flaberry.com"
     },
     {
       "type": "header",
-      "content": "Navigation Column 2"
+      "content": "Social Links"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "twitter_url",
+      "label": "X / Twitter URL"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Menus (Admin Dynamic Links)"
+    },
+    {
+      "type": "text",
+      "id": "col1_heading",
+      "label": "Column 2 Heading",
+      "default": "INFORMATION"
+    },
+    {
+      "type": "link_list",
+      "id": "col1_menu",
+      "label": "Column 2 Menu (Information)"
     },
     {
       "type": "text",
       "id": "col2_heading",
-      "label": "Column 2 heading",
-      "default": "Shop"
+      "label": "Column 3 Heading",
+      "default": "HELP SERVICES"
     },
     {
       "type": "link_list",
       "id": "col2_menu",
-      "label": "Column 2 menu",
-      "default": "footer"
-    },
-    {
-      "type": "header",
-      "content": "Navigation Column 3"
+      "label": "Column 3 Menu (Help Services)"
     },
     {
       "type": "text",
       "id": "col3_heading",
-      "label": "Column 3 heading",
-      "default": "Occasions"
+      "label": "Column 4 Heading",
+      "default": "SUPPORT"
     },
     {
       "type": "link_list",
       "id": "col3_menu",
-      "label": "Column 3 menu"
-    },
-    {
-      "type": "header",
-      "content": "Navigation Column 4"
+      "label": "Column 4 Menu (Support)"
     },
     {
       "type": "text",
       "id": "col4_heading",
-      "label": "Column 4 heading",
-      "default": "Company"
+      "label": "Column 5 Heading",
+      "default": "POLICIES"
     },
     {
       "type": "link_list",
       "id": "col4_menu",
-      "label": "Column 4 menu"
+      "label": "Column 5 Menu (Policies)"
     },
     {
       "type": "header",
-      "content": "Bottom Bar"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "Show enabled payment method icons",
-      "default": true
+      "content": "Bottom Bar & Payment Methods"
     },
     {
       "type": "text",
       "id": "copyright_text",
-      "label": "Copyright text",
+      "label": "Copyright Text",
       "default": "© 2026 Flaberry. All rights reserved."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_badge",
+      "label": "Show 100% Purchase Protection Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "payment_methods_text",
+      "label": "Payment Methods Text",
+      "default": "UPI · RuPay · Net banking · Wallets"
+    },
+    {
+      "type": "text",
+      "id": "credit_text",
+      "label": "Credit Label",
+      "default": "Website by"
+    },
+    {
+      "type": "text",
+      "id": "credit_name",
+      "label": "Credit Name",
+      "default": "Probey Services"
+    },
+    {
+      "type": "url",
+      "id": "credit_url",
+      "label": "Credit URL"
     }
   ],
   "presets": [
     {
-      "name": "Flaberry Footer"
+      "name": "Flaberry Footer",
+      "settings": {
+        "bg_color": "#1e1b4b",
+        "brand_text": "India's leading brand for flowers, cakes, plants and gifts. Same-day, midnight and advance-date delivery to 500+ cities.",
+        "col1_heading": "INFORMATION",
+        "col2_heading": "HELP SERVICES",
+        "col3_heading": "SUPPORT",
+        "col4_heading": "POLICIES"
+      }
     }
   ]
 }

@@ -16,7 +16,7 @@
             "heading": "Fresh flowers, delivered today",
             "description": "Hand-arranged by local florists and delivered the same day in 500+ cities. Order by 4 PM.",
             "button_label": "Shop flowers",
-            "button_link": "shopify:\/\/collections\/flowers"
+            "button_link": "shopify://collections/flowers"
           }
         },
         "slide_2": {
@@ -28,7 +28,7 @@
             "heading": "Cakes baked fresh on order",
             "description": "Eggless, photo and designer cakes — with midnight delivery for the big moment.",
             "button_label": "Order a cake",
-            "button_link": "shopify:\/\/collections\/cakes"
+            "button_link": "shopify://collections/cakes"
           }
         },
         "slide_3": {
@@ -40,7 +40,7 @@
             "heading": "Flowers & chocolates, together",
             "description": "Lilies, carnations and Ferrero Rocher in one delivery, with your message printed.",
             "button_label": "Shop combos",
-            "button_link": "shopify:\/\/collections\/combos"
+            "button_link": "shopify://collections/combos"
           }
         },
         "slide_4": {
@@ -52,7 +52,7 @@
             "heading": "Brighten someone's day",
             "description": "Sunny gerberas for birthdays, thank-yous and get-wells.",
             "button_label": "Shop gerberas",
-            "button_link": "shopify:\/\/collections\/flowers"
+            "button_link": "shopify://collections/flowers"
           }
         },
         "slide_5": {
@@ -64,7 +64,7 @@
             "heading": "Fresh fruit baskets",
             "description": "Seasonal fruit, packed the morning of delivery.",
             "button_label": "Shop fruit baskets",
-            "button_link": "shopify:\/\/collections\/all"
+            "button_link": "shopify://collections/all"
           }
         }
       },
@@ -95,7 +95,7 @@
           "settings": {
             "image_asset_fallback": "t_roses.webp",
             "title": "Fresh Roses",
-            "link": "shopify:\/\/collections\/roses"
+            "link": "shopify://collections/roses"
           }
         },
         "cat_bouquets": {
@@ -103,7 +103,7 @@
           "settings": {
             "image_asset_fallback": "t_bouquets.webp",
             "title": "Flower Bouquets",
-            "link": "shopify:\/\/collections\/bouquets"
+            "link": "shopify://collections/bouquets"
           }
         },
         "cat_orchids": {
@@ -111,7 +111,7 @@
           "settings": {
             "image_asset_fallback": "t_orchids.webp",
             "title": "Exotic Orchids",
-            "link": "shopify:\/\/collections\/orchids"
+            "link": "shopify://collections/orchids"
           }
         },
         "cat_vase": {
@@ -119,7 +119,7 @@
           "settings": {
             "image_asset_fallback": "t_vase.webp",
             "title": "Luxury Vases",
-            "link": "shopify:\/\/collections\/flowers"
+            "link": "shopify://collections/flowers"
           }
         },
         "cat_heart": {
@@ -127,7 +127,7 @@
           "settings": {
             "image_asset_fallback": "t_heart.webp",
             "title": "Heart Arrangements",
-            "link": "shopify:\/\/collections\/heart-shape"
+            "link": "shopify://collections/heart-shape"
           }
         },
         "cat_combos": {
@@ -135,7 +135,7 @@
           "settings": {
             "image_asset_fallback": "t_cakeflowers.webp",
             "title": "Cake & Flowers",
-            "link": "shopify:\/\/collections\/combos"
+            "link": "shopify://collections/combos"
           }
         },
         "cat_designer": {
@@ -143,7 +143,7 @@
           "settings": {
             "image_asset_fallback": "t_premiumcake.webp",
             "title": "Designer Cakes",
-            "link": "shopify:\/\/collections\/designer-cakes"
+            "link": "shopify://collections/designer-cakes"
           }
         },
         "cat_photocakes": {
@@ -151,7 +151,7 @@
           "settings": {
             "image_asset_fallback": "t_photocake.webp",
             "title": "Photo Cakes",
-            "link": "shopify:\/\/collections\/photo-cakes"
+            "link": "shopify://collections/photo-cakes"
           }
         },
         "cat_eggless": {
@@ -159,7 +159,7 @@
           "settings": {
             "image_asset_fallback": "t_eggless.webp",
             "title": "Eggless Cakes",
-            "link": "shopify:\/\/collections\/eggless"
+            "link": "shopify://collections/eggless"
           }
         },
         "cat_redvelvet": {
@@ -167,7 +167,7 @@
           "settings": {
             "image_asset_fallback": "t_heartcake.webp",
             "title": "Red Velvet",
-            "link": "shopify:\/\/collections\/cakes"
+            "link": "shopify://collections/cakes"
           }
         },
         "cat_kidscake": {
@@ -175,7 +175,7 @@
           "settings": {
             "image_asset_fallback": "t_kidscake.webp",
             "title": "Kids Cakes",
-            "link": "shopify:\/\/collections\/cakes"
+            "link": "shopify://collections/cakes"
           }
         },
         "cat_birthday": {
@@ -183,7 +183,7 @@
           "settings": {
             "image_asset_fallback": "t_birthday.webp",
             "title": "Birthday",
-            "link": "shopify:\/\/collections\/birthday"
+            "link": "shopify://collections/birthday"
           }
         },
         "cat_anniv": {
@@ -191,7 +191,7 @@
           "settings": {
             "image_asset_fallback": "t_anniv.webp",
             "title": "Anniversary",
-            "link": "shopify:\/\/collections\/anniversary"
+            "link": "shopify://collections/anniversary"
           }
         },
         "cat_congrats": {
@@ -199,7 +199,7 @@
           "settings": {
             "image_asset_fallback": "t_congrats.webp",
             "title": "Congratulations",
-            "link": "shopify:\/\/collections\/occasions"
+            "link": "shopify://collections/occasions"
           }
         },
         "cat_thankyou": {
@@ -207,7 +207,7 @@
           "settings": {
             "image_asset_fallback": "t_thankyou.webp",
             "title": "Thank You",
-            "link": "shopify:\/\/collections\/occasions"
+            "link": "shopify://collections/occasions"
           }
         },
         "cat_combo2": {
@@ -215,7 +215,7 @@
           "settings": {
             "image_asset_fallback": "t_cakeflower2.webp",
             "title": "Combos",
-            "link": "shopify:\/\/collections\/combos"
+            "link": "shopify://collections/combos"
           }
         }
       },
@@ -245,7 +245,7 @@
         "heading_accent": "smiles",
         "heading_suffix": "across India",
         "story_label": "Our story",
-        "story_link": "\/pages\/about-us",
+        "story_link": "/pages/about-us",
         "stat_1_val": "500+",
         "stat_1_lbl": "cities served",
         "stat_2_val": "2,500+",
@@ -264,7 +264,7 @@
             "title": "All gifts",
             "count_badge": "372",
             "subtitle": "Everything we deliver to 201301",
-            "link": "shopify:\/\/collections\/all"
+            "link": "shopify://collections/all"
           }
         },
         "card_flowers": {
@@ -275,7 +275,7 @@
             "title": "Flowers",
             "count_badge": "125",
             "subtitle": "Hand-tied bouquets, baskets and vases",
-            "link": "shopify:\/\/collections\/flowers"
+            "link": "shopify://collections/flowers"
           }
         },
         "card_cakes": {
@@ -286,7 +286,7 @@
             "title": "Cakes",
             "count_badge": "90",
             "subtitle": "Baked fresh on order, eggless options",
-            "link": "shopify:\/\/collections\/cakes"
+            "link": "shopify://collections/cakes"
           }
         },
         "card_combos": {
@@ -297,7 +297,7 @@
             "title": "Combos",
             "count_badge": "34",
             "subtitle": "Flowers with cake, chocolates and teddies",
-            "link": "shopify:\/\/collections\/combos"
+            "link": "shopify://collections/combos"
           }
         },
         "card_gifts": {
@@ -308,7 +308,7 @@
             "title": "Gifts",
             "count_badge": "50",
             "subtitle": "Hampers, mithai, dry fruits and plants",
-            "link": "shopify:\/\/collections\/all"
+            "link": "shopify://collections/all"
           }
         }
       },
@@ -323,21 +323,266 @@
     "flaberry_best_sellers": {
       "type": "flaberry-product-rail",
       "settings": {
-        "title": "Best Sellers in Flowers",
-        "subtitle": "Hand-crafted fresh arrangements that our customers love most.",
+        "title": "Premium flowers",
+        "subtitle": "Exotic stems and luxury arrangements, hand-finished by our senior florists.",
         "collection": "flowers",
-        "products_to_show": 10
-      }
+        "products_to_show": 12,
+        "show_view_all": true,
+        "view_all_text": "View all",
+        "view_all_link": "shopify://collections/flowers"
+      },
+      "blocks": {
+        "prem_1": {
+          "type": "product_item",
+          "settings": {
+            "title": "Posh Pink Enchantment",
+            "price": "2440",
+            "rating": "4.8",
+            "reviews_count": 217,
+            "tag": "Premium",
+            "image_asset": "p111.webp",
+            "link": "/products/posh-pink-enchantment"
+          }
+        },
+        "prem_2": {
+          "type": "product_item",
+          "settings": {
+            "title": "Heartful Wishes",
+            "price": "11990",
+            "rating": "4.8",
+            "reviews_count": 81,
+            "tag": "Premium",
+            "image_asset": "p112.webp",
+            "link": "/products/heartful-wishes"
+          }
+        },
+        "prem_3": {
+          "type": "product_item",
+          "settings": {
+            "title": "Passionate Love",
+            "price": "4660",
+            "rating": "4.8",
+            "reviews_count": 241,
+            "tag": "Premium",
+            "image_asset": "p113.webp",
+            "link": "/products/passionate-love"
+          }
+        },
+        "prem_4": {
+          "type": "product_item",
+          "settings": {
+            "title": "Just for You",
+            "price": "7800",
+            "rating": "4.5",
+            "reviews_count": 86,
+            "tag": "Premium",
+            "image_asset": "p114.webp",
+            "link": "/products/just-for-you"
+          }
+        },
+        "prem_5": {
+          "type": "product_item",
+          "settings": {
+            "title": "Mom's Love",
+            "price": "4200",
+            "rating": "5.0",
+            "reviews_count": 51,
+            "tag": "Premium",
+            "image_asset": "p115.webp",
+            "link": "/products/moms-love"
+          }
+        },
+        "prem_6": {
+          "type": "product_item",
+          "settings": {
+            "title": "Premium Beauty",
+            "price": "4400",
+            "rating": "4.8",
+            "reviews_count": 201,
+            "tag": "Premium",
+            "image_asset": "p105.webp",
+            "link": "/products/premium-beauty"
+          }
+        },
+        "prem_7": {
+          "type": "product_item",
+          "settings": {
+            "title": "Mesmerizing Red",
+            "price": "2420",
+            "rating": "4.7",
+            "reviews_count": 144,
+            "tag": "Premium",
+            "image_asset": "p108.webp",
+            "link": "/products/mesmerizing-red"
+          }
+        },
+        "prem_8": {
+          "type": "product_item",
+          "settings": {
+            "title": "Breathtaking Beauty",
+            "price": "4190",
+            "rating": "4.4",
+            "reviews_count": 133,
+            "tag": "Premium",
+            "image_asset": "p109.webp",
+            "link": "/products/breathtaking-beauty"
+          }
+        }
+      },
+      "block_order": [
+        "prem_1",
+        "prem_2",
+        "prem_3",
+        "prem_4",
+        "prem_5",
+        "prem_6",
+        "prem_7",
+        "prem_8"
+      ]
+    },
+    "flaberry_features_strip": {
+      "type": "flaberry-features-strip",
+      "blocks": {
+        "feat_1": {
+          "type": "feature",
+          "settings": {
+            "title": "Same-Day Delivery",
+            "image_asset_fallback": "f_sameday.webp",
+            "link": "shopify://collections/same-day-delivery"
+          }
+        },
+        "feat_2": {
+          "type": "feature",
+          "settings": {
+            "title": "Freshly Baked Cakes",
+            "image_asset_fallback": "f_fresh.webp",
+            "link": "shopify://collections/cakes"
+          }
+        },
+        "feat_3": {
+          "type": "feature",
+          "settings": {
+            "title": "Hand-Picked Florals",
+            "image_asset_fallback": "f_handcrafted.webp",
+            "link": "shopify://collections/flowers"
+          }
+        },
+        "feat_4": {
+          "type": "feature",
+          "settings": {
+            "title": "MidNight Delivery",
+            "image_asset_fallback": "f_midnight.webp",
+            "link": "shopify://collections/midnight-delivery"
+          }
+        },
+        "feat_5": {
+          "type": "feature",
+          "settings": {
+            "title": "Serving 500+ Cities",
+            "image_asset_fallback": "f_support.webp",
+            "link": "/pages/pincodes"
+          }
+        }
+      },
+      "block_order": [
+        "feat_1",
+        "feat_2",
+        "feat_3",
+        "feat_4",
+        "feat_5"
+      ]
     },
     "flaberry_split_banner": {
       "type": "flaberry-split-banner",
+      "blocks": {
+        "combo_1": {
+          "type": "combo_product",
+          "settings": {
+            "title": "Pink and White Roses with Chocolate Cake",
+            "price": "1990",
+            "rating": "4.9",
+            "reviews_count": 210,
+            "tag": "Bestseller",
+            "image_asset": "p214.webp",
+            "link": "/products/pink-and-white-roses-with-chocolate-cake"
+          }
+        },
+        "combo_2": {
+          "type": "combo_product",
+          "settings": {
+            "title": "Mixed Roses with Chocolate Cake",
+            "price": "1599",
+            "rating": "4.5",
+            "reviews_count": 86,
+            "tag": "",
+            "image_asset": "p215.webp",
+            "link": "/products/mixed-roses-with-chocolate-cake"
+          }
+        },
+        "combo_3": {
+          "type": "combo_product",
+          "settings": {
+            "title": "Rainbow Roses with Chocolate Cake",
+            "price": "1770",
+            "rating": "5.0",
+            "reviews_count": 187,
+            "tag": "Bestseller",
+            "image_asset": "p216.webp",
+            "link": "/products/rainbow-roses-with-chocolate-cake"
+          }
+        },
+        "combo_4": {
+          "type": "combo_product",
+          "settings": {
+            "title": "Mesmerizing roses +delicious cake",
+            "price": "1890",
+            "rating": "4.9",
+            "reviews_count": 242,
+            "tag": "Bestseller",
+            "image_asset": "p217.webp",
+            "link": "/products/mesmerizing-roses-delicious-cake"
+          }
+        },
+        "combo_5": {
+          "type": "combo_product",
+          "settings": {
+            "title": "12 Roses Bouquet with 1 kg Rosy Pineapple Cake",
+            "price": "2550",
+            "rating": "4.5",
+            "reviews_count": 46,
+            "tag": "",
+            "image_asset": "p218.webp",
+            "link": "/products/12-roses-bouquet-with-1-kg-rosy-pineapple-cake"
+          }
+        },
+        "combo_6": {
+          "type": "combo_product",
+          "settings": {
+            "title": "Pink Pearl Roses and Cake",
+            "price": "2200",
+            "rating": "4.5",
+            "reviews_count": 166,
+            "tag": "",
+            "image_asset": "p219.webp",
+            "link": "/products/pink-pearl-roses-and-cake"
+          }
+        }
+      },
+      "block_order": [
+        "combo_1",
+        "combo_2",
+        "combo_3",
+        "combo_4",
+        "combo_5",
+        "combo_6"
+      ],
       "settings": {
-        "image": "shopify:\/\/shop_images\/t_cakeflowers.webp",
-        "eyebrow": "Flower Combos",
+        "eyebrow": "Flower combos",
         "heading": "Flowers are better with cake",
         "description": "Bouquets paired with cakes, chocolates and teddies — one delivery, one message card.",
-        "button_label": "Shop Combos",
-        "button_link": "shopify:\/\/collections\/combos"
+        "button_label": "Shop combos",
+        "button_link": "shopify://collections/combos",
+        "banner_image_fallback": "t_cakeflowers.webp"
       }
     },
     "flaberry_tabbed_cakes": {
@@ -364,7 +609,7 @@
         "tab_photo": {
           "type": "tab",
           "settings": {
-            "tab_title": "Photo Cakes",
+            "tab_title": "Photo",
             "collection": "photo-cakes"
           }
         },
@@ -403,80 +648,151 @@
     "flaberry_reviews": {
       "type": "flaberry-reviews",
       "settings": {
-        "title": "Loved by 2 million+ senders",
-        "subtitle": "Real reviews from customers who trust Flaberry for their most memorable occasions."
+        "eyebrow": "CUSTOMER STORIES",
+        "stars": "★★★★★",
+        "subtitle": "Verified reviews from customers across India",
+        "button_label": "Read all reviews",
+        "button_link": "shopify://pages/reviews",
+        "trust_1_title": "India's leading brand",
+        "trust_1_sub": "for flowers, cakes & gifts",
+        "trust_2_title": "No hidden charges",
+        "trust_2_sub": "Prices include taxes",
+        "trust_3_title": "Customer support",
+        "trust_3_sub": "8 AM – midnight IST",
+        "trust_4_title": "100% safe",
+        "trust_4_sub": "& secure payments"
       },
       "blocks": {
         "rev_1": {
           "type": "review",
           "settings": {
+            "author": "Ananya R.",
+            "avatar_initial": "A",
+            "location": "Houston, USA",
+            "tagline": "Anniversary · Pune",
             "stars": 5,
-            "quote": "The flowers arrived in Bangalore right at midnight. My mother was so touched by the fresh lilies!",
-            "author": "Priya S.",
-            "city": "Bengaluru",
-            "product_name": "Serene Pink Lilies"
+            "quote": "Sent roses and a truffle cake to my parents in Pune for their anniversary. Delivered on the exact date, flowers looked just like the photo."
           }
         },
         "rev_2": {
           "type": "review",
           "settings": {
+            "author": "Rahul M.",
+            "avatar_initial": "R",
+            "location": "Gurugram",
+            "tagline": "Birthday · Delhi",
             "stars": 5,
-            "quote": "Ordered a photo cake for my nephew's birthday in Pune. Freshly baked, moist and delivered exactly on time.",
-            "author": "Rohan M.",
-            "city": "Pune",
-            "product_name": "Personalized Photo Cake"
+            "quote": "Midnight delivery reached at 11:40 PM sharp. My wife was completely surprised. The message card was printed neatly."
           }
         },
         "rev_3": {
           "type": "review",
           "settings": {
+            "author": "Priya S.",
+            "avatar_initial": "P",
+            "location": "London, UK",
+            "tagline": "Birthday · Bengaluru",
             "stars": 5,
-            "quote": "Best gifting service from USA to Delhi. Payment in USD was smooth and the bouquet was gorgeous.",
-            "author": "Ananya K.",
-            "city": "New Jersey (Sender to Delhi)",
-            "product_name": "Red Rose Gift Luxe"
+            "quote": "Booked 12 days in advance for my sister's birthday and got WhatsApp updates on every step. Smooth from start to finish."
+          }
+        },
+        "rev_4": {
+          "type": "review",
+          "settings": {
+            "author": "Vikram K.",
+            "avatar_initial": "V",
+            "location": "Mumbai",
+            "tagline": "Kids · Mumbai",
+            "stars": 4,
+            "quote": "Ordered a photo cake for my son. Good print quality and tasted great. Delivery boy called before arriving."
+          }
+        },
+        "rev_5": {
+          "type": "review",
+          "settings": {
+            "author": "Meera J.",
+            "avatar_initial": "M",
+            "location": "Dubai, UAE",
+            "tagline": "Thank you · Chennai",
+            "stars": 5,
+            "quote": "Paying from abroad was easy and the prices were clear. The lilies were fresh and lasted a week."
+          }
+        },
+        "rev_6": {
+          "type": "review",
+          "settings": {
+            "author": "Sandeep T.",
+            "avatar_initial": "S",
+            "location": "Noida",
+            "tagline": "Corporate · Noida",
+            "stars": 5,
+            "quote": "Our team uses Flaberry for client gifting. Corporate orders are handled quickly and invoices come on time."
           }
         }
       },
       "block_order": [
         "rev_1",
         "rev_2",
-        "rev_3"
+        "rev_3",
+        "rev_4",
+        "rev_5",
+        "rev_6"
       ]
     },
     "flaberry_seo_faq": {
       "type": "flaberry-seo-faq",
       "settings": {
-        "seo_heading": "Send flowers & cakes to India with Flaberry",
-        "faq_heading": "Frequently Asked Questions"
+        "seo_heading": "Send flowers to India with Flaberry",
+        "faq_heading": "FAQs about sending flowers to India"
       },
       "blocks": {
         "faq_1": {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "How does Same-Day Delivery work?",
-            "answer": "Orders placed before 4:00 PM IST qualify for same-day delivery across 500+ serviceable cities. You can select your preferred delivery time slot during checkout."
+            "question": "How do I send flowers to India online?",
+            "answer": "Enter the receiver's pincode, choose a gift, pick a delivery date and time slot, add your message and pay. You get updates by email and WhatsApp until the gift is delivered."
           }
         },
         "faq_2": {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "Are the flowers and cakes fresh?",
-            "answer": "Yes, 100%. Flowers reach our distribution hubs within 2 to 3 days of being hand-picked. Cakes are baked fresh by our partner master bakeries only after your order is confirmed."
+            "question": "Can I get flowers delivered in India the same day?",
+            "answer": "Yes. Orders placed before 4 PM IST are delivered the same day in serviceable pincodes. Fixed-time and midnight slots have their own cut-off times shown on the product page."
           }
         },
         "faq_3": {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "Can I order from outside India?",
-            "answer": "Absolutely. Flaberry serves customers worldwide across the USA, UK, Canada, UAE, Australia, and Europe with international credit card and PayPal support, delivering right to doorsteps across India."
+            "question": "Do you deliver flowers at midnight?",
+            "answer": "Yes, between 11:00 PM and 12:30 AM in most metro pincodes. Choose the Midnight slot on the product page."
           }
         },
         "faq_4": {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "Can I add a personalized message card?",
-            "answer": "Yes, every gift order comes with a free personalized greeting message card. Simply enter your message on the product page or cart drawer, and our team prints it neatly onto a physical gift card."
+            "question": "Can I order today for a future date?",
+            "answer": "Yes. Pick any date up to 90 days ahead. Your order stays scheduled and is prepared for that day. Occasion prices follow the delivery date."
+          }
+        },
+        "faq_5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I send flowers to India from abroad?",
+            "answer": "Yes. You can browse in your own currency and pay with international cards or PayPal. Your card is charged in INR; your bank converts it."
+          }
+        },
+        "faq_6": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What can I send along with flowers?",
+            "answer": "Add cakes, chocolates, teddy bears, sweets and dry fruits from the product page or the cart."
+          }
+        },
+        "faq_7": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will my flowers look like the picture?",
+            "answer": "We match the picture closely. If a flower is out of season, our florist uses one of equal or higher value, as per our substitution policy."
           }
         }
       },
@@ -484,7 +800,10 @@
         "faq_1",
         "faq_2",
         "faq_3",
-        "faq_4"
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7"
       ]
     }
   },
@@ -494,9 +813,9 @@
     "flaberry_category_rail",
     "flaberry_brand_intro",
     "flaberry_best_sellers",
-    "flaberry_split_banner",
+    "flaberry_features_strip",
     "flaberry_tabbed_cakes",
-    "flaberry_occasions_rail",
+    "flaberry_split_banner",
     "flaberry_reviews",
     "flaberry_seo_faq"
   ]

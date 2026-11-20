@@ -1,146 +1,333 @@
 {% comment %}
   Flaberry Tabbed Cakes Section
-  Source of Truth: reference/Flaberry_Design1_Classic.html
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.sec-h, .optrow, .chip, .grid, .pcard)
   Interactive tabs for Chocolate, Truffle, Photo, Eggless, and Designer cakes.
+  Desktop: 4-column product grid with 2 full rows (8 products).
+  Mobile: 2-column product grid as per prototype.
+  Max-width matches the exact homepage container standard (1440px).
 {% endcomment %}
 
-<div class="flaberry-tabbed-cakes-section" data-section-id="{{ section.id }}">
-  <div class="flaberry-container">
-    <div class="flaberry-sec-header">
-      <div>
-        <h2 class="flaberry-sec-title">{{ section.settings.title | default: 'Cakes for every celebration' }}</h2>
-        <p class="flaberry-sec-subtitle">{{ section.settings.subtitle | default: 'Baked fresh on order. Choose eggless, pick a weight and add an icing message.' }}</p>
+<section class="flaberry-tabbed-cakes-sec sec" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="sec-h-text">
+        <h2>{{ section.settings.title | default: 'Cakes for every celebration' }}</h2>
+        <p>{{ section.settings.subtitle | default: 'Baked fresh on order. Choose eggless, pick a weight and add an icing message.' }}</p>
       </div>
-      <div class="flaberry-header-actions">
-        <a href="{{ routes.collections_url }}/cakes" class="flaberry-view-all-link">
-          All cakes
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+
+      <div class="optrow-wrap">
+        <div class="optrow" id="caketabs-{{ section.id }}">
+          {% for block in section.blocks %}
+            <button 
+              type="button" 
+              class="chip {% if forloop.first %}on{% endif %}" 
+              onclick="flaberrySwitchCakeTab('{{ section.id }}', {{ forloop.index0 }})"
+              data-tab-index="{{ forloop.index0 }}"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.tab_title }}
+            </button>
+          {% endfor %}
+          <a class="btn ghost sm" href="{{ routes.collections_url }}/cakes">{{ section.settings.view_all_text | default: 'All cakes' }}</a>
+        </div>
       </div>
     </div>
 
-    <div class="flaberry-cake-tabs">
+    <div class="cake-tab-panels">
       {% for block in section.blocks %}
-        <button 
-          type="button" 
-          class="flaberry-cake-tab-btn {% if forloop.first %}active{% endif %}" 
-          onclick="flaberrySwitchCakeTab('{{ section.id }}', {{ forloop.index0 }})"
-          data-tab-index="{{ forloop.index0 }}"
-          {{ block.shopify_attributes }}
-        >
-          {{ block.settings.tab_title }}
-        </button>
-      {% endfor %}
-    </div>
-
-    <div class="flaberry-cake-tab-contents">
-      {% for block in section.blocks %}
-        {% assign tab_coll = block.settings.collection %}
+        {%- liquid
+          assign coll_handle = block.settings.collection.handle | default: block.settings.collection
+          assign tab_coll = collections[coll_handle]
+        -%}
         <div 
-          class="flaberry-cake-tab-panel {% if forloop.first %}active{% endif %}" 
-          id="flaberry-cake-tab-{{ section.id }}-{{ forloop.index0 }}"
+          class="cake-panel {% if forloop.first %}on{% endif %}" 
+          id="cakepanel-{{ section.id }}-{{ forloop.index0 }}"
         >
-          <div class="flaberry-cake-grid">
-            {% if tab_coll != blank and tab_coll.products.size > 0 %}
-              {% for prod in tab_coll.products limit: 4 %}
+          <div class="flaberry-cakes-grid">
+            {% if tab_coll != blank and tab_coll.products.size >= 8 %}
+              {% for prod in tab_coll.products limit: 8 %}
                 {% render 'flaberry-product-card', product: prod %}
               {% endfor %}
             {% else %}
-              {% comment %} Preview Fallback Cakes {% endcomment %}
-              {% assign cake_img_1 = 'hero_cake.webp' | file_url %}
-              {% assign cake_img_2 = 'hx_truffle.webp' | file_url %}
-              {% assign cake_img_3 = 't_photocake.webp' | file_url %}
-              {% assign cake_img_4 = 't_heartcake.webp' | file_url %}
-              {% render 'flaberry-product-card', title: 'Belgian Chocolate Truffle Cake', price_formatted: '₹849.00', compare_price_formatted: '₹999.00', price: 849, compare_at_price: 999, image: cake_img_1, rating: '4.9', reviews_count: 215, category: 'Cakes', link: '/products/chocolate-cake' %}
-              {% render 'flaberry-product-card', title: 'Dutch Chocolate Delight Cake', price_formatted: '₹899.00', compare_price_formatted: '₹1,050.00', price: 899, compare_at_price: 1050, image: cake_img_2, rating: '4.8', reviews_count: 142, category: 'Cakes', link: '/products/chocolate-cake' %}
-              {% render 'flaberry-product-card', title: 'Classic Black Forest Photo Cake', price_formatted: '₹929.00', compare_price_formatted: '₹1,099.00', price: 929, compare_at_price: 1099, image: cake_img_3, rating: '4.9', reviews_count: 88, category: 'Photo Cakes', link: '/products/chocolate-cake' %}
-              {% render 'flaberry-product-card', title: 'Heartfelt Red Velvet Heart Cake', price_formatted: '₹999.00', compare_price_formatted: '₹1,199.00', price: 999, compare_at_price: 1199, image: cake_img_4, rating: '5.0', reviews_count: 94, category: 'Designer Cakes', link: '/products/chocolate-cake' %}
+              {% case forloop.index0 %}
+                {% when 0 %}
+                  {% comment %} Tab 1: Chocolate Cakes (8 Items, 2 Rows of 4) {% endcomment %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Cake', price: 1299, rating: '4.9', reviews_count: 18, tag: 'Bestseller', image_asset: 'p125.webp', link: '/products/chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Heart Shape Chocolate Cake', price: 829, rating: '4.7', reviews_count: 40, tag: '', image_asset: 'p126.webp', link: '/products/heart-shape-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Birthday Chocolate Cake', price: 799, rating: '4.5', reviews_count: 198, tag: '', image_asset: 'p127.webp', link: '/products/birthday-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Sweet Heart Chocolate Cake', price: 749, rating: '4.4', reviews_count: 213, tag: '', image_asset: 'p128.webp', link: '/products/sweet-heart-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Bittersweet Chocolate Cake', price: 1549, rating: '4.6', reviews_count: 119, tag: '', image_asset: 'p129.webp', link: '/products/bittersweet-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Yummy Chocolate Cake', price: 709, rating: '4.3', reviews_count: 84, tag: '', image_asset: 'p130.webp', link: '/products/yummy-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Cake Eggless', price: 740, rating: '5.0', reviews_count: 99, tag: 'Bestseller', image_asset: 'p131.webp', link: '/products/chocolate-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Skellington Chocolate Cake', price: 849, rating: '4.5', reviews_count: 230, tag: '', image_asset: 'p132.webp', link: '/products/skellington-chocolate-cake' %}
+
+                {% when 1 %}
+                  {% comment %} Tab 2: Truffle Cakes (8 Items, 2 Rows of 4) {% endcomment %}
+                  {% render 'flaberry-product-card', title: 'Rich Truffle Cake', price: 1399, rating: '4.9', reviews_count: 226, tag: 'Bestseller', image_asset: 'p137.webp', link: '/products/rich-truffle-cake' %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Truffle Cake', price: 775, rating: '4.3', reviews_count: 68, tag: '', image_asset: 'p138.webp', link: '/products/chocolate-truffle-cake' %}
+                  {% render 'flaberry-product-card', title: 'Choco Truffle Cake', price: 629, rating: '4.9', reviews_count: 162, tag: '', image_asset: 'p139.webp', link: '/products/choco-truffle-cake' %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Truffle Cakes', price: 699, rating: '4.8', reviews_count: 129, tag: '', image_asset: 'p140.webp', link: '/products/chocolate-truffle-cakes' %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Truffle Cake Eggless', price: 640, rating: '4.4', reviews_count: 13, tag: '', image_asset: 'p141.webp', link: '/products/chocolate-truffle-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Cheerful Glow & Truffle Cake', price: 2290, rating: '4.7', reviews_count: 144, tag: '', image_asset: 'p142.webp', link: '/products/cheerful-glow-truffle-cake' %}
+                  {% render 'flaberry-product-card', title: 'Sweet Heart Chocolate Truffle Cake', price: 2150, rating: '4.5', reviews_count: 102, tag: '', image_asset: 'p143.webp', link: '/products/sweet-heart-chocolate-truffle-cake' %}
+                  {% render 'flaberry-product-card', title: 'Almond Choco Truffle Cake Eggless', price: 799, rating: '4.3', reviews_count: 100, tag: '', image_asset: 'p144.webp', link: '/products/almond-choco-truffle-cake-eggless' %}
+
+                {% when 2 %}
+                  {% comment %} Tab 3: Photo Cakes (8 Items, 2 Rows of 4) {% endcomment %}
+                  {% render 'flaberry-product-card', title: 'Anniversary Photo Cake', price: 929, rating: '4.7', reviews_count: 24, tag: 'Personalised', image_asset: 'p178.webp', link: '/products/anniversary-photo-cake' %}
+                  {% render 'flaberry-product-card', title: 'Square Photo Cake', price: 929, rating: '4.7', reviews_count: 128, tag: 'Personalised', image_asset: 'p179.webp', link: '/products/square-photo-cake' %}
+                  {% render 'flaberry-product-card', title: 'Birthday Photo Cake', price: 929, rating: '4.3', reviews_count: 44, tag: 'Personalised', image_asset: 'p180.webp', link: '/products/birthday-photo-cake' %}
+                  {% render 'flaberry-product-card', title: 'Double Delight Photo Cake', price: 3499, rating: '4.5', reviews_count: 158, tag: 'Personalised', image_asset: 'p181.webp', link: '/products/double-delight-photo-cake' %}
+                  {% render 'flaberry-product-card', title: 'Happy Birthday Photo Cake', price: 929, rating: '5.0', reviews_count: 179, tag: 'Bestseller', image_asset: 'p182.webp', link: '/products/happy-birthday-photo-cake' %}
+                  {% render 'flaberry-product-card', title: 'Personalize Bdy Photo Cake', price: 929, rating: '4.4', reviews_count: 141, tag: 'Personalised', image_asset: 'p183.webp', link: '/products/personalize-bdy-photo-cake' %}
+                  {% render 'flaberry-product-card', title: 'Jungle Safari Photo Cake', price: 929, rating: '4.5', reviews_count: 86, tag: 'Personalised', image_asset: 'p184.webp', link: '/products/jungle-safari-photo-cake' %}
+                  {% render 'flaberry-product-card', title: 'Jungle Kids Photo Cake', price: 929, rating: '4.9', reviews_count: 210, tag: 'Bestseller', image_asset: 'p185.webp', link: '/products/jungle-kids-photo-cake' %}
+
+                {% when 3 %}
+                  {% comment %} Tab 4: Eggless Cakes (8 Items, 2 Rows of 4) {% endcomment %}
+                  {% render 'flaberry-product-card', title: 'Almond Choco Truffle Cake Eggless', price: 799, rating: '4.3', reviews_count: 100, tag: 'Eggless', image_asset: 'p144.webp', link: '/products/almond-choco-truffle-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Rich Truffle Eggless Cake', price: 1397, rating: '4.7', reviews_count: 248, tag: 'Eggless', image_asset: 'p188.webp', link: '/products/rich-truffle-eggless-cake' %}
+                  {% render 'flaberry-product-card', title: 'Rich Pineapple Cake Eggless Mini', price: 549, rating: '4.9', reviews_count: 42, tag: 'Eggless', image_asset: 'p189.webp', link: '/products/rich-pineapple-cake-eggless-mini' %}
+                  {% render 'flaberry-product-card', title: 'Butterscotch Cake Eggless', price: 1299, rating: '5.0', reviews_count: 75, tag: 'Bestseller', image_asset: 'p190.webp', link: '/products/butterscotch-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Pineapple Cake Eggless', price: 649, rating: '4.4', reviews_count: 61, tag: 'Eggless', image_asset: 'p166.webp', link: '/products/pineapple-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Cake Eggless', price: 740, rating: '5.0', reviews_count: 99, tag: 'Bestseller', image_asset: 'p131.webp', link: '/products/chocolate-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Vanilla Cake Eggless', price: 699, rating: '4.3', reviews_count: 84, tag: 'Eggless', image_asset: 'p191.webp', link: '/products/vanilla-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Crushed Pineapple Eggless Cake', price: 1299, rating: '5.0', reviews_count: 67, tag: 'Bestseller', image_asset: 'p192.webp', link: '/products/crushed-pineapple-eggless-cake' %}
+
+                {% when 4 %}
+                  {% comment %} Tab 5: Designer Cakes (8 Items, 2 Rows of 4) {% endcomment %}
+                  {% render 'flaberry-product-card', title: 'Barbie Tier Designer Cake', price: 3849, rating: '5.0', reviews_count: 67, tag: 'Bestseller', image_asset: 'p194.webp', link: '/products/barbie-tier-designer-cake' %}
+                  {% render 'flaberry-product-card', title: 'Krishna Janmashtami Designer Cake', price: 1829, rating: '5.0', reviews_count: 35, tag: 'Bestseller', image_asset: 'p195.webp', link: '/products/krishna-janmashtami-designer-cake' %}
+                  {% render 'flaberry-product-card', title: 'Five Tier Celebration Cake', price: 13990, rating: '5.0', reviews_count: 99, tag: 'Bestseller', image_asset: 'p196.webp', link: '/products/five-tier-celebration-cake' %}
+                  {% render 'flaberry-product-card', title: 'Heroic Spiderman Cake', price: 1949, rating: '4.8', reviews_count: 193, tag: '', image_asset: 'p197.webp', link: '/products/heroic-spiderman-cake' %}
+                  {% render 'flaberry-product-card', title: 'Strawberry Princess Cake', price: 1889, rating: '4.7', reviews_count: 72, tag: '', image_asset: 'p198.webp', link: '/products/strawberry-princess-cake' %}
+                  {% render 'flaberry-product-card', title: 'Princess Barbie Cake', price: 2295, rating: '4.7', reviews_count: 144, tag: '', image_asset: 'p199.webp', link: '/products/princess-barbie-cake' %}
+                  {% render 'flaberry-product-card', title: 'Barbie Doll Cake', price: 2295, rating: '5.0', reviews_count: 243, tag: 'Bestseller', image_asset: 'p200.webp', link: '/products/barbie-doll-cake' %}
+                  {% render 'flaberry-product-card', title: "Daughter's Day Theme Cake", price: 829, rating: '4.8', reviews_count: 25, tag: '', image_asset: 'p201.webp', link: '/products/daughters-day-theme-cake' %}
+                {% else %}
+                  {% comment %} General fallback {% endcomment %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Cake', price: 1299, rating: '4.9', reviews_count: 18, tag: 'Bestseller', image_asset: 'p125.webp', link: '/products/chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Heart Shape Chocolate Cake', price: 829, rating: '4.7', reviews_count: 40, tag: '', image_asset: 'p126.webp', link: '/products/heart-shape-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Birthday Chocolate Cake', price: 799, rating: '4.5', reviews_count: 198, tag: '', image_asset: 'p127.webp', link: '/products/birthday-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Sweet Heart Chocolate Cake', price: 749, rating: '4.4', reviews_count: 213, tag: '', image_asset: 'p128.webp', link: '/products/sweet-heart-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Bittersweet Chocolate Cake', price: 1549, rating: '4.6', reviews_count: 119, tag: '', image_asset: 'p129.webp', link: '/products/bittersweet-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Yummy Chocolate Cake', price: 709, rating: '4.3', reviews_count: 84, tag: '', image_asset: 'p130.webp', link: '/products/yummy-chocolate-cake' %}
+                  {% render 'flaberry-product-card', title: 'Chocolate Cake Eggless', price: 740, rating: '5.0', reviews_count: 99, tag: 'Bestseller', image_asset: 'p131.webp', link: '/products/chocolate-cake-eggless' %}
+                  {% render 'flaberry-product-card', title: 'Skellington Chocolate Cake', price: 849, rating: '4.5', reviews_count: 230, tag: '', image_asset: 'p132.webp', link: '/products/skellington-chocolate-cake' %}
+              {% endcase %}
             {% endif %}
           </div>
         </div>
       {% endfor %}
     </div>
   </div>
-</div>
+</section>
 
 <style>
-  .flaberry-tabbed-cakes-section {
-    padding: 38px 0;
+  .flaberry-tabbed-cakes-sec {
+    padding: 36px 0 44px;
     background: #ffffff;
+    width: 100%;
   }
-  .flaberry-cake-tabs {
+  .flaberry-tabbed-cakes-sec .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .flaberry-tabbed-cakes-sec .sec-h {
     display: flex;
-    gap: 10px;
-    margin-bottom: 24px;
-    overflow-x: auto;
-    padding-bottom: 6px;
-    scrollbar-width: none;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
   }
-  .flaberry-cake-tabs::-webkit-scrollbar {
-    display: none;
+  .flaberry-tabbed-cakes-sec .sec-h-text h2 {
+    font-family: var(--display, inherit);
+    font-size: clamp(24px, 3.2vw, 36px);
+    font-weight: 700;
+    color: #1e1b4b;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
-  .flaberry-cake-tab-btn {
-    padding: 8px 18px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: var(--fl-radius-pill, 999px);
-    border: 1px solid var(--fl-color-line, #e7e1dd);
-    background: var(--fl-color-mist, #f5f2f0);
-    color: var(--fl-color-ink, #151312);
+  .flaberry-tabbed-cakes-sec .sec-h-text p {
+    color: var(--muted, #6b7280);
+    margin: 6px 0 0;
+    font-size: 14.5px;
+    max-width: 65ch;
+    line-height: 1.45;
+  }
+  .flaberry-tabbed-cakes-sec .optrow-wrap {
+    display: flex;
+    align-items: center;
+  }
+  .flaberry-tabbed-cakes-sec .optrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .flaberry-tabbed-cakes-sec .chip {
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--line, #e7e1dd);
+    background: #ffffff;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #1e1b4b;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    line-height: 1.4;
   }
-  .flaberry-cake-tab-btn:hover {
-    border-color: var(--fl-color-flora, #e2522c);
+  .flaberry-tabbed-cakes-sec .chip:hover {
+    border-color: #1e1b4b;
   }
-  .flaberry-cake-tab-btn.active {
-    background: var(--fl-color-ink, #151312);
-    border-color: var(--fl-color-ink, #151312);
+  .flaberry-tabbed-cakes-sec .chip.on {
+    background: #1e1b4b;
+    color: #ffffff;
+    border-color: #1e1b4b;
+  }
+  .flaberry-tabbed-cakes-sec .btn.ghost.sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1e1b4b;
+    background: transparent;
+    border: 1px solid #1e1b4b;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    line-height: 1.4;
+    margin-left: 4px;
+  }
+  .flaberry-tabbed-cakes-sec .btn.ghost.sm:hover {
+    background: #1e1b4b;
     color: #ffffff;
   }
-  .flaberry-cake-tab-panel {
+
+  /* Scoped Cake Grid - 4 Columns Desktop (2 Rows), 2 Columns Mobile */
+  .flaberry-tabbed-cakes-sec .cake-tab-panels {
+    width: 100%;
+  }
+  .flaberry-tabbed-cakes-sec .cake-panel {
     display: none;
+    width: 100%;
   }
-  .flaberry-cake-tab-panel.active {
+  .flaberry-tabbed-cakes-sec .cake-panel.on {
     display: block;
+    animation: fadeInCakePanel 0.2s ease-out;
   }
-  .flaberry-cake-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+  @keyframes fadeInCakePanel {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
-  @media (max-width: 1024px) {
-    .flaberry-cake-grid {
-      grid-template-columns: repeat(2, 1fr);
+
+  /* Explicit grid styles ensuring exactly 4 columns on desktop (2 rows of 4) */
+  .flaberry-tabbed-cakes-sec .flaberry-cakes-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 22px 16px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Tablet */
+  @media (max-width: 1100px) {
+    .flaberry-tabbed-cakes-sec .flaberry-cakes-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 18px 14px !important;
     }
   }
-  @media (max-width: 600px) {
-    .flaberry-cake-grid {
-      display: flex;
+
+  /* Mobile: Exactly 2 Columns */
+  @media (max-width: 768px) {
+    .flaberry-tabbed-cakes-sec {
+      padding: 24px 0 32px;
+    }
+    .flaberry-tabbed-cakes-sec .wrap {
+      padding: 0 16px;
+    }
+    .flaberry-tabbed-cakes-sec .sec-h {
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+    .flaberry-tabbed-cakes-sec .sec-h-text h2 {
+      font-size: 22px;
+    }
+    .flaberry-tabbed-cakes-sec .sec-h-text p {
+      font-size: 13px;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+    .flaberry-tabbed-cakes-sec .optrow-wrap {
+      width: 100%;
+    }
+    .flaberry-tabbed-cakes-sec .optrow {
+      width: 100%;
       overflow-x: auto;
-      scroll-behavior: smooth;
-      padding-bottom: 16px;
+      flex-wrap: nowrap;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
     }
-  }
-  .flaberry-empty-state {
-    grid-column: 1 / -1;
-    padding: 30px;
-    text-align: center;
-    background: var(--fl-color-mist, #f5f2f0);
-    border-radius: 12px;
-    color: var(--fl-color-muted, #6f6763);
+    .flaberry-tabbed-cakes-sec .optrow::-webkit-scrollbar {
+      display: none;
+    }
+    .flaberry-tabbed-cakes-sec .chip {
+      padding: 6px 14px;
+      font-size: 12.5px;
+      flex-shrink: 0;
+    }
+    .flaberry-tabbed-cakes-sec .btn.ghost.sm {
+      padding: 6px 14px;
+      font-size: 12.5px;
+      flex-shrink: 0;
+    }
+
+    /* 2 Columns on Mobile strictly as requested */
+    .flaberry-tabbed-cakes-sec .flaberry-cakes-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 18px 12px !important;
+    }
   }
 </style>
 
 <script>
-  function flaberrySwitchCakeTab(secId, idx) {
-    const parent = document.querySelector(`[data-section-id="${secId}"]`);
-    if (!parent) return;
-    const btns = parent.querySelectorAll('.flaberry-cake-tab-btn');
-    const panels = parent.querySelectorAll('.flaberry-cake-tab-panel');
-    btns.forEach((b, i) => b.classList.toggle('active', i === idx));
-    panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+  function flaberrySwitchCakeTab(secId, tabIndex) {
+    var tabsWrap = document.getElementById('caketabs-' + secId);
+    if (tabsWrap) {
+      var chips = tabsWrap.querySelectorAll('.chip');
+      chips.forEach(function(chip, idx) {
+        if (idx === tabIndex) {
+          chip.classList.add('on');
+        } else {
+          chip.classList.remove('on');
+        }
+      });
+    }
+
+    var sec = document.querySelector('[data-section-id="' + secId + '"]');
+    if (sec) {
+      var panels = sec.querySelectorAll('.cake-panel');
+      panels.forEach(function(panel, idx) {
+        if (idx === tabIndex) {
+          panel.classList.add('on');
+        } else {
+          panel.classList.remove('on');
+        }
+      });
+    }
   }
 </script>
 
@@ -159,6 +346,12 @@
       "id": "subtitle",
       "label": "Subtitle",
       "default": "Baked fresh on order. Choose eggless, pick a weight and add an icing message."
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "'All cakes' Button Text",
+      "default": "All cakes"
     }
   ],
   "blocks": [
@@ -169,13 +362,13 @@
         {
           "type": "text",
           "id": "tab_title",
-          "label": "Tab Label",
+          "label": "Tab Name",
           "default": "Chocolate"
         },
         {
           "type": "collection",
           "id": "collection",
-          "label": "Collection"
+          "label": "Collection (Optional)"
         }
       ]
     }
@@ -183,12 +376,41 @@
   "presets": [
     {
       "name": "Flaberry Tabbed Cakes",
+      "settings": {
+        "title": "Cakes for every celebration",
+        "subtitle": "Baked fresh on order. Choose eggless, pick a weight and add an icing message."
+      },
       "blocks": [
-        { "type": "tab", "settings": { "tab_title": "Chocolate" } },
-        { "type": "tab", "settings": { "tab_title": "Truffle" } },
-        { "type": "tab", "settings": { "tab_title": "Photo Cakes" } },
-        { "type": "tab", "settings": { "tab_title": "Eggless" } },
-        { "type": "tab", "settings": { "tab_title": "Designer" } }
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Chocolate"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Truffle"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Photo"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Eggless"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Designer"
+          }
+        }
       ]
     }
   ]

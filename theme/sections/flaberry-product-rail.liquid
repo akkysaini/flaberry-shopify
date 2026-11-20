@@ -1,118 +1,279 @@
 {% comment %}
   Flaberry Product Rail / Carousel Section
-  Source of Truth: reference/Flaberry_Design1_Classic.html
-  Dynamic collection-driven product rail with rating badges, pricing, and responsive arrows.
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.rail, .sec-h, .pcard)
+  Displays collection or block-driven products in a 5-column horizontal rail with
+  circular arrow controls, 'View all' link, and mobile peeking cards.
+  Individual product cards strictly redirect to their respective Product Detail Pages (PDP).
 {% endcomment %}
 
-<div class="flaberry-prod-rail-section" data-section-id="{{ section.id }}">
-  <div class="flaberry-container">
-    <div class="flaberry-sec-header">
-      <div>
-        <h2 class="flaberry-sec-title">{{ section.settings.title | default: 'Featured Collection' }}</h2>
+<section class="flaberry-rail-section sec" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="sec-h-text">
+        <h2>{{ section.settings.title | default: 'Premium flowers' }}</h2>
         {% if section.settings.subtitle != blank %}
-          <p class="flaberry-sec-subtitle">{{ section.settings.subtitle }}</p>
+          <p>{{ section.settings.subtitle }}</p>
         {% endif %}
       </div>
-      <div class="flaberry-header-actions">
-        {% if section.settings.collection != blank %}
-          <a href="{{ section.settings.collection.url }}" class="flaberry-view-all-link">
-            View all
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+
+      <div class="sec-h-actions">
+        {%- liquid
+          assign view_url = ''
+          if section.settings.view_all_link != blank
+            assign view_url = section.settings.view_all_link
+          elsif section.settings.collection != blank
+            if section.settings.collection.url != blank
+              assign view_url = section.settings.collection.url
+            else
+              assign view_url = '/collections/' | append: section.settings.collection
+            endif
+          else
+            assign view_url = '/collections/flowers'
+          endif
+        -%}
+
+        {% if section.settings.show_view_all %}
+          <a class="btn ghost sm" href="{{ view_url }}">{{ section.settings.view_all_text | default: 'View all' }}</a>
         {% endif %}
-        <div class="flaberry-rail-arrows">
-          <button class="flaberry-arrow-btn" onclick="flaberryScrollProdRail('{{ section.id }}', -1)" aria-label="Previous products">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+
+        <div class="arrow-btns">
+          <button type="button" onclick="flaberryScrollRail('{{ section.id }}', -1)" aria-label="Previous products">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
           </button>
-          <button class="flaberry-arrow-btn" onclick="flaberryScrollProdRail('{{ section.id }}', 1)" aria-label="Next products">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          <button type="button" onclick="flaberryScrollRail('{{ section.id }}', 1)" aria-label="Next products">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
           </button>
         </div>
       </div>
     </div>
 
-    {% assign target_coll = section.settings.collection %}
-    <div class="flaberry-prod-rail" id="flaberry-prod-rail-{{ section.id }}">
+    {%- liquid
+      assign coll_handle = section.settings.collection.handle | default: section.settings.collection
+      assign target_coll = collections[coll_handle]
+    -%}
+
+    <div class="rail" id="flaberry-rail-{{ section.id }}">
       {% if target_coll != blank and target_coll.products.size > 0 %}
         {% for prod in target_coll.products limit: section.settings.products_to_show %}
           {% render 'flaberry-product-card', product: prod %}
         {% endfor %}
-      {% else %}
+      {% elsif section.blocks.size > 0 %}
         {% for block in section.blocks %}
           {% if block.settings.product != blank %}
-            {% render 'flaberry-product-card', product: block.settings.product %}
+            {% render 'flaberry-product-card', 
+              product: block.settings.product,
+              title: block.settings.title,
+              price: block.settings.price,
+              compare_at_price: block.settings.compare_at_price,
+              rating: block.settings.rating,
+              reviews_count: block.settings.reviews_count,
+              tag: block.settings.tag,
+              image_asset: block.settings.image_asset,
+              link: block.settings.link
+            %}
+          {% else %}
+            {% assign block_img = '' %}
+            {% if block.settings.custom_image != blank %}
+              {% assign block_img = block.settings.custom_image | image_url: width: 600, height: 600 %}
+            {% endif %}
+            {% render 'flaberry-product-card', 
+              title: block.settings.title,
+              price: block.settings.price,
+              compare_at_price: block.settings.compare_at_price,
+              rating: block.settings.rating,
+              reviews_count: block.settings.reviews_count,
+              tag: block.settings.tag,
+              image: block_img,
+              image_asset: block.settings.image_asset,
+              link: block.settings.link
+            %}
           {% endif %}
         {% endfor %}
-        {% comment %} Preview Fallback Cards for Unpublished Collections in Dev Preview {% endcomment %}
-        {% if section.settings.collection == 'flowers' or section.id contains 'best_sellers' %}
-          {% assign img_rose = 'hx_roses.webp' | file_url %}
-          {% assign img_lily = 'hx_lily.webp' | file_url %}
-          {% assign img_orchid = 'hx_orchids.webp' | file_url %}
-          {% assign img_heart = 'hx_heartbox.webp' | file_url %}
-          {% assign img_flowers = 'hero_flowers.webp' | file_url %}
-          {% render 'flaberry-product-card', title: 'Heartfelt Red Roses Bunch', price_formatted: '₹3,100.00', compare_price_formatted: '₹3,500.00', price: 3100, compare_at_price: 3500, image: img_flowers, rating: '4.9', reviews_count: 142, category: 'Bouquets', link: '/products/red-rose-gift-luxe' %}
-          {% render 'flaberry-product-card', title: 'Red Rose Love Treat', price_formatted: '₹2,660.00', compare_price_formatted: '₹2,990.00', price: 2660, compare_at_price: 2990, image: img_rose, rating: '4.8', reviews_count: 98, category: 'Roses', link: '/products/red-rose-gift-luxe' %}
-          {% render 'flaberry-product-card', title: 'Serene Pink Lily Box', price_formatted: '₹3,800.00', compare_price_formatted: '₹4,200.00', price: 3800, compare_at_price: 4200, image: img_lily, rating: '4.9', reviews_count: 67, category: 'Lilies', link: '/products/red-rose-gift-luxe' %}
-          {% render 'flaberry-product-card', title: 'Royal Blue Orchid Vase', price_formatted: '₹2,900.00', compare_price_formatted: '₹3,250.00', price: 2900, compare_at_price: 3250, image: img_orchid, rating: '4.7', reviews_count: 53, category: 'Orchids', link: '/products/red-rose-gift-luxe' %}
-          {% render 'flaberry-product-card', title: 'Grand Rose Arrangement', price_formatted: '₹29,000.00', compare_price_formatted: '₹32,000.00', price: 29000, compare_at_price: 32000, image: img_heart, rating: '5.0', reviews_count: 24, category: 'Luxury', link: '/products/red-rose-gift-luxe' %}
-        {% else %}
-          {% assign img_anniv = 'hero_anniv.webp' | file_url %}
-          {% assign img_combo = 't_cakeflowers.webp' | file_url %}
-          {% assign img_bday = 'hero_bday.webp' | file_url %}
-          {% assign img_ferrero = 'hx_ferrero.webp' | file_url %}
-          {% render 'flaberry-product-card', title: 'Anniversary Peach Charm', price_formatted: '₹1,699.00', compare_price_formatted: '₹1,899.00', price: 1699, compare_at_price: 1899, image: img_anniv, rating: '4.8', reviews_count: 110, category: 'Occasions', link: '/products/chocolate-cake' %}
-          {% render 'flaberry-product-card', title: 'Dark Choco Rose Affair', price_formatted: '₹4,400.00', compare_price_formatted: '₹4,890.00', price: 4400, compare_at_price: 4890, image: img_combo, rating: '4.9', reviews_count: 76, category: 'Combos', link: '/products/chocolate-cake' %}
-          {% render 'flaberry-product-card', title: 'Birthday Wishes Bouquet', price_formatted: '₹1,599.00', compare_price_formatted: '₹1,799.00', price: 1599, compare_at_price: 1799, image: img_bday, rating: '4.7', reviews_count: 89, category: 'Birthday', link: '/products/chocolate-cake' %}
-          {% render 'flaberry-product-card', title: 'Ferrero Rocher Floral Luxe', price_formatted: '₹2,990.00', compare_price_formatted: '₹3,350.00', price: 2990, compare_at_price: 3350, image: img_ferrero, rating: '4.9', reviews_count: 134, category: 'Gourmet', link: '/products/chocolate-cake' %}
-        {% endif %}
+      {% else %}
+        {% comment %} Prototype Curated Fallback with direct PDP links {% endcomment %}
+        {% render 'flaberry-product-card', title: 'Posh Pink Enchantment', price: 2440, rating: '4.8', reviews_count: 217, tag: 'Premium', image_asset: 'p111.webp', link: '/products/posh-pink-enchantment' %}
+        {% render 'flaberry-product-card', title: 'Heartful Wishes', price: 11990, rating: '4.8', reviews_count: 81, tag: 'Premium', image_asset: 'p112.webp', link: '/products/heartful-wishes' %}
+        {% render 'flaberry-product-card', title: 'Passionate Love', price: 4660, rating: '4.8', reviews_count: 241, tag: 'Premium', image_asset: 'p113.webp', link: '/products/passionate-love' %}
+        {% render 'flaberry-product-card', title: 'Just for You', price: 7800, rating: '4.5', reviews_count: 86, tag: 'Premium', image_asset: 'p114.webp', link: '/products/just-for-you' %}
+        {% render 'flaberry-product-card', title: "Mom's Love", price: 4200, rating: '5.0', reviews_count: 51, tag: 'Premium', image_asset: 'p115.webp', link: '/products/moms-love' %}
+        {% render 'flaberry-product-card', title: 'Premium Beauty', price: 4400, rating: '4.8', reviews_count: 201, tag: 'Premium', image_asset: 'p105.webp', link: '/products/premium-beauty' %}
+        {% render 'flaberry-product-card', title: 'Mesmerizing Red', price: 2420, rating: '4.7', reviews_count: 144, tag: 'Premium', image_asset: 'p108.webp', link: '/products/mesmerizing-red' %}
+        {% render 'flaberry-product-card', title: 'Breathtaking Beauty', price: 4190, rating: '4.4', reviews_count: 133, tag: 'Premium', image_asset: 'p109.webp', link: '/products/breathtaking-beauty' %}
       {% endif %}
     </div>
   </div>
-</div>
+</section>
 
 <style>
-  .flaberry-prod-rail-section {
+  .flaberry-rail-section {
     padding: 36px 0;
-    background-color: #ffffff;
+    background: #ffffff;
   }
-  .flaberry-header-actions {
+  .flaberry-rail-section .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--gutter, 20px);
+    box-sizing: border-box;
+  }
+  .flaberry-rail-section .sec-h {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    justify-content: space-between;
     gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
   }
-  .flaberry-view-all-link {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--fl-color-flora, #e2522c);
-    text-decoration: none;
+  .flaberry-rail-section .sec-h-text h2 {
+    font-family: var(--display, inherit);
+    font-size: clamp(24px, 3.2vw, 36px);
+    font-weight: 700;
+    color: #1e1b4b;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .flaberry-rail-section .sec-h-text p {
+    color: var(--muted, #6b7280);
+    margin: 6px 0 0;
+    font-size: 14.5px;
+    max-width: 65ch;
+    line-height: 1.45;
+  }
+  .flaberry-rail-section .sec-h-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .flaberry-rail-section .btn.ghost.sm {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    transition: color 0.2s;
+    justify-content: center;
+    padding: 7px 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1e1b4b;
+    background: transparent;
+    border: 1px solid #1e1b4b;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    line-height: 1.4;
   }
-  .flaberry-view-all-link:hover {
-    color: var(--fl-color-flora-deep, #c23e1b);
-    text-decoration: underline;
+  .flaberry-rail-section .btn.ghost.sm:hover {
+    background: #1e1b4b;
+    color: #ffffff;
   }
-  .flaberry-prod-rail {
+  .flaberry-rail-section .arrow-btns {
     display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 10px 4px 20px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    gap: 8px;
+    align-items: center;
   }
-  .flaberry-prod-rail::-webkit-scrollbar {
+  .flaberry-rail-section .arrow-btns button {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--line, #e7e1dd);
+    background: #ffffff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #1e1b4b;
+    transition: all 0.2s ease;
+    padding: 0;
+  }
+  .flaberry-rail-section .arrow-btns button:hover {
+    border-color: #1e1b4b;
+    background: #faf9f8;
+  }
+  .flaberry-rail-section .arrow-btns button:active {
+    transform: scale(0.95);
+  }
+
+  /* 5-Column Responsive Rail */
+  .flaberry-rail-section .rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 4 * 16px) / 5);
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .flaberry-rail-section .rail::-webkit-scrollbar {
     display: none;
+  }
+  .flaberry-rail-section .rail > * {
+    scroll-snap-align: start;
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 1200px) {
+    .flaberry-rail-section .rail {
+      grid-auto-columns: calc((100% - 3 * 16px) / 4);
+    }
+  }
+  @media (max-width: 900px) {
+    .flaberry-rail-section .rail {
+      grid-auto-columns: calc((100% - 2 * 14px) / 3);
+      gap: 14px;
+    }
+  }
+  @media (max-width: 640px) {
+    .flaberry-rail-section {
+      padding: 24px 0;
+    }
+    .flaberry-rail-section .sec-h {
+      margin-bottom: 16px;
+      gap: 12px;
+      align-items: center;
+    }
+    .flaberry-rail-section .sec-h-text h2 {
+      font-size: 22px;
+    }
+    .flaberry-rail-section .sec-h-text p {
+      font-size: 13px;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+    .flaberry-rail-section .sec-h-actions {
+      gap: 8px;
+    }
+    .flaberry-rail-section .btn.ghost.sm {
+      padding: 6px 14px;
+      font-size: 12.5px;
+    }
+    .flaberry-rail-section .arrow-btns button {
+      width: 32px;
+      height: 32px;
+    }
+    .flaberry-rail-section .arrow-btns button svg {
+      width: 15px;
+      height: 15px;
+    }
+    .flaberry-rail-section .rail {
+      grid-auto-columns: 72%;
+      gap: 14px;
+      margin: 0 calc(-1 * var(--gutter, 16px));
+      padding: 0 var(--gutter, 16px) 6px;
+      scroll-padding: 0 var(--gutter, 16px);
+    }
   }
 </style>
 
 <script>
-  function flaberryScrollProdRail(secId, dir) {
-    const rail = document.getElementById('flaberry-prod-rail-' + secId);
+  function flaberryScrollRail(secId, dir) {
+    var rail = document.getElementById('flaberry-rail-' + secId);
     if (!rail) return;
-    rail.scrollBy({ left: dir * 340, behavior: 'smooth' });
+    var step = rail.clientWidth * 0.75;
+    rail.scrollBy({ left: dir * step, behavior: 'smooth' });
   }
 </script>
 
@@ -124,13 +285,13 @@
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "Best Sellers"
+      "default": "Premium flowers"
     },
     {
       "type": "text",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Hand-crafted arrangements that our customers love most."
+      "default": "Exotic stems and luxury arrangements, hand-finished by our senior florists."
     },
     {
       "type": "collection",
@@ -140,22 +301,90 @@
     {
       "type": "range",
       "id": "products_to_show",
-      "label": "Maximum products to show",
+      "label": "Maximum products to show from collection",
       "min": 4,
       "max": 24,
       "step": 2,
       "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "'View all' Button Text",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "'View all' Custom URL (Optional)"
     }
   ],
   "blocks": [
     {
-      "type": "product",
-      "name": "Specific Product",
+      "type": "product_item",
+      "name": "Product Card",
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "Product"
+          "label": "Shopify Product (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Posh Pink Enchantment"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price in INR (e.g. 2440)",
+          "default": "2440"
+        },
+        {
+          "type": "text",
+          "id": "compare_at_price",
+          "label": "Compare Price (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating",
+          "default": "4.8"
+        },
+        {
+          "type": "number",
+          "id": "reviews_count",
+          "label": "Reviews Count",
+          "default": 217
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Badge Tag",
+          "default": "Premium"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Asset Filename in assets/ (e.g. p111.webp)",
+          "default": "p111.webp"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Upload Custom Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Product Detail Page (PDP) Link"
         }
       ]
     }
@@ -164,9 +393,84 @@
     {
       "name": "Flaberry Product Rail",
       "settings": {
-        "title": "Best Sellers",
-        "subtitle": "Hand-crafted arrangements that our customers love most."
-      }
+        "title": "Premium flowers",
+        "subtitle": "Exotic stems and luxury arrangements, hand-finished by our senior florists.",
+        "collection": "flowers"
+      },
+      "blocks": [
+        {
+          "type": "product_item",
+          "settings": {
+            "title": "Posh Pink Enchantment",
+            "price": "2440",
+            "rating": "4.8",
+            "reviews_count": 217,
+            "tag": "Premium",
+            "image_asset": "p111.webp",
+            "link": "/products/posh-pink-enchantment"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "title": "Heartful Wishes",
+            "price": "11990",
+            "rating": "4.8",
+            "reviews_count": 81,
+            "tag": "Premium",
+            "image_asset": "p112.webp",
+            "link": "/products/heartful-wishes"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "title": "Passionate Love",
+            "price": "4660",
+            "rating": "4.8",
+            "reviews_count": 241,
+            "tag": "Premium",
+            "image_asset": "p113.webp",
+            "link": "/products/passionate-love"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "title": "Just for You",
+            "price": "7800",
+            "rating": "4.5",
+            "reviews_count": 86,
+            "tag": "Premium",
+            "image_asset": "p114.webp",
+            "link": "/products/just-for-you"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "title": "Mom's Love",
+            "price": "4200",
+            "rating": "5.0",
+            "reviews_count": 51,
+            "tag": "Premium",
+            "image_asset": "p115.webp",
+            "link": "/products/moms-love"
+          }
+        },
+        {
+          "type": "product_item",
+          "settings": {
+            "title": "Premium Beauty",
+            "price": "4400",
+            "rating": "4.8",
+            "reviews_count": 201,
+            "tag": "Premium",
+            "image_asset": "p105.webp",
+            "link": "/products/premium-beauty"
+          }
+        }
+      ]
     }
   ]
 }

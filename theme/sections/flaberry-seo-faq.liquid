@@ -1,209 +1,345 @@
 {% comment %}
-  Flaberry SEO Content & FAQ Section
-  Source of Truth: reference/Flaberry_Design1_Classic.html
-  Editorial storytelling, international gifting details, and interactive FAQ accordion.
+  Flaberry SEO Editorial & FAQ Accordion Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.seo, .more, .faq)
+  Includes expandable editorial SEO prose and interactive FAQ accordion.
 {% endcomment %}
 
-<div class="flaberry-seo-faq-section" data-section-id="{{ section.id }}">
-  <div class="flaberry-container">
-    <div class="flaberry-seo-block">
-      <h2 class="flaberry-seo-heading">{{ section.settings.seo_heading | default: 'Send flowers & cakes to India with Flaberry' }}</h2>
-      <div class="flaberry-seo-prose">
-        <p>Fresh flowers leave an enchanting impression with their natural beauty and delicate fragrance. Explore farm-fresh roses, carnations, lilies, orchids, and gerberas hand-crafted by master florists and sent to your loved ones anywhere in India.</p>
-        <p>Flaberry delivers to 500+ cities through its own climate-controlled fulfillment hubs and over 2,500+ vetted local partner merchants, offering Same-Day Delivery, Fixed-Time delivery, and Midnight delivery right to the doorstep.</p>
-        <p><strong>Ordering from USA, UK, Canada, or UAE?</strong> Browse comfortably in your local currency, personalize your order with a free message card printed and placed with the gift, and track your delivery seamlessly.</p>
+<section class="flaberry-seo-faq-section sec" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <!-- Top SEO Content Block with Read More -->
+    <div class="seo">
+      <h2>{{ section.settings.seo_heading | default: 'Send flowers to India with Flaberry' }}</h2>
+      <div class="more" id="seomore-{{ section.id }}">
+        {% if section.settings.seo_content != blank %}
+          {{ section.settings.seo_content }}
+        {% else %}
+          <p>Fresh flowers leave an enchanting impression with their natural beauty and fragrance. Explore roses, carnations, lilies, orchids and gerberas and send them to your loved ones anywhere in India.</p>
+          <p>Flaberry delivers to 500+ cities through its own warehouses and 2,500+ partner merchants, with same-day, fixed-time and midnight delivery.</p>
+          <p>Ordering from the USA, UK, Canada or the UAE? Browse in your own currency, add a personal message, and we deliver to the doorstep in India.</p>
+          <h3>Same day and midnight delivery</h3>
+          <p>Forgot a birthday? Order by 4 PM for same-day delivery, or choose the midnight slot for a surprise at 12. Book up to 90 days ahead for planned occasions.</p>
+          <h3>Personalised touch</h3>
+          <p>Choose a ready message or write your own. We print it neatly on a card and place it with the gift. Cakes can carry a short icing message.</p>
+        {% endif %}
+      </div>
+      <div>
+        <button type="button" class="linkbtn" onclick="flaberryToggleSeo(this)">Read more</button>
       </div>
     </div>
 
-    <div class="flaberry-faq-block">
-      <h3 class="flaberry-faq-heading">{{ section.settings.faq_heading | default: 'Frequently Asked Questions' }}</h3>
-      <div class="flaberry-accordion">
+    <!-- FAQ Accordion -->
+    <h2 class="faq-heading">{{ section.settings.faq_heading | default: 'FAQs about sending flowers to India' }}</h2>
+    <div class="faq">
+      {% if section.blocks.size > 0 %}
         {% for block in section.blocks %}
-          <div class="flaberry-faq-item" {{ block.shopify_attributes }}>
-            <button type="button" class="flaberry-faq-trigger" onclick="flaberryToggleFaq(this)">
-              <span>{{ block.settings.question }}</span>
-              <svg class="flaberry-faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="flaberry-faq-answer">
-              <p>{{ block.settings.answer }}</p>
-            </div>
-          </div>
+          <details {% if forloop.first %}open{% endif %} {{ block.shopify_attributes }}>
+            <summary>{{ block.settings.question }}</summary>
+            <p>{{ block.settings.answer }}</p>
+          </details>
         {% endfor %}
-      </div>
+      {% else %}
+        <!-- Prototype Default 7 FAQs -->
+        <details open>
+          <summary>How do I send flowers to India online?</summary>
+          <p>Enter the receiver's pincode, choose a gift, pick a delivery date and time slot, add your message and pay. You get updates by email and WhatsApp until the gift is delivered.</p>
+        </details>
+        <details>
+          <summary>Can I get flowers delivered in India the same day?</summary>
+          <p>Yes. Orders placed before 4 PM IST are delivered the same day in serviceable pincodes. Fixed-time and midnight slots have their own cut-off times shown on the product page.</p>
+        </details>
+        <details>
+          <summary>Do you deliver flowers at midnight?</summary>
+          <p>Yes, between 11:00 PM and 12:30 AM in most metro pincodes. Choose the Midnight slot on the product page.</p>
+        </details>
+        <details>
+          <summary>Can I order today for a future date?</summary>
+          <p>Yes. Pick any date up to 90 days ahead. Your order stays scheduled and is prepared for that day. Occasion prices follow the delivery date.</p>
+        </details>
+        <details>
+          <summary>Can I send flowers to India from abroad?</summary>
+          <p>Yes. You can browse in your own currency and pay with international cards or PayPal. Your card is charged in INR; your bank converts it.</p>
+        </details>
+        <details>
+          <summary>What can I send along with flowers?</summary>
+          <p>Add cakes, chocolates, teddy bears, sweets and dry fruits from the product page or the cart.</p>
+        </details>
+        <details>
+          <summary>Will my flowers look like the picture?</summary>
+          <p>We match the picture closely. If a flower is out of season, our florist uses one of equal or higher value, as per our substitution policy.</p>
+        </details>
+      {% endif %}
     </div>
   </div>
-</div>
-
-<style>
-  .flaberry-seo-faq-section {
-    padding: 48px 0 60px;
-    background: var(--fl-color-mist, #f5f2f0);
-    border-top: 1px solid var(--fl-color-line, #e7e1dd);
-  }
-  .flaberry-seo-block {
-    max-width: 900px;
-    margin-bottom: 44px;
-  }
-  .flaberry-seo-heading {
-    font-family: var(--fl-font-display, "Inter Tight", sans-serif);
-    font-size: clamp(24px, 3.2vw, 36px);
-    font-weight: 800;
-    color: var(--fl-color-ink, #151312);
-    margin: 0 0 16px;
-    letter-spacing: -0.02em;
-  }
-  .flaberry-seo-prose p {
-    font-size: 15px;
-    line-height: 1.65;
-    color: var(--fl-color-muted, #6f6763);
-    margin: 0 0 12px;
-  }
-  .flaberry-seo-prose strong {
-    color: var(--fl-color-ink, #151312);
-  }
-  .flaberry-faq-block {
-    max-width: 900px;
-  }
-  .flaberry-faq-heading {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--fl-color-ink, #151312);
-    margin: 0 0 20px;
-  }
-  .flaberry-accordion {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .flaberry-faq-item {
-    background: #ffffff;
-    border: 1px solid var(--fl-color-line, #e7e1dd);
-    border-radius: var(--fl-radius-card, 12px);
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .flaberry-faq-item.active {
-    border-color: var(--fl-color-flora, #e2522c);
-  }
-  .flaberry-faq-trigger {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 20px;
-    background: transparent;
-    border: none;
-    font-size: 15.5px;
-    font-weight: 700;
-    color: var(--fl-color-ink, #151312);
-    text-align: left;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  .flaberry-faq-trigger:hover {
-    color: var(--fl-color-flora, #e2522c);
-  }
-  .flaberry-faq-icon {
-    flex-shrink: 0;
-    transition: transform 0.25s ease;
-    color: var(--fl-color-muted, #6f6763);
-  }
-  .flaberry-faq-item.active .flaberry-faq-icon {
-    transform: rotate(180deg);
-    color: var(--fl-color-flora, #e2522c);
-  }
-  .flaberry-faq-answer {
-    display: none;
-    padding: 0 20px 20px;
-    font-size: 14.5px;
-    line-height: 1.6;
-    color: var(--fl-color-muted, #6f6763);
-  }
-  .flaberry-faq-item.active .flaberry-faq-answer {
-    display: block;
-  }
-</style>
+</section>
 
 <script>
-  function flaberryToggleFaq(btn) {
-    const item = btn.closest('.flaberry-faq-item');
-    if (!item) return;
-    const wasActive = item.classList.contains('active');
-    const parent = item.parentElement;
-    parent.querySelectorAll('.flaberry-faq-item').forEach(i => i.classList.remove('active'));
-    if (!wasActive) {
-      item.classList.add('active');
-    }
+  function flaberryToggleSeo(btn) {
+    const parent = btn.closest('.seo');
+    if (!parent) return;
+    const more = parent.querySelector('.more');
+    if (!more) return;
+    more.classList.toggle('open');
+    btn.textContent = more.classList.contains('open') ? 'Read less' : 'Read more';
   }
 </script>
 
+<style>
+  .flaberry-seo-faq-section {
+    padding: 36px 0 56px;
+    background: #ffffff;
+    width: 100%;
+  }
+  .flaberry-seo-faq-section .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* SEO Section */
+  .flaberry-seo-faq-section .seo {
+    border-top: 1px solid var(--flaberry-line, #e5e0dc);
+    padding-top: 32px;
+    display: grid;
+    gap: 14px;
+    color: #3a3431;
+  }
+  .flaberry-seo-faq-section .seo h2 {
+    font-family: var(--display, inherit);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--flaberry-navy, #1e1b4b);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .flaberry-seo-faq-section .seo h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--flaberry-navy, #1e1b4b);
+    margin: 10px 0 2px;
+  }
+  .flaberry-seo-faq-section .seo p {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #4b4542;
+    margin: 0 0 10px;
+  }
+  .flaberry-seo-faq-section .seo .more {
+    max-height: 180px;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    gap: 8px;
+    transition: max-height 0.3s ease;
+  }
+  .flaberry-seo-faq-section .seo .more::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 70px;
+    background: linear-gradient(transparent, #ffffff);
+    pointer-events: none;
+  }
+  .flaberry-seo-faq-section .seo .more.open {
+    max-height: none;
+  }
+  .flaberry-seo-faq-section .seo .more.open::after {
+    display: none;
+  }
+  .flaberry-seo-faq-section .linkbtn {
+    background: none;
+    border: none;
+    color: #b91c1c;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-size: 14px;
+    display: inline-block;
+  }
+  .flaberry-seo-faq-section .linkbtn:hover {
+    color: #991b1b;
+  }
+
+  /* FAQ Accordion */
+  .flaberry-seo-faq-section .faq-heading {
+    font-family: var(--display, inherit);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--flaberry-navy, #1e1b4b);
+    margin: 36px 0 16px;
+    letter-spacing: -0.01em;
+  }
+  .flaberry-seo-faq-section .faq {
+    display: grid;
+    gap: 10px;
+  }
+  .flaberry-seo-faq-section .faq details {
+    border: 1px solid var(--flaberry-line, #e5e0dc);
+    border-radius: var(--r-md, 16px);
+    padding: 16px 20px;
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+  }
+  .flaberry-seo-faq-section .faq details:hover {
+    border-color: #d1c7c2;
+  }
+  .flaberry-seo-faq-section .faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    color: #151312;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+  }
+  .flaberry-seo-faq-section .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .flaberry-seo-faq-section .faq summary::after {
+    content: "+";
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 400;
+    color: #6f6763;
+    flex: none;
+  }
+  .flaberry-seo-faq-section .faq details[open] summary::after {
+    content: "–";
+    color: #151312;
+    font-weight: 600;
+  }
+  .flaberry-seo-faq-section .faq details p {
+    margin: 12px 0 0;
+    color: #4b4542;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 768px) {
+    .flaberry-seo-faq-section {
+      padding: 24px 0 36px;
+    }
+    .flaberry-seo-faq-section .wrap {
+      padding: 0 16px;
+    }
+    .flaberry-seo-faq-section .seo h2,
+    .flaberry-seo-faq-section .faq-heading {
+      font-size: 20px;
+    }
+    .flaberry-seo-faq-section .faq details {
+      padding: 14px 16px;
+    }
+    .flaberry-seo-faq-section .faq summary {
+      font-size: 14px;
+    }
+  }
+</style>
+
 {% schema %}
 {
-  "name": "Flaberry SEO & FAQ",
+  "name": "Flaberry SEO & FAQs",
   "settings": [
     {
       "type": "text",
       "id": "seo_heading",
       "label": "SEO Section Heading",
-      "default": "Send flowers & cakes to India with Flaberry"
+      "default": "Send flowers to India with Flaberry"
+    },
+    {
+      "type": "richtext",
+      "id": "seo_content",
+      "label": "Custom SEO Content (Leave blank for prototype defaults)"
     },
     {
       "type": "text",
       "id": "faq_heading",
-      "label": "FAQ Section Heading",
-      "default": "Frequently Asked Questions"
+      "label": "FAQ Heading",
+      "default": "FAQs about sending flowers to India"
     }
   ],
   "blocks": [
     {
-      "type": "faq",
+      "type": "faq_item",
       "name": "FAQ Item",
       "settings": [
         {
           "type": "text",
           "id": "question",
           "label": "Question",
-          "default": "How does Same-Day Delivery work?"
+          "default": "How do I send flowers to India online?"
         },
         {
           "type": "textarea",
           "id": "answer",
           "label": "Answer",
-          "default": "Orders placed before 4:00 PM IST qualify for same-day delivery across 500+ serviceable cities. You can select your preferred delivery time slot during checkout."
+          "default": "Enter the receiver's pincode, choose a gift, pick a delivery date and time slot, add your message and pay. You get updates by email and WhatsApp until the gift is delivered."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Flaberry SEO & FAQ",
+      "name": "Flaberry SEO & FAQs",
+      "settings": {
+        "seo_heading": "Send flowers to India with Flaberry",
+        "faq_heading": "FAQs about sending flowers to India"
+      },
       "blocks": [
         {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "How does Same-Day Delivery work?",
-            "answer": "Orders placed before 4:00 PM IST qualify for same-day delivery across 500+ serviceable cities. You can select your preferred delivery time slot during checkout."
+            "question": "How do I send flowers to India online?",
+            "answer": "Enter the receiver's pincode, choose a gift, pick a delivery date and time slot, add your message and pay. You get updates by email and WhatsApp until the gift is delivered."
           }
         },
         {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "Are the flowers and cakes fresh?",
-            "answer": "Yes, 100%. Flowers reach our distribution hubs within 2 to 3 days of being hand-picked. Cakes are baked fresh by our partner master bakeries only after your order is confirmed."
+            "question": "Can I get flowers delivered in India the same day?",
+            "answer": "Yes. Orders placed before 4 PM IST are delivered the same day in serviceable pincodes. Fixed-time and midnight slots have their own cut-off times shown on the product page."
           }
         },
         {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "Can I order from outside India?",
-            "answer": "Absolutely. Flaberry serves customers worldwide across the USA, UK, Canada, UAE, Australia, and Europe with international credit card and PayPal support, delivering right to doorsteps across India."
+            "question": "Do you deliver flowers at midnight?",
+            "answer": "Yes, between 11:00 PM and 12:30 AM in most metro pincodes. Choose the Midnight slot on the product page."
           }
         },
         {
-          "type": "faq",
+          "type": "faq_item",
           "settings": {
-            "question": "Can I add a personalized message card?",
-            "answer": "Yes, every gift order comes with a free personalized greeting message card. Simply enter your message on the product page or cart drawer, and our team prints it neatly onto a physical gift card."
+            "question": "Can I order today for a future date?",
+            "answer": "Yes. Pick any date up to 90 days ahead. Your order stays scheduled and is prepared for that day. Occasion prices follow the delivery date."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I send flowers to India from abroad?",
+            "answer": "Yes. You can browse in your own currency and pay with international cards or PayPal. Your card is charged in INR; your bank converts it."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What can I send along with flowers?",
+            "answer": "Add cakes, chocolates, teddy bears, sweets and dry fruits from the product page or the cart."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will my flowers look like the picture?",
+            "answer": "We match the picture closely. If a flower is out of season, our florist uses one of equal or higher value, as per our substitution policy."
           }
         }
       ]

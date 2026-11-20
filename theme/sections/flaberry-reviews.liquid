@@ -1,126 +1,369 @@
 {% comment %}
-  Flaberry Customer Reviews & Testimonials Section
-  Source of Truth: reference/Flaberry_Design1_Classic.html
-  Displays verified customer testimonials, star ratings, and cities with editorial presentation.
+  Flaberry Customer Reviews & Trust Badges Section
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.reviews, .rv-sum, .rv-list, .rv, .trust)
+  Left: Customer Stories card (navy background, stars, verified notice, Read all reviews CTA).
+  Right: 6 Verified review cards in a 3x2 grid.
+  Bottom: 4 Trust badges (India's leading brand, No hidden charges, Customer support, 100% safe).
 {% endcomment %}
 
-<div class="flaberry-reviews-section" data-section-id="{{ section.id }}">
-  <div class="flaberry-container">
-    <div class="flaberry-sec-header">
-      <div>
-        <h2 class="flaberry-sec-title">{{ section.settings.title | default: 'Loved by 2 million+ senders' }}</h2>
-        <p class="flaberry-sec-subtitle">{{ section.settings.subtitle | default: 'Real reviews from customers who trust Flaberry for their most memorable occasions.' }}</p>
-      </div>
-      <div class="flaberry-overall-rating">
-        <div class="flaberry-stars">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+<section class="flaberry-reviews-section sec" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <div class="reviews">
+      <!-- Left Summary Card -->
+      <div class="rv-sum">
+        {% if section.settings.eyebrow != blank %}
+          <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        {% endif %}
+        <span class="stars" aria-label="{{ section.settings.rating_score | default: '5.0' }} out of 5 stars">
+          {{ section.settings.stars | default: '★★★★★' }}
+        </span>
+        <p>{{ section.settings.subtitle | default: 'Verified reviews from customers across India' }}</p>
+        <div>
+          <a class="btn white" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+            {{ section.settings.button_label | default: 'Read all reviews' }}
+          </a>
         </div>
-        <span><strong>4.8 / 5</strong> Rating</span>
+      </div>
+
+      <!-- Right Review Cards Grid -->
+      <div class="rv-list">
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign initial = block.settings.author | slice: 0, 1 | upcase %}
+            <div class="rv" {{ block.shopify_attributes }}>
+              <span class="stars">
+                {% assign star_count = block.settings.stars | default: 5 %}
+                {% case star_count %}
+                  {% when 5 %}★★★★★
+                  {% when 4 %}★★★★☆
+                  {% when 3 %}★★★☆☆
+                  {% when 2 %}★★☆☆☆
+                  {% else %}★☆☆☆☆
+                {% endcase %}
+              </span>
+              <p>“{{ block.settings.quote }}”</p>
+              <div class="who">
+                <span class="av">{{ block.settings.avatar_initial | default: initial }}</span>
+                <div>
+                  <b>{{ block.settings.author }}</b><br>
+                  <span class="muted">{{ block.settings.location }}{% if block.settings.tagline != blank %} · {{ block.settings.tagline }}{% endif %}</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <!-- Prototype Default 6 Reviews -->
+          <div class="rv">
+            <span class="stars">★★★★★</span>
+            <p>“Sent roses and a truffle cake to my parents in Pune for their anniversary. Delivered on the exact date, flowers looked just like the photo.”</p>
+            <div class="who">
+              <span class="av">A</span>
+              <div>
+                <b>Ananya R.</b><br>
+                <span class="muted">Houston, USA · Anniversary · Pune</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rv">
+            <span class="stars">★★★★★</span>
+            <p>“Midnight delivery reached at 11:40 PM sharp. My wife was completely surprised. The message card was printed neatly.”</p>
+            <div class="who">
+              <span class="av">R</span>
+              <div>
+                <b>Rahul M.</b><br>
+                <span class="muted">Gurugram · Birthday · Delhi</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rv">
+            <span class="stars">★★★★★</span>
+            <p>“Booked 12 days in advance for my sister's birthday and got WhatsApp updates on every step. Smooth from start to finish.”</p>
+            <div class="who">
+              <span class="av">P</span>
+              <div>
+                <b>Priya S.</b><br>
+                <span class="muted">London, UK · Birthday · Bengaluru</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rv">
+            <span class="stars">★★★★☆</span>
+            <p>“Ordered a photo cake for my son. Good print quality and tasted great. Delivery boy called before arriving.”</p>
+            <div class="who">
+              <span class="av">V</span>
+              <div>
+                <b>Vikram K.</b><br>
+                <span class="muted">Mumbai · Kids · Mumbai</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rv">
+            <span class="stars">★★★★★</span>
+            <p>“Paying from abroad was easy and the prices were clear. The lilies were fresh and lasted a week.”</p>
+            <div class="who">
+              <span class="av">M</span>
+              <div>
+                <b>Meera J.</b><br>
+                <span class="muted">Dubai, UAE · Thank you · Chennai</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rv">
+            <span class="stars">★★★★★</span>
+            <p>“Our team uses Flaberry for client gifting. Corporate orders are handled quickly and invoices come on time.”</p>
+            <div class="who">
+              <span class="av">S</span>
+              <div>
+                <b>Sandeep T.</b><br>
+                <span class="muted">Noida · Corporate · Noida</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
 
-    <div class="flaberry-reviews-grid">
-      {% for block in section.blocks %}
-        <div class="flaberry-review-card" {{ block.shopify_attributes }}>
-          <div class="flaberry-review-top">
-            <div class="flaberry-card-stars">
-              {% for i in (1..block.settings.stars) %}
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="#f0a722" stroke="#f0a722"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              {% endfor %}
-            </div>
-            <span class="flaberry-verified-tag">✓ Verified Buyer</span>
-          </div>
-
-          <p class="flaberry-review-quote">"{{ block.settings.quote }}"</p>
-
-          <div class="flaberry-reviewer">
-            <strong>{{ block.settings.author }}</strong>
-            <span>{{ block.settings.city }} • Ordered {{ block.settings.product_name }}</span>
-          </div>
-        </div>
-      {% endfor %}
+    <!-- Bottom Trust Badges -->
+    <div class="trust">
+      <div class="trust-item">
+        <img loading="lazy" src="{{ 'i_20yrs.png' | asset_url }}" alt="India's leading brand" width="38" height="38">
+        <span><b>{{ section.settings.trust_1_title | default: "India's leading brand" }}</b>{{ section.settings.trust_1_sub | default: 'for flowers, cakes & gifts' }}</span>
+      </div>
+      <div class="trust-item">
+        <img loading="lazy" src="{{ 'i_pricing.png' | asset_url }}" alt="No hidden charges" width="38" height="38">
+        <span><b>{{ section.settings.trust_2_title | default: 'No hidden charges' }}</b>{{ section.settings.trust_2_sub | default: 'Prices include taxes' }}</span>
+      </div>
+      <div class="trust-item">
+        <img loading="lazy" src="{{ 'i_support.png' | asset_url }}" alt="Customer support" width="38" height="38">
+        <span><b>{{ section.settings.trust_3_title | default: 'Customer support' }}</b>{{ section.settings.trust_3_sub | default: '8 AM – midnight IST' }}</span>
+      </div>
+      <div class="trust-item">
+        <img loading="lazy" src="{{ 'i_secure.png' | asset_url }}" alt="100% safe" width="38" height="38">
+        <span><b>{{ section.settings.trust_4_title | default: '100% safe' }}</b>{{ section.settings.trust_4_sub | default: '& secure payments' }}</span>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <style>
   .flaberry-reviews-section {
-    padding: 44px 0;
+    padding: 36px 0 44px;
     background: #ffffff;
+    width: 100%;
   }
-  .flaberry-overall-rating {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--fl-color-mist, #f5f2f0);
-    padding: 8px 16px;
-    border-radius: var(--fl-radius-pill, 999px);
-    font-size: 14px;
-    color: var(--fl-color-ink, #151312);
+  .flaberry-reviews-section .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
   }
-  .flaberry-stars {
-    display: flex;
-    gap: 2px;
-  }
-  .flaberry-reviews-grid {
+
+  /* Split layout: left summary 0.8fr, right grid 2fr */
+  .flaberry-reviews-section .reviews {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
     gap: 24px;
+    align-items: stretch;
   }
-  @media (max-width: 900px) {
-    .flaberry-reviews-grid {
+
+  /* Left Dark Card */
+  .flaberry-reviews-section .rv-sum {
+    background: var(--flaberry-navy, #1e1b4b);
+    color: #ffffff;
+    border-radius: var(--r-lg, 24px);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: flex-start;
+    box-sizing: border-box;
+  }
+  .flaberry-reviews-section .rv-sum .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffd9cc;
+    line-height: 1.2;
+  }
+  .flaberry-reviews-section .rv-sum .stars {
+    font-size: 26px;
+    color: #f59e0b;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-top: 4px;
+  }
+  .flaberry-reviews-section .rv-sum p {
+    color: #d8d0cb;
+    font-size: 14.5px;
+    line-height: 1.5;
+    margin: 4px 0 12px;
+  }
+  .flaberry-reviews-section .rv-sum .btn.white {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 26px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--flaberry-navy, #1e1b4b);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+    transition: all 0.2s ease;
+    width: fit-content;
+  }
+  .flaberry-reviews-section .rv-sum .btn.white:hover {
+    background: #f1ece9;
+    transform: translateY(-1px);
+  }
+
+  /* Right Reviews 3x2 Grid */
+  .flaberry-reviews-section .rv-list {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .flaberry-reviews-section .rv {
+    border: 1px solid var(--flaberry-line, #e5e0dc);
+    border-radius: var(--r-md, 16px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    background: #ffffff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .flaberry-reviews-section .rv:hover {
+    border-color: #d0c8c3;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+  .flaberry-reviews-section .rv .stars {
+    color: #f59e0b;
+    font-size: 14px;
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  .flaberry-reviews-section .rv p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #3a3431;
+    margin: 0;
+    flex-grow: 1;
+  }
+  .flaberry-reviews-section .rv .who {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .flaberry-reviews-section .rv .av {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #991b1b;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex: none;
+  }
+  .flaberry-reviews-section .rv .who b {
+    color: #151312;
+    font-size: 13.5px;
+  }
+  .flaberry-reviews-section .rv .who .muted {
+    color: #88807b;
+    font-size: 12px;
+  }
+
+  /* Bottom Trust Strip: 4 Columns */
+  .flaberry-reviews-section .trust {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    margin-top: 24px;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .flaberry-reviews-section .trust-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-radius: var(--r-md, 16px);
+    background: var(--flaberry-mist, #f7f5f3);
+    padding: 14px 16px;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+  .flaberry-reviews-section .trust-item img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    flex: none;
+    display: block;
+  }
+  .flaberry-reviews-section .trust-item span {
+    line-height: 1.35;
+    color: #524c48;
+  }
+  .flaberry-reviews-section .trust-item b {
+    display: block;
+    font-size: 14px;
+    color: #151312;
+    margin-bottom: 2px;
+  }
+
+  /* Responsive Rules */
+  @media (max-width: 1024px) {
+    .flaberry-reviews-section .reviews {
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 20px;
+    }
+    .flaberry-reviews-section .trust {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
   }
-  .flaberry-review-card {
-    background: var(--fl-color-mist, #f5f2f0);
-    border: 1px solid var(--fl-color-line, #e7e1dd);
-    border-radius: var(--fl-radius-md, 16px);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-  }
-  .flaberry-review-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .flaberry-card-stars {
-    display: flex;
-    gap: 2px;
-  }
-  .flaberry-verified-tag {
-    font-size: 11.5px;
-    font-weight: 600;
-    color: var(--fl-color-leaf, #1f7a4d);
-  }
-  .flaberry-review-quote {
-    font-size: 14.5px;
-    line-height: 1.55;
-    color: var(--fl-color-ink, #151312);
-    margin: 0 0 18px;
-    flex-grow: 1;
-    font-style: italic;
-  }
-  .flaberry-reviewer {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--fl-color-line, #e7e1dd);
-    padding-top: 12px;
-  }
-  .flaberry-reviewer strong {
-    font-size: 13.5px;
-    color: var(--fl-color-ink, #151312);
-  }
-  .flaberry-reviewer span {
-    font-size: 12px;
-    color: var(--fl-color-muted, #6f6763);
+
+  @media (max-width: 768px) {
+    .flaberry-reviews-section {
+      padding: 24px 0 32px;
+    }
+    .flaberry-reviews-section .wrap {
+      padding: 0 16px;
+    }
+    .flaberry-reviews-section .rv-list {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    .flaberry-reviews-section .rv-sum {
+      padding: 24px 20px;
+      border-radius: 18px;
+    }
+    .flaberry-reviews-section .rv-sum .stars {
+      font-size: 22px;
+    }
+    .flaberry-reviews-section .trust {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+      margin-top: 18px;
+    }
   }
 </style>
 
@@ -130,15 +373,84 @@
   "settings": [
     {
       "type": "text",
-      "id": "title",
-      "label": "Heading",
-      "default": "Loved by 2 million+ senders"
+      "id": "eyebrow",
+      "label": "Left Card Eyebrow",
+      "default": "CUSTOMER STORIES"
+    },
+    {
+      "type": "text",
+      "id": "stars",
+      "label": "Rating Stars Display",
+      "default": "★★★★★"
     },
     {
       "type": "text",
       "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Real reviews from customers who trust Flaberry for their most memorable occasions."
+      "label": "Left Card Subtitle",
+      "default": "Verified reviews from customers across India"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Read all reviews"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Trust Badges"
+    },
+    {
+      "type": "text",
+      "id": "trust_1_title",
+      "label": "Trust Badge 1 Title",
+      "default": "India's leading brand"
+    },
+    {
+      "type": "text",
+      "id": "trust_1_sub",
+      "label": "Trust Badge 1 Subtitle",
+      "default": "for flowers, cakes & gifts"
+    },
+    {
+      "type": "text",
+      "id": "trust_2_title",
+      "label": "Trust Badge 2 Title",
+      "default": "No hidden charges"
+    },
+    {
+      "type": "text",
+      "id": "trust_2_sub",
+      "label": "Trust Badge 2 Subtitle",
+      "default": "Prices include taxes"
+    },
+    {
+      "type": "text",
+      "id": "trust_3_title",
+      "label": "Trust Badge 3 Title",
+      "default": "Customer support"
+    },
+    {
+      "type": "text",
+      "id": "trust_3_sub",
+      "label": "Trust Badge 3 Subtitle",
+      "default": "8 AM – midnight IST"
+    },
+    {
+      "type": "text",
+      "id": "trust_4_title",
+      "label": "Trust Badge 4 Title",
+      "default": "100% safe"
+    },
+    {
+      "type": "text",
+      "id": "trust_4_sub",
+      "label": "Trust Badge 4 Subtitle",
+      "default": "& secure payments"
     }
   ],
   "blocks": [
@@ -147,36 +459,42 @@
       "name": "Customer Review",
       "settings": [
         {
+          "type": "text",
+          "id": "author",
+          "label": "Customer Name",
+          "default": "Ananya R."
+        },
+        {
+          "type": "text",
+          "id": "avatar_initial",
+          "label": "Avatar Initial (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Customer Location",
+          "default": "Houston, USA"
+        },
+        {
+          "type": "text",
+          "id": "tagline",
+          "label": "Occasion & City Tagline",
+          "default": "Anniversary · Pune"
+        },
+        {
           "type": "range",
           "id": "stars",
           "label": "Rating Stars",
           "min": 1,
           "max": 5,
+          "step": 1,
           "default": 5
         },
         {
           "type": "textarea",
           "id": "quote",
-          "label": "Testimonial Quote",
-          "default": "The flowers arrived in Bangalore right at midnight. My mother was so touched by the fresh lilies!"
-        },
-        {
-          "type": "text",
-          "id": "author",
-          "label": "Customer Name",
-          "default": "Priya S."
-        },
-        {
-          "type": "text",
-          "id": "city",
-          "label": "City / Location",
-          "default": "Bengaluru"
-        },
-        {
-          "type": "text",
-          "id": "product_name",
-          "label": "Product Ordered",
-          "default": "Pink Lily Bouquet"
+          "label": "Review Quote",
+          "default": "Sent roses and a truffle cake to my parents in Pune for their anniversary. Delivered on the exact date, flowers looked just like the photo."
         }
       ]
     }
@@ -184,32 +502,77 @@
   "presets": [
     {
       "name": "Flaberry Customer Reviews",
+      "settings": {
+        "eyebrow": "CUSTOMER STORIES",
+        "stars": "★★★★★",
+        "subtitle": "Verified reviews from customers across India",
+        "button_label": "Read all reviews"
+      },
       "blocks": [
         {
           "type": "review",
           "settings": {
-            "quote": "The flowers arrived in Bangalore right at midnight. My mother was so touched by the fresh lilies!",
+            "author": "Ananya R.",
+            "avatar_initial": "A",
+            "location": "Houston, USA",
+            "tagline": "Anniversary · Pune",
+            "stars": 5,
+            "quote": "Sent roses and a truffle cake to my parents in Pune for their anniversary. Delivered on the exact date, flowers looked just like the photo."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "author": "Rahul M.",
+            "avatar_initial": "R",
+            "location": "Gurugram",
+            "tagline": "Birthday · Delhi",
+            "stars": 5,
+            "quote": "Midnight delivery reached at 11:40 PM sharp. My wife was completely surprised. The message card was printed neatly."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
             "author": "Priya S.",
-            "city": "Bengaluru",
-            "product_name": "Serene Pink Lilies"
+            "avatar_initial": "P",
+            "location": "London, UK",
+            "tagline": "Birthday · Bengaluru",
+            "stars": 5,
+            "quote": "Booked 12 days in advance for my sister's birthday and got WhatsApp updates on every step. Smooth from start to finish."
           }
         },
         {
           "type": "review",
           "settings": {
-            "quote": "Ordered a photo cake for my nephew's birthday in Pune. Freshly baked, moist and delivered exactly on time.",
-            "author": "Rohan M.",
-            "city": "Pune",
-            "product_name": "Personalized Photo Cake"
+            "author": "Vikram K.",
+            "avatar_initial": "V",
+            "location": "Mumbai",
+            "tagline": "Kids · Mumbai",
+            "stars": 4,
+            "quote": "Ordered a photo cake for my son. Good print quality and tasted great. Delivery boy called before arriving."
           }
         },
         {
           "type": "review",
           "settings": {
-            "quote": "Best gifting service from USA to Delhi. Payment in USD was smooth and the bouquet was gorgeous.",
-            "author": "Ananya K.",
-            "city": "New Jersey (Sender to Delhi)",
-            "product_name": "Red Rose Gift Luxe"
+            "author": "Meera J.",
+            "avatar_initial": "M",
+            "location": "Dubai, UAE",
+            "tagline": "Thank you · Chennai",
+            "stars": 5,
+            "quote": "Paying from abroad was easy and the prices were clear. The lilies were fresh and lasted a week."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "author": "Sandeep T.",
+            "avatar_initial": "S",
+            "location": "Noida",
+            "tagline": "Corporate · Noida",
+            "stars": 5,
+            "quote": "Our team uses Flaberry for client gifting. Corporate orders are handled quickly and invoices come on time."
           }
         }
       ]
