@@ -2,10 +2,41 @@
   "sections": {
     "flaberry_main_product": {
       "type": "flaberry-main-product",
-      "settings": {}
+      "settings": {
+        "enable_pincode_check": true,
+        "default_pincode": "110001",
+        "same_day_cutoff_hour": 16,
+        "force_cake_options": false
+      }
+    },
+    "flaberry_similar_products": {
+      "type": "flaberry-product-rail",
+      "settings": {
+        "title": "Similar gifts deliverable to your pincode",
+        "subtitle": "Fresh flowers, handcrafted cakes, and curated combos deliverable across India",
+        "collection": "all",
+        "products_to_show": 8,
+        "show_view_all": true,
+        "view_all_text": "View all",
+        "view_all_link": "/collections/all"
+      }
+    },
+    "flaberry_bestseller_products": {
+      "type": "flaberry-product-rail",
+      "settings": {
+        "title": "Bestsellers",
+        "subtitle": "Most popular gifts with 4.8+ ratings and fast dispatch",
+        "collection": "all",
+        "products_to_show": 8,
+        "show_view_all": true,
+        "view_all_text": "View all",
+        "view_all_link": "/collections/all"
+      }
     }
   },
   "order": [
-    "flaberry_main_product"
+    "flaberry_main_product",
+    "flaberry_similar_products",
+    "flaberry_bestseller_products"
   ]
 }

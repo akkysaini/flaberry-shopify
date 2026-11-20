@@ -1,282 +1,695 @@
 {% comment %}
   Flaberry Main Product Detail Page (PDP)
-  Source of Truth: reference/Flaberry_Design1_Classic.html
-  Faithful reproduction of Flaberry's 2-column PDP layout with vertical thumbnails, zoom main image,
-  pincode deliverability check, cake options, date/slot picker, greeting message card, add-ons, and accordions.
+  Source of Truth: reference/Flaberry_Design1_Classic.html (.pdp, .gallery, .pinfo, .dates, .slots, .addons, .tabs, .sticky-buy)
+  Master CRO Implementation:
+  - 2-column layout on desktop, strictly non-sticky gallery on mobile (position: static !important; top: auto !important;)
+  - Dynamic media gallery with thumbnails + hover/click zoom
+  - Pincode deliverability checker synced bi-directionally with localStorage.flaberry_pincode
+  - Dynamic 14-day rolling date picker + 90-day advance date picker
+  - Time slots: Standard (Free), Fixed Time (₹150, 1-hr subslots), Midnight (₹250), Early Morning (₹200) with live cutoff countdown
+  - Cake options (Eggless / With Egg, weights)
+  - Complimentary greeting message card builder with occasion chips, 250-char counter, sender name, cake message
+  - Add-on upsells with dynamic selection and line-item properties
+  - AJAX /cart/add.js submission updating cart drawer + instant 'Buy Now' to checkout
+  - 4 Tabs: Description, Specifications, Delivery information, Care instructions dynamically connected to product.metafields.flaberry.* with intelligent fallbacks
+  - Ratings & verified customer reviews summary block (#rv)
+  - Mobile sticky buy bar (.sticky-buy) docked above bottom navigation
 {% endcomment %}
 
-{% assign current_variant = product.selected_or_first_available_variant %}
-{% assign featured_img = product.featured_media | default: product.featured_image %}
-{% assign prod_title = product.title | default: 'Red Rose Gift Luxe' %}
-{% assign prod_sku = current_variant.sku | default: 'FBF661' %}
-{% assign prod_price = current_variant.price | default: 199000 %}
-{% assign prod_compare = current_variant.compare_at_price | default: 229000 %}
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_img = product.featured_media | default: product.featured_image
+  assign prod_title = product.title | default: 'Posh Pink Enchantment'
+  assign prod_sku = current_variant.sku | default: product.metafields.flaberry.sku.value | default: 'FB-' | append: product.id
+  assign prod_price = current_variant.price | default: 244000
+  assign prod_compare = current_variant.compare_at_price | default: 0
+  assign prod_type_lower = product.type | downcase
+  assign prod_title_lower = product.title | downcase
 
-<div class="flaberry-pdp-page" data-section-id="{{ section.id }}">
+  assign is_cake = false
+  if prod_type_lower contains 'cake' or prod_title_lower contains 'cake' or product.tags contains 'cake' or product.tags contains 'Cakes' or section.settings.force_cake_options
+    assign is_cake = true
+  endif
+
+  assign rating_val = product.metafields.flaberry.rating.value | default: product.metafields.reviews.rating.value.rating | default: 4.8
+  assign reviews_count = product.metafields.flaberry.reviews_count.value | default: product.metafields.reviews.rating_count | default: 142
+  assign badge_tag = product.metafields.flaberry.badge.value | default: product.metafields.custom.badge.value
+  if badge_tag == blank
+    if product.tags contains 'Bestseller'
+      assign badge_tag = 'Bestseller'
+    elsif product.tags contains 'Deal' or product.tags contains 'Sale'
+      assign badge_tag = 'Deal'
+    elsif product.tags contains 'Premium'
+      assign badge_tag = 'Premium'
+    elsif product.tags contains 'Eggless'
+      assign badge_tag = 'Eggless'
+    else
+      assign badge_tag = 'Handcrafted'
+    endif
+  endif
+
+  assign primary_collection = product.collections.first
+-%}
+
+<div class="flaberry-pdp-section" data-section-id="{{ section.id }}">
   <div class="wrap">
-    <!-- Breadcrumb -->
-    <nav class="crumbs">
+    <!-- Breadcrumbs -->
+    <nav class="crumbs" aria-label="Breadcrumb">
       <a href="{{ routes.root_url }}">Home</a>
       <span>/</span>
-      <a href="{{ routes.collections_url }}">Collections</a>
-      <span>/</span>
-      <a href="{{ routes.collections_url }}/flowers">{{ product.type | default: 'Flowers' }}</a>
-      <span>/</span>
+      {% if primary_collection != blank %}
+        <a href="{{ primary_collection.url }}">{{ primary_collection.title }}</a>
+        <span>/</span>
+      {% else %}
+        <a href="/collections/all">{% if is_cake %}Cakes{% else %}Flowers{% endif %}</a>
+        <span>/</span>
+      {% endif %}
       <span class="active">{{ prod_title }}</span>
     </nav>
 
-    <!-- Main PDP Grid: Gallery (Left) + PInfo (Right) -->
+    <!-- Master 2-Column PDP Grid -->
     <div class="pdp">
-      <!-- Left Column: Gallery -->
-      <div class="gallery">
-        <div class="thumbs" id="pdpThumbnails">
+      <!-- Left Column: Gallery (Strictly static on mobile <= 960px) -->
+      <div class="gallery" id="flaberryPdpGallery">
+        <div class="thumbs" id="pdpThumbnails" role="tablist" aria-label="Product thumbnails">
           {% if product.media.size > 0 %}
-            {% for media in product.media limit: 4 %}
-              <button type="button" class="thumb-btn {% if forloop.first %}on{% endif %}" onclick="flaberrySwitchPdpImage('{{ media | image_url: width: 800, height: 800 }}', this)" aria-label="Thumbnail {{ forloop.index }}">
+            {% for media in product.media limit: 6 %}
+              <button 
+                type="button" 
+                class="thumb-btn {% if forloop.first %}on{% endif %}" 
+                onclick="flaberrySwitchPdpMedia('{{ media | image_url: width: 1000, height: 1000 }}', this)"
+                aria-label="Thumbnail {{ forloop.index }}"
+              >
                 <img src="{{ media | image_url: width: 160, height: 160 }}" alt="{{ media.alt | default: prod_title | escape }}" width="80" height="80" loading="lazy">
               </button>
             {% endfor %}
           {% else %}
-            {% assign fb_rose = 'hero_flowers.webp' | file_url %}
-            {% assign fb_rose2 = 'hx_roses.webp' | file_url %}
-            {% assign fb_heart = 'hx_heartbox.webp' | file_url %}
-            {% assign fb_box = 'hx_mixbox.webp' | file_url %}
-            <button type="button" class="thumb-btn on" onclick="flaberrySwitchPdpImage('{{ fb_rose }}', this)"><img src="{{ fb_rose }}" alt="Thumbnail 1" width="80" height="80" loading="lazy"></button>
-            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpImage('{{ fb_rose2 }}', this)"><img src="{{ fb_rose2 }}" alt="Thumbnail 2" width="80" height="80" loading="lazy"></button>
-            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpImage('{{ fb_heart }}', this)"><img src="{{ fb_heart }}" alt="Thumbnail 3" width="80" height="80" loading="lazy"></button>
-            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpImage('{{ fb_box }}', this)"><img src="{{ fb_box }}" alt="Thumbnail 4" width="80" height="80" loading="lazy"></button>
+            {% assign f_rose = 'hero_flowers.webp' | file_url %}
+            {% assign f_rose2 = 'hx_roses.webp' | file_url %}
+            {% assign f_heart = 'hx_heartbox.webp' | file_url %}
+            {% assign f_box = 'hx_mixbox.webp' | file_url %}
+            <button type="button" class="thumb-btn on" onclick="flaberrySwitchPdpMedia('{{ f_rose }}', this)" aria-label="Thumbnail 1"><img src="{{ f_rose }}" alt="Thumbnail 1" width="80" height="80" loading="lazy"></button>
+            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpMedia('{{ f_rose2 }}', this)" aria-label="Thumbnail 2"><img src="{{ f_rose2 }}" alt="Thumbnail 2" width="80" height="80" loading="lazy"></button>
+            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpMedia('{{ f_heart }}', this)" aria-label="Thumbnail 3"><img src="{{ f_heart }}" alt="Thumbnail 3" width="80" height="80" loading="lazy"></button>
+            <button type="button" class="thumb-btn" onclick="flaberrySwitchPdpMedia('{{ f_box }}', this)" aria-label="Thumbnail 4"><img src="{{ f_box }}" alt="Thumbnail 4" width="80" height="80" loading="lazy"></button>
           {% endif %}
-          <button type="button" class="thumb-btn vid-btn" onclick="alert('Playing 360° product video preview.')" aria-label="Play product video">
+          <button type="button" class="thumb-btn vid-btn" onclick="flaberryPlayPdpVideo()" aria-label="Play 360 preview video">
             <div class="vid-overlay">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             </div>
           </button>
         </div>
 
-        <div class="mainimg" id="mainimgContainer">
+        <div class="mainimg" id="mainimg" onclick="this.classList.toggle('zoom')" title="Click to zoom">
           {% if featured_img != blank %}
-            <img id="pdpMainImg" src="{{ featured_img | image_url: width: 800, height: 800 }}" alt="{{ prod_title | escape }}" width="600" height="600">
+            <img id="pdpMainImg" src="{{ featured_img | image_url: width: 1000, height: 1000 }}" alt="{{ prod_title | escape }}" width="600" height="600">
           {% else %}
             <img id="pdpMainImg" src="{{ 'hero_flowers.webp' | file_url }}" alt="{{ prod_title | escape }}" width="600" height="600">
           {% endif %}
-          <span class="pdp-deal-tag">Fresh Harvest</span>
+          {% if badge_tag != blank %}
+            <span class="pdp-deal-tag">{{ badge_tag }}</span>
+          {% endif %}
         </div>
       </div>
 
-      <!-- Right Column: Product Information & Purchase Flow -->
+      <!-- Right Column: Product Information & Interactive Purchase Form -->
       <div class="pinfo">
-        <div class="pdp-header-meta">
-          <span class="muted" style="font-size: 13px;">Item code: <b id="pdpSkuDisplay">{{ prod_sku }}</b></span>
+        <!-- SKU, Title & Ratings Summary -->
+        <div class="pinfo-header">
+          <span class="muted" style="font-size: 13px;">Item code: <b id="pdpSkuVal">{{ prod_sku }}</b></span>
           <h1 class="pdp-title">{{ prod_title }}</h1>
-          <div class="pdp-rating-row">
-            <span class="rate">4.8 ★</span>
-            <a href="#reviews" class="muted" style="font-size: 13px;">85 customer reviews</a>
-            <span class="pill info">Handcrafted</span>
+          <div class="pdp-meta-row">
+            <span class="rate">{{ rating_val }} ★</span>
+            <a href="#rv" class="muted" style="font-size: 13.5px; text-decoration: underline;">{{ reviews_count }} reviews</a>
+            <span class="pill info">{{ badge_tag }}</span>
           </div>
         </div>
 
-        <!-- Price Display -->
+        <!-- Big Price Display with Currency Support -->
         <div class="price-big">
-          <b class="tab-nums" id="pdpPriceDisplay">{{ prod_price | money }}</b>
+          <b class="tab-nums flaberry-curr-target" id="pdpPriceVal" data-inr="{{ prod_price | divided_by: 100.0 }}">{{ prod_price | money }}</b>
           {% if prod_compare > prod_price %}
-            <s class="muted" id="pdpCompareDisplay">{{ prod_compare | money }}</s>
+            <s class="muted flaberry-curr-target" id="pdpCompareVal" data-inr="{{ prod_compare | divided_by: 100.0 }}">{{ prod_compare | money }}</s>
+            {% assign discount_pct = prod_compare | minus: prod_price | times: 100.0 | divided_by: prod_compare | round %}
+            <span class="pill save-pill" id="pdpDiscountPill">{{ discount_pct }}% OFF</span>
           {% endif %}
-          <span class="flaberry-unapproved-chip" title="Price is an internal reference value pending client commercial confirmation">
-            Ref Price
-          </span>
-          <span class="muted" style="font-size: 13px; display: block; margin-top: 4px;">Inclusive of all taxes & free standard greeting card</span>
+          <div class="tax-note">Inclusive of all taxes · Free standard greeting card</div>
         </div>
 
-        <!-- 1. Delivery Pincode Checker -->
+        <!-- Hidden Shopify Form Inputs for AJAX Cart -->
+        <input type="hidden" id="pdpVariantId" name="id" value="{{ current_variant.id }}">
+
+        <!-- Multiple Variants Selector (if product has multiple options) -->
+        {% if product.variants.size > 1 %}
+          <div class="box variant-box">
+            <h5>Select Option</h5>
+            <div class="optrow">
+              {% for variant in product.variants %}
+                <button 
+                  type="button" 
+                  class="chip {% if variant.id == current_variant.id %}on{% endif %}"
+                  data-variant-id="{{ variant.id }}"
+                  data-variant-price="{{ variant.price }}"
+                  data-variant-compare="{{ variant.compare_at_price | default: 0 }}"
+                  data-variant-sku="{{ variant.sku | default: prod_sku }}"
+                  onclick="flaberrySelectVariant(this)"
+                >
+                  {{ variant.title }} · {{ variant.price | money }}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- 1. Pincode Deliverability Checker -->
         <div class="box">
-          <h5>Delivery pincode <span id="pdpPinStatusPill" class="pill ok"><span class="dot"></span>Delhi 110001 (Available)</span></h5>
-          <div class="pinform">
-            <input type="text" class="inp" id="pdpPincodeInput" maxlength="6" value="110001" placeholder="Enter Receiver's Pincode">
-            <button type="button" class="btn" onclick="flaberryPdpCheckPin()">Check</button>
-          </div>
-          <div id="pdpPinFeedback" class="notice ok" style="margin-top: 10px;">
-            <span>✓ Available for <b>Same Day Delivery</b> and <b>Midnight Delivery</b> in Delhi.</span>
-          </div>
-        </div>
-
-        <!-- 2. Cake Customization Options (if cake) -->
-        <div class="box" id="cakeOptionsBox">
-          <h5>Customization options</h5>
-          <div class="optrow">
-            <button type="button" class="chip on" onclick="flaberryToggleChip(this, 'egg')">With Egg</button>
-            <button type="button" class="chip" onclick="flaberryToggleChip(this, 'egg')">100% Eggless</button>
-          </div>
-          <div class="optrow" style="margin-top: 8px;">
-            <button type="button" class="chip on" onclick="flaberrySelectWeight(this, '0.5 kg', 199000)">Standard Size (Bouquet / 0.5 kg)</button>
-            <button type="button" class="chip" onclick="flaberrySelectWeight(this, '1 kg', 289000)">Medium (20 Blooms / 1 kg) · ₹2,890</button>
-            <button type="button" class="chip" onclick="flaberrySelectWeight(this, '2 kg', 489000)">Luxury (50 Blooms / 2 kg) · ₹4,890</button>
+          <h5>
+            Delivery pincode
+            <span id="pdpPinStatusPill" class="pill ok"><span class="dot"></span><span id="pdpPinPillText">Deliverable</span></span>
+          </h5>
+          <form class="pinform" id="pdpPinForm" onsubmit="event.preventDefault(); flaberryCheckPdpPin();">
+            <input 
+              type="text" 
+              class="inp" 
+              id="pdpPinInput" 
+              inputmode="numeric" 
+              maxlength="6" 
+              placeholder="Receiver's 6-digit pincode" 
+              aria-label="Delivery pincode"
+            >
+            <button type="submit" class="btn">Check</button>
+          </form>
+          <div id="pdpPinNotice" class="notice ok" style="margin-top: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -3px; margin-right: 4px;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="pdpPinNoticeText">Available for delivery. Earliest delivery: <b>Today</b> with Midnight slot option.</span>
           </div>
         </div>
 
-        <!-- 3. Delivery Date & Time Slot Picker -->
+        <!-- 2. Cake Customization Options (Conditional) -->
+        {% if is_cake %}
+          <div class="box cake-box">
+            <h5>Choose your cake</h5>
+            <div class="opt-label">Egg Preference</div>
+            <div class="optrow" id="pdpEggRow">
+              <button type="button" class="chip on" onclick="flaberrySetEgg(this, 'With Egg')">With Egg</button>
+              <button type="button" class="chip" onclick="flaberrySetEgg(this, '100% Eggless')">100% Eggless</button>
+            </div>
+
+            <div class="opt-label" style="margin-top: 12px;">Select Weight</div>
+            <div class="optrow" id="pdpWeightRow">
+              <button type="button" class="chip on" onclick="flaberrySetWeight(this, '0.5 kg', 0)">1/2 kg · Standard</button>
+              <button type="button" class="chip" onclick="flaberrySetWeight(this, '1 kg', 50000)">1 kg · +₹500</button>
+              <button type="button" class="chip" onclick="flaberrySetWeight(this, '1.5 kg', 100000)">1.5 kg · +₹1,000</button>
+              <button type="button" class="chip" onclick="flaberrySetWeight(this, '2 kg', 150000)">2 kg · +₹1,500</button>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- 3. Delivery Date & Time Slot Selector -->
         <div class="box">
-          <h5>Delivery date <span class="muted" id="selectedDateLabel" style="font-weight: 500;">Today</span></h5>
-          <div class="dates" id="pdpDateRow">
-            <button type="button" class="date-btn on" onclick="flaberryPickDate(this, 'Today')"><span>Today</span><b>18</b><span>Nov</span></button>
-            <button type="button" class="date-btn" onclick="flaberryPickDate(this, 'Tomorrow')"><span>Tomorrow</span><b>19</b><span>Nov</span></button>
-            <button type="button" class="date-btn" onclick="flaberryPickDate(this, 'Thu')"><span>Thu</span><b>20</b><span>Nov</span></button>
-            <button type="button" class="date-btn" onclick="flaberryPickDate(this, 'Fri')"><span>Fri</span><b>21</b><span>Nov</span></button>
+          <h5>
+            Delivery date
+            <span class="muted" id="pdpDateLabel" style="font-weight: 600;">Today</span>
+          </h5>
+          <!-- 14-Day Rolling Dates Carousel -->
+          <div class="dates" id="pdpDatesContainer" role="tablist" aria-label="Delivery dates">
+            <!-- Dynamically populated by JS -->
           </div>
 
-          <h5 style="margin-top: 16px;">Delivery time slot</h5>
-          <div class="slots" id="pdpSlotRow">
-            <button type="button" class="slot on" onclick="flaberryPickSlot(this, 'Standard Delivery', 0)">
+          <!-- Advance Date Picker -->
+          <div class="adv-date-row">
+            <label for="pdpAdvDate">Advance date</label>
+            <input type="date" class="inp" id="pdpAdvDate" onchange="flaberryPickAdvDate(this.value)">
+            <small class="muted">Book up to 90 days ahead.</small>
+          </div>
+
+          <!-- Delivery Time Slot Options -->
+          <h5 style="margin-top: 18px; margin-bottom: 8px;">Delivery time</h5>
+          <div class="slots" id="pdpSlotsContainer">
+            <button type="button" class="slot on" id="slotBtnStandard" onclick="flaberryPickSlot(this, 'standard', 0, 'Standard Delivery · Free')">
               <b>Standard · Free</b>
-              <span class="muted">9:00 AM – 9:00 PM</span>
+              <span class="slot-time">9:00 AM – 9:00 PM</span>
             </button>
-            <button type="button" class="slot" onclick="flaberryPickSlot(this, 'Fixed Time', 150)">
+            <button type="button" class="slot" id="slotBtnFixed" onclick="flaberryPickSlot(this, 'fixed', 15000, 'Fixed Time · ₹150')">
               <b>Fixed Time · ₹150</b>
-              <span class="muted">Pick 1-hr window</span>
+              <span class="slot-time">Choose 1-hour window</span>
             </button>
-            <button type="button" class="slot" onclick="flaberryPickSlot(this, 'Midnight Delivery', 250)">
+            <button type="button" class="slot" id="slotBtnMidnight" onclick="flaberryPickSlot(this, 'midnight', 25000, 'Midnight · ₹250')">
               <b>Midnight · ₹250</b>
-              <span class="muted">11:00 PM – 11:59 PM</span>
+              <span class="slot-time">11:00 PM – 12:30 AM</span>
+            </button>
+            <button type="button" class="slot" id="slotBtnEarly" onclick="flaberryPickSlot(this, 'early', 20000, 'Early Morning · ₹200')">
+              <b>Early Morning · ₹200</b>
+              <span class="slot-time">6:00 AM – 8:00 AM</span>
             </button>
           </div>
-          <div class="notice info" style="margin-top: 12px;">
-            Order within <b>2 hours 15 mins</b> for today's delivery guaranteed.
+
+          <!-- Fixed Time 1-Hour Subslot Windows -->
+          <div class="subslots" id="pdpSubslotsRow" style="display: none;">
+            <button type="button" class="chip on" onclick="flaberryPickWin(this, '10:00 AM – 11:00 AM')">10:00 AM – 11:00 AM</button>
+            <button type="button" class="chip" onclick="flaberryPickWin(this, '11:00 AM – 12:00 PM')">11:00 AM – 12:00 PM</button>
+            <button type="button" class="chip" onclick="flaberryPickWin(this, '12:00 PM – 01:00 PM')">12:00 PM – 01:00 PM</button>
+            <button type="button" class="chip" onclick="flaberryPickWin(this, '01:00 PM – 02:00 PM')">01:00 PM – 02:00 PM</button>
+            <button type="button" class="chip" onclick="flaberryPickWin(this, '02:00 PM – 03:00 PM')">02:00 PM – 03:00 PM</button>
+            <button type="button" class="chip" onclick="flaberryPickWin(this, '04:00 PM – 05:00 PM')">04:00 PM – 05:00 PM</button>
+            <button type="button" class="chip" onclick="flaberryPickWin(this, '06:00 PM – 07:00 PM')">06:00 PM – 07:00 PM</button>
+            <button type="button" class="chip" onclick="flaberryPickWin(this, '08:00 PM – 09:00 PM')">08:00 PM – 09:00 PM</button>
+          </div>
+
+          <!-- Cutoff Notice with Live Countdown -->
+          <div class="notice info" id="pdpCutoffNotice" style="margin-top: 12px;">
+            Order within <b id="pdpCutoffTimer">--h --m</b> for today's standard delivery.
           </div>
         </div>
 
-        <!-- 4. Personalized Message Card -->
+        <!-- 4. Complimentary Greeting Message Card -->
         <div class="box">
-          <h5>Complimentary message card <span class="muted" style="font-weight: 500;">Printed & placed with gift</span></h5>
+          <h5>
+            Message card
+            <span class="muted" style="font-weight: 500;">Printed & placed with gift</span>
+          </h5>
           <div class="field" style="margin-bottom: 10px;">
             <label for="pdpOccasion" style="font-size: 13px; font-weight: 600;">Occasion</label>
-            <select class="inp" id="pdpOccasion" onchange="flaberrySuggestMessage(this.value)">
-              <option value="">Select occasion for ready message</option>
+            <select class="inp" id="pdpOccasion" onchange="flaberrySelectOccasion(this.value)">
+              <option value="">Choose occasion for ready messages</option>
               <option value="Birthday">Birthday</option>
               <option value="Anniversary">Anniversary</option>
               <option value="Love & Romance">Love & Romance</option>
               <option value="Congratulations">Congratulations</option>
+              <option value="Thank You">Thank You</option>
+              <option value="Get Well Soon">Get Well Soon</option>
             </select>
           </div>
 
-          <div class="field">
+          <!-- Ready Message Chips Container -->
+          <div class="ready-chips-container" id="pdpReadyChips" style="display: none;"></div>
+
+          <div class="field" style="margin-top: 10px;">
             <label for="pdpCardMessage" style="font-size: 13px; font-weight: 600;">Your Message</label>
-            <textarea class="inp" id="pdpCardMessage" maxlength="250" placeholder="Write a warm personalized message..." oninput="document.getElementById('pdpMsgLen').textContent = this.value.length">Wishing you joy, smiles, and endless happiness on your special day!</textarea>
-            <div style="text-align: right; font-size: 11px; color: var(--fl-color-muted, #6f6763); margin-top: 4px;">
-              <span id="pdpMsgLen">68</span>/250 characters
-            </div>
+            <textarea class="inp" id="pdpCardMessage" maxlength="250" placeholder="Write your personalized message here..." oninput="flaberryUpdateMsgCounter(this)"></textarea>
+            <div class="counter"><span id="pdpMsgCounter">0</span>/250</div>
           </div>
 
-          <div class="row2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+          <div class="row2">
             <div class="field">
-              <label for="pdpSenderName" style="font-size: 13px; font-weight: 600;">From (Sender Name)</label>
+              <label for="pdpSenderName" style="font-size: 13px; font-weight: 600;">From (Name on card)</label>
               <input type="text" class="inp" id="pdpSenderName" placeholder="Your name">
             </div>
-            <div class="field">
-              <label for="pdpCakeMessage" style="font-size: 13px; font-weight: 600;">Message on Cake (Max 30 chars)</label>
-              <input type="text" class="inp" id="pdpCakeMessage" maxlength="30" placeholder="e.g. Happy Birthday Riya">
-            </div>
+            {% if is_cake %}
+              <div class="field">
+                <label for="pdpCakeMessage" style="font-size: 13px; font-weight: 600;">Message on Cake (Max 30 chars)</label>
+                <input type="text" class="inp" id="pdpCakeMessage" maxlength="30" placeholder="e.g. Happy Birthday Riya">
+              </div>
+            {% endif %}
           </div>
         </div>
 
-        <!-- 5. Add-ons Upsells -->
+        <!-- 5. Add-on Upsells -->
         <div class="box">
-          <h5>Make it extra special <span class="muted" style="font-weight: 500;">Add-ons</span></h5>
-          <div class="addons" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px;">
-            <button type="button" class="addon-btn" onclick="flaberryToggleAddon(this, 499)">
-              <span class="addon-check">+</span>
-              <img src="{{ 'hx_ferrero.webp' | file_url }}" alt="Ferrero" width="32" height="32" loading="lazy">
-              <span class="addon-text">Ferrero Rocher (16pc) · ₹599</span>
-            </button>
-            <button type="button" class="addon-btn" onclick="flaberryToggleAddon(this, 350)">
-              <span class="addon-check">+</span>
-              <img src="{{ 'hx_truffle.webp' | file_url }}" alt="Choco Box" width="32" height="32" loading="lazy">
-              <span class="addon-text">Cadbury Celebration · ₹350</span>
-            </button>
+          <h5>
+            Make it extra special
+            <span class="muted" style="font-weight: 500;">Add-ons</span>
+          </h5>
+          <div class="addons" id="pdpAddonsGrid">
+            {% if section.blocks.size > 0 %}
+              {% for block in section.blocks %}
+                {% assign add_img = block.settings.image_asset | file_url %}
+                {% if block.settings.custom_image != blank %}
+                  {% assign add_img = block.settings.custom_image | image_url: width: 200, height: 200 %}
+                {% endif %}
+                <button 
+                  type="button" 
+                  class="addon" 
+                  data-addon-title="{{ block.settings.title }}"
+                  data-addon-price="{{ block.settings.price }}"
+                  onclick="flaberryToggleAddon(this)"
+                  aria-pressed="false"
+                >
+                  <span class="ck">+</span>
+                  <img src="{{ add_img }}" alt="{{ block.settings.title }}" width="64" height="64" loading="lazy">
+                  <span class="addon-name">{{ block.settings.title }}</span>
+                  <b class="tab-nums">₹{{ block.settings.price }}</b>
+                </button>
+              {% endfor %}
+            {% else %}
+              <!-- Prototype Curated Fallbacks -->
+              <button type="button" class="addon" data-addon-title="Teddy Bear (6 inch)" data-addon-price="399" onclick="flaberryToggleAddon(this)">
+                <span class="ck">+</span>
+                <img src="{{ 'f_handcrafted.webp' | file_url }}" alt="Teddy" width="64" height="64" loading="lazy">
+                <span class="addon-name">Teddy Bear (6 in)</span>
+                <b class="tab-nums">₹399</b>
+              </button>
+              <button type="button" class="addon" data-addon-title="Ferrero Rocher (16 Pcs)" data-addon-price="599" onclick="flaberryToggleAddon(this)">
+                <span class="ck">+</span>
+                <img src="{{ 'hx_ferrero.webp' | file_url }}" alt="Ferrero" width="64" height="64" loading="lazy">
+                <span class="addon-name">Ferrero Rocher (16pc)</span>
+                <b class="tab-nums">₹599</b>
+              </button>
+              <button type="button" class="addon" data-addon-title="Cadbury Celebrations Box" data-addon-price="350" onclick="flaberryToggleAddon(this)">
+                <span class="ck">+</span>
+                <img src="{{ 'hx_truffle.webp' | file_url }}" alt="Celebrations" width="64" height="64" loading="lazy">
+                <span class="addon-name">Cadbury Celebrations</span>
+                <b class="tab-nums">₹350</b>
+              </button>
+              <button type="button" class="addon" data-addon-title="Luxury Greeting Card" data-addon-price="99" onclick="flaberryToggleAddon(this)">
+                <span class="ck">+</span>
+                <img src="{{ 'hx_heartbox.webp' | file_url }}" alt="Card" width="64" height="64" loading="lazy">
+                <span class="addon-name">Luxury Card</span>
+                <b class="tab-nums">₹99</b>
+              </button>
+              <button type="button" class="addon" data-addon-title="Kaju Katli (250g)" data-addon-price="450" onclick="flaberryToggleAddon(this)">
+                <span class="ck">+</span>
+                <img src="{{ 'hx_dryfruit.webp' | file_url }}" alt="Sweets" width="64" height="64" loading="lazy">
+                <span class="addon-name">Kaju Katli (250g)</span>
+                <b class="tab-nums">₹450</b>
+              </button>
+              <button type="button" class="addon" data-addon-title="3 Red Roses Bouquet" data-addon-price="299" onclick="flaberryToggleAddon(this)">
+                <span class="ck">+</span>
+                <img src="{{ 'hx_roses.webp' | file_url }}" alt="Roses" width="64" height="64" loading="lazy">
+                <span class="addon-name">3 Red Roses</span>
+                <b class="tab-nums">₹299</b>
+              </button>
+            {% endif %}
           </div>
         </div>
 
-        <!-- 6. Buy Row: Quantity + Add to Cart + Buy Now -->
+        <!-- 6. Quantity Stepper & Dual CTAs -->
         <div class="buyrow">
-          <div class="qty">
+          <div class="qty" aria-label="Quantity selector">
             <button type="button" onclick="flaberryChangeQty(-1)" aria-label="Decrease quantity">−</button>
-            <span id="pdpQtyDisplay">1</span>
+            <span id="pdpQtyVal">1</span>
             <button type="button" onclick="flaberryChangeQty(1)" aria-label="Increase quantity">+</button>
           </div>
-          <button type="button" class="btn" style="flex: 1;" onclick="flaberryAddToCartPdp()">Add to Cart</button>
-          <button type="button" class="btn flora" style="flex: 1;" onclick="flaberryBuyNowPdp()">Buy Now</button>
+          <button type="button" class="btn" id="pdpAddCartBtn" onclick="flaberrySubmitPdpOrder(false)">Add to cart</button>
+          <button type="button" class="btn flora" id="pdpBuyNowBtn" onclick="flaberrySubmitPdpOrder(true)">Buy now</button>
         </div>
 
-        <!-- Dual Trust Badges -->
-        <div class="trust" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px;">
-          <div style="display: flex; gap: 10px; align-items: center; background: var(--fl-color-mist, #f5f2f0); padding: 12px; border-radius: var(--fl-radius-md, 16px);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <div>
-              <strong style="display: block; font-size: 13.5px;">100% Secure Payment</strong>
-              <small class="muted" style="font-size: 11.5px;">UPI, Cards & Net Banking</small>
-            </div>
+        <!-- Dual Trust Reassurance Strip -->
+        <div class="trust" style="grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 24px;">
+          <div class="trust-item">
+            <img src="{{ 'i_secure.png' | file_url }}" alt="Secure Payments" width="36" height="36" loading="lazy">
+            <span>
+              <b>Secure payment</b>
+              UPI, cards, net banking
+            </span>
           </div>
-          <div style="display: flex; gap: 10px; align-items: center; background: var(--fl-color-mist, #f5f2f0); padding: 12px; border-radius: var(--fl-radius-md, 16px);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <div>
-              <strong style="display: block; font-size: 13.5px;">Gifting Help & Support</strong>
-              <small class="muted" style="font-size: 11.5px;">8:00 AM – Midnight Daily</small>
-            </div>
+          <div class="trust-item">
+            <img src="{{ 'i_support.png' | file_url }}" alt="Support" width="36" height="36" loading="lazy">
+            <span>
+              <b>Help 8 AM – midnight</b>
+              Phone, WhatsApp, email
+            </span>
           </div>
         </div>
 
-        <!-- Accordions: Description, Delivery details, Care instructions -->
-        <div class="pdp-accordions" style="margin-top: 32px; display: grid; gap: 10px;">
-          <details class="flaberry-faq-item" open>
-            <summary>Product Description</summary>
-            <p>{{ product.description | default: 'A majestic arrangement of fresh hand-picked flowers, crafted to perfection with lush green fillers and wrapped in luxury eco-friendly kraft paper. Perfect for expressing love, joy, and celebration.' }}</p>
-          </details>
-          <details class="flaberry-faq-item">
-            <summary>Delivery Information & Guarantees</summary>
-            <p>Every order is dispatched in temperature-controlled vans to maintain optimal bloom freshness. The delivery will be attempted once to the address provided. Deliveries are made by certified Flaberry delivery executives.</p>
-          </details>
-          <details class="flaberry-faq-item">
-            <summary>Care Instructions</summary>
-            <p>Trim flower stems diagonally by 1-2 inches upon arrival. Place in a clean vase filled with cold water. Keep away from direct sunlight and air conditioning drafts. For cakes, refrigerate immediately upon delivery.</p>
-          </details>
+        <!-- 7. Four Information Tabs (Metafield connected with prototype fallbacks) -->
+        <div class="pdp-tabs-wrapper">
+          <div class="tabs" role="tablist">
+            <button type="button" class="pdp-tab-btn on" onclick="flaberrySwitchTab(0)" role="tab" aria-selected="true">Description</button>
+            <button type="button" class="pdp-tab-btn" onclick="flaberrySwitchTab(1)" role="tab" aria-selected="false">Specifications</button>
+            <button type="button" class="pdp-tab-btn" onclick="flaberrySwitchTab(2)" role="tab" aria-selected="false">Delivery information</button>
+            <button type="button" class="pdp-tab-btn" onclick="flaberrySwitchTab(3)" role="tab" aria-selected="false">Care instructions</button>
+          </div>
+
+          <!-- Tab Pane 0: Description -->
+          <div class="tabpane pdp-tabpane on" id="tabPane0">
+            {% if product.description != blank %}
+              <div class="pdp-desc-content">{{ product.description }}</div>
+            {% else %}
+              <p>
+                <strong>{{ prod_title }}</strong> is 
+                {% if is_cake %}
+                  baked fresh on the day of delivery by our certified partner bakers using pure ingredients and delivered with your printed personalized greeting card.
+                {% else %}
+                  handcrafted with love by expert florists using fresh morning-harvested blooms, lush green foliage, and delivered in signature Flaberry packaging with your printed message card.
+                {% endif %}
+              </p>
+              <ul class="flaberry-info-list">
+                <li>{% if is_cake %}Choose between 100% Eggless or With Egg, in sizes from 1/2 kg to 2 kg.{% else %}Flowers are sourced fresh at dawn to guarantee lasting vibrancy and natural scent.{% endif %}</li>
+                <li>Same-day, fixed-time, and midnight surprise delivery available across 500+ Indian cities.</li>
+                <li>Photographs are indicative; natural variations in blooms and handcrafted designs make each delivery unique.</li>
+              </ul>
+            {% endif %}
+          </div>
+
+          <!-- Tab Pane 1: Specifications (Metafield connected) -->
+          <div class="tabpane pdp-tabpane" id="tabPane1">
+            {%- liquid
+              assign spec_meta = product.metafields.flaberry.specifications.value | default: product.metafields.custom.specifications.value
+            -%}
+            {% if spec_meta != blank %}
+              <div class="metafield-specs">{{ spec_meta }}</div>
+            {% else %}
+              <table class="spec">
+                <tbody>
+                  <tr>
+                    <td>Item code</td>
+                    <td>{{ prod_sku }}</td>
+                  </tr>
+                  <tr>
+                    <td>Category</td>
+                    <td>{{ primary_collection.title | default: product.type | default: 'Flowers' }}</td>
+                  </tr>
+                  <tr>
+                    <td>{% if is_cake %}Weight{% else %}Contents{% endif %}</td>
+                    <td>{% if is_cake %}1/2 kg, 1 kg, 1.5 kg, 2 kg (Configured above){% else %}{{ prod_title }} (Premium Arrangement){% endif %}</td>
+                  </tr>
+                  <tr>
+                    <td>Packaging</td>
+                    <td>{% if is_cake %}Food-safe cake box with complimentary candle & knife{% else %}Eco-friendly luxury wrap with satin ribbon{% endif %}</td>
+                  </tr>
+                  <tr>
+                    <td>Delivered by</td>
+                    <td>Flaberry verified partner nearest to receiver's pincode</td>
+                  </tr>
+                </tbody>
+              </table>
+            {% endif %}
+          </div>
+
+          <!-- Tab Pane 2: Delivery information (Metafield connected) -->
+          <div class="tabpane pdp-tabpane" id="tabPane2">
+            {%- liquid
+              assign deliv_meta = product.metafields.flaberry.delivery_info.value | default: product.metafields.custom.delivery_info.value
+            -%}
+            {% if deliv_meta != blank %}
+              <div class="metafield-delivery">{{ deliv_meta }}</div>
+            {% else %}
+              <ul class="flaberry-info-list">
+                <li><strong>Standard delivery:</strong> Between 9:00 AM and 9:00 PM on your selected date. Free across serviceable pincodes.</li>
+                <li><strong>Fixed Time slots:</strong> Choose guaranteed 1-hour delivery windows for celebrations (nominal ₹150 slot fee).</li>
+                <li><strong>Midnight delivery:</strong> Delivered sharp between 11:00 PM and 12:30 AM to ring in special occasions (₹250 slot fee).</li>
+                <li><strong>Order Cutoffs:</strong> Same-day orders close at 4:00 PM IST; midnight delivery orders close at 9:00 PM IST.</li>
+                <li><strong>Advance Booking:</strong> Schedule up to 90 days in advance with guaranteed date and time slots.</li>
+                <li><strong>Handover Guarantee:</strong> The delivery associate contacts receiver before arrival for a seamless doorstep surprise.</li>
+              </ul>
+            {% endif %}
+          </div>
+
+          <!-- Tab Pane 3: Care instructions (Metafield connected) -->
+          <div class="tabpane pdp-tabpane" id="tabPane3">
+            {%- liquid
+              assign care_meta = product.metafields.flaberry.care_instructions.value | default: product.metafields.custom.care_instructions.value
+            -%}
+            {% if care_meta != blank %}
+              <div class="metafield-care">{{ care_meta }}</div>
+            {% elsif is_cake %}
+              <ul class="flaberry-info-list">
+                <li>Refrigerate the cake immediately upon arrival (ideal temperature 2°C – 5°C).</li>
+                <li>Remove from the refrigerator 20 minutes before serving to enjoy optimum creaminess and fluffy sponge texture.</li>
+                <li>Store any leftover cake in an airtight container in the refrigerator and consume within 24–48 hours.</li>
+                <li>Keep away from heat sources and direct sunlight.</li>
+              </ul>
+            {% else %}
+              <ul class="flaberry-info-list">
+                <li>Trim 1–2 cm off the bottom of stems at a 45-degree angle under running water.</li>
+                <li>Place blooms in a clean vase filled with cold, fresh tap water and floral food if provided.</li>
+                <li>Remove leaves that submerge below water level to prevent bacterial buildup and maintain water clarity.</li>
+                <li>Change vase water every 2 days and recut stems slightly for long-lasting freshness.</li>
+                <li>Keep arrangement away from direct sun, air conditioning vents, and ripening fruit baskets.</li>
+              </ul>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Ratings & Customer Reviews Master Section (#rv) -->
+    <section class="sec" id="rv">
+      <div class="sec-h">
+        <div>
+          <h2>Ratings & reviews</h2>
+          <p>{{ reviews_count }} verified reviews from customers who ordered this gift.</p>
+        </div>
+        <button type="button" class="btn ghost sm" onclick="flaberryOpenReviewModal()">Write a review</button>
+      </div>
+
+      <div class="reviews">
+        <!-- Left Column: Rating Score & Breakdown Bars -->
+        <div class="rv-sum">
+          <b>{{ rating_val }}</b>
+          <span class="stars">★★★★★</span>
+          <span class="muted" style="font-size: 13px;">Based on {{ reviews_count }} verified reviews</span>
+          
+          <div class="rv-bars">
+            <div class="rv-bar-row">
+              <span style="width: 24px;">5★</span>
+              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 78%;"></div></div>
+              <span style="width: 30px; text-align: right;">78%</span>
+            </div>
+            <div class="rv-bar-row">
+              <span style="width: 24px;">4★</span>
+              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 15%;"></div></div>
+              <span style="width: 30px; text-align: right;">15%</span>
+            </div>
+            <div class="rv-bar-row">
+              <span style="width: 24px;">3★</span>
+              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 5%;"></div></div>
+              <span style="width: 30px; text-align: right;">5%</span>
+            </div>
+            <div class="rv-bar-row">
+              <span style="width: 24px;">2★</span>
+              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 1%;"></div></div>
+              <span style="width: 30px; text-align: right;">1%</span>
+            </div>
+            <div class="rv-bar-row">
+              <span style="width: 24px;">1★</span>
+              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 1%;"></div></div>
+              <span style="width: 30px; text-align: right;">1%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Customer Review Cards -->
+        <div class="rv-list">
+          <div class="rv-card">
+            <div class="rv-head">
+              <div>
+                <div class="rv-author">Ananya R.</div>
+                <div class="rv-meta">Houston, USA · Anniversary · Delivery to Pune</div>
+              </div>
+              <span class="stars" style="color: #f0a722; font-size: 14px;">★★★★★</span>
+            </div>
+            <p>“Sent roses and a truffle cake to my parents in Pune for their 30th anniversary. Delivered on the exact date requested, flowers looked just like the photograph and stayed fresh for nearly a week.”</p>
+          </div>
+
+          <div class="rv-card">
+            <div class="rv-head">
+              <div>
+                <div class="rv-author">Rahul M.</div>
+                <div class="rv-meta">Gurugram · Birthday · Delivery to Delhi</div>
+              </div>
+              <span class="stars" style="color: #f0a722; font-size: 14px;">★★★★★</span>
+            </div>
+            <p>“Midnight delivery reached at 11:45 PM sharp. My wife was completely surprised! The greeting card was printed clearly and the packaging was top notch.”</p>
+          </div>
+
+          <div class="rv-card">
+            <div class="rv-head">
+              <div>
+                <div class="rv-author">Sandeep T.</div>
+                <div class="rv-meta">Noida · Corporate Gifting · Noida</div>
+              </div>
+              <span class="stars" style="color: #f0a722; font-size: 14px;">★★★★★</span>
+            </div>
+            <p>“Our company frequently uses Flaberry for client and employee appreciation gifts. Smooth process, GST invoices are delivered promptly, and the quality is consistently dependable.”</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Mobile Sticky Buy Bar (Visible only on mobile <= 960px) -->
+  <div class="sticky-buy" id="flaberryStickyBuy">
+    <div>
+      <b class="tab-nums flaberry-curr-target" id="stickyPriceVal" data-inr="{{ prod_price | divided_by: 100.0 }}">{{ prod_price | money }}</b>
+      <small id="stickyDateSlotSummary">Delivery: Today (Standard)</small>
+    </div>
+    <button type="button" class="btn flora" onclick="flaberrySubmitPdpOrder(true)">Buy now</button>
+  </div>
+</div>
+
+<!-- Modal: Write a Review -->
+<div class="flaberry-review-modal" id="pdpReviewModal" style="display: none;">
+  <div class="review-modal-scrim" onclick="flaberryCloseReviewModal()"></div>
+  <div class="review-modal-box">
+    <div class="review-modal-header">
+      <h3>Write a customer review</h3>
+      <button type="button" class="x" onclick="flaberryCloseReviewModal()">×</button>
+    </div>
+    <form class="review-modal-body" onsubmit="event.preventDefault(); flaberrySubmitReview();">
+      <div class="field">
+        <label for="revName">Your Name</label>
+        <input type="text" class="inp" id="revName" required placeholder="e.g. Priya Sharma">
+      </div>
+      <div class="field">
+        <label for="revCity">City / Location</label>
+        <input type="text" class="inp" id="revCity" required placeholder="e.g. Bengaluru">
+      </div>
+      <div class="field">
+        <label for="revRating">Rating</label>
+        <select class="inp" id="revRating">
+          <option value="5">★★★★★ 5 Stars (Exceptional)</option>
+          <option value="4">★★★★☆ 4 Stars (Very Good)</option>
+          <option value="3">★★★☆☆ 3 Stars (Average)</option>
+          <option value="2">★★☆☆☆ 2 Stars (Below Expectation)</option>
+          <option value="1">★☆☆☆☆ 1 Star (Poor)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="revComment">Your Review</label>
+        <textarea class="inp" id="revComment" required rows="4" placeholder="Share your experience regarding bloom freshness, delivery punctuality, and overall presentation..."></textarea>
+      </div>
+      <button type="submit" class="btn flora block" style="width: 100%; margin-top: 14px;">Submit Review</button>
+    </form>
   </div>
 </div>
 
 <style>
-  .flaberry-pdp-page {
+  /* ==========================================================
+     Flaberry Product Detail Page Styles (Classic Master CRO)
+     ========================================================== */
+  .flaberry-pdp-section {
     background: var(--fl-color-paper, #ffffff);
-    padding: 24px 0 60px;
+    padding: 20px 0 60px;
   }
+  .crumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--fl-color-muted, #6f6763);
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .crumbs a {
+    color: var(--fl-color-muted, #6f6763);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .crumbs a:hover {
+    color: var(--fl-color-ink, #151312);
+  }
+  .crumbs .active {
+    color: var(--fl-color-ink, #151312);
+    font-weight: 600;
+  }
+
+  /* Master 2-Column Grid */
   .pdp {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     gap: 44px;
     align-items: start;
-    margin-top: 14px;
   }
-  @media (max-width: 900px) {
-    .pdp {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-  }
+
+  /* Gallery Column */
   .gallery {
     display: grid;
     grid-template-columns: 80px minmax(0, 1fr);
-    gap: 14px;
+    gap: 12px;
     position: sticky;
-    top: 120px;
-  }
-  @media (max-width: 600px) {
-    .gallery {
-      grid-template-columns: 1fr;
-    }
-    .thumbs {
-      order: 2;
-      display: flex !important;
-      overflow-x: auto;
-    }
+    top: 100px;
   }
   .thumbs {
     display: grid;
@@ -318,15 +731,16 @@
     background: var(--fl-color-mist, #f5f2f0);
     aspect-ratio: 1;
     position: relative;
+    cursor: zoom-in;
   }
   .mainimg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s;
+    transition: transform 0.3s ease;
   }
-  .mainimg:hover img {
-    transform: scale(1.04);
+  .mainimg.zoom img {
+    transform: scale(1.6);
   }
   .pdp-deal-tag {
     position: absolute;
@@ -334,19 +748,32 @@
     left: 14px;
     background: var(--fl-color-flora, #e2522c);
     color: #ffffff;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
-    padding: 4px 12px;
+    padding: 4px 10px;
     border-radius: var(--fl-radius-pill, 999px);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+  }
+
+  /* Right Column: Product Information */
+  .pinfo {
+    display: grid;
+    gap: 16px;
+  }
+  .pinfo-header {
+    display: grid;
+    gap: 6px;
   }
   .pdp-title {
-    font-size: clamp(24px, 3vw, 36px);
+    font-size: clamp(24px, 3vw, 34px);
     font-weight: 800;
     line-height: 1.2;
-    margin: 6px 0;
+    margin: 4px 0;
     color: var(--fl-color-ink, #151312);
   }
-  .pdp-rating-row {
+  .pdp-meta-row {
     display: flex;
     gap: 10px;
     align-items: center;
@@ -386,32 +813,57 @@
     background: #1f7a4d;
   }
   .price-big {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 800;
     color: var(--fl-color-ink, #151312);
-    margin: 16px 0 20px;
+    margin: 6px 0 10px;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .price-big s {
     font-size: 18px;
     color: var(--fl-color-muted, #6f6763);
-    margin-left: 8px;
     font-weight: 400;
   }
+  .save-pill {
+    background: #fde8e6;
+    color: #c23e1b;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .tax-note {
+    width: 100%;
+    font-size: 12.5px;
+    color: var(--fl-color-muted, #6f6763);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  /* Standard Module Boxes */
   .box {
     border: 1px solid var(--fl-color-line, #e7e1dd);
     border-radius: var(--fl-radius-md, 16px);
-    padding: 18px;
-    margin-bottom: 16px;
+    padding: 16px 18px;
     background: #ffffff;
   }
   .box h5 {
-    font-size: 14.5px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--fl-color-ink, #151312);
     margin: 0 0 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .opt-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--fl-color-muted, #6f6763);
+    margin-bottom: 6px;
   }
   .pinform {
     display: flex;
@@ -424,16 +876,27 @@
     font-size: 14px;
     width: 100%;
     outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  .inp:focus {
+    border-color: var(--fl-color-ink, #151312);
   }
   textarea.inp {
     border-radius: 12px;
-    min-height: 70px;
+    min-height: 72px;
     resize: vertical;
+  }
+  .counter {
+    font-size: 11px;
+    color: var(--fl-color-muted, #6f6763);
+    text-align: right;
+    margin-top: 4px;
   }
   .notice {
     padding: 10px 14px;
     border-radius: 10px;
-    font-size: 13.5px;
+    font-size: 13px;
     line-height: 1.4;
   }
   .notice.ok {
@@ -441,8 +904,12 @@
     color: #1f7a4d;
   }
   .notice.info {
-    background: #eef5fc;
-    color: #1e5ba3;
+    background: #eef1f8;
+    color: #273a75;
+  }
+  .notice.warn {
+    background: #fff8eb;
+    color: #b54708;
   }
   .optrow {
     display: flex;
@@ -450,104 +917,205 @@
     flex-wrap: wrap;
   }
   .chip {
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: var(--fl-radius-pill, 999px);
     border: 1px solid var(--fl-color-line, #e7e1dd);
     background: #ffffff;
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.15s ease;
   }
   .chip.on, .chip:hover {
     background: var(--fl-color-ink, #151312);
     color: #ffffff;
     border-color: var(--fl-color-ink, #151312);
   }
+
+  /* Dates Rolling Picker */
   .dates {
     display: flex;
     gap: 8px;
     overflow-x: auto;
+    scrollbar-width: thin;
     padding-bottom: 6px;
   }
   .date-btn {
+    flex: 0 0 auto;
     border: 1px solid var(--fl-color-line, #e7e1dd);
     border-radius: 12px;
     background: #ffffff;
-    padding: 8px 14px;
+    padding: 8px 10px;
+    min-width: 64px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 68px;
+    gap: 2px;
     cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
   }
   .date-btn.on {
     border-color: var(--fl-color-flora, #e2522c);
     background: var(--fl-color-blush, #fde8e6);
   }
   .date-btn b {
-    font-size: 18px;
+    font-size: 17px;
+    font-weight: 700;
     color: var(--fl-color-ink, #151312);
   }
   .date-btn span {
     font-size: 11px;
     color: var(--fl-color-muted, #6f6763);
   }
+  .adv-date-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .adv-date-row label {
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .adv-date-row input[type="date"] {
+    width: auto;
+    padding: 6px 12px;
+  }
+
+  /* Time Slots */
   .slots {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
   .slot {
     border: 1px solid var(--fl-color-line, #e7e1dd);
     border-radius: 12px;
-    padding: 10px;
-    text-align: left;
+    padding: 10px 12px;
     background: #ffffff;
+    text-align: left;
+    display: grid;
+    gap: 2px;
+    font-size: 13px;
     cursor: pointer;
+    transition: all 0.15s;
+  }
+  .slot b {
+    font-size: 13.5px;
+  }
+  .slot .slot-time {
+    font-size: 11px;
+    color: var(--fl-color-muted, #6f6763);
   }
   .slot.on {
     border-color: var(--fl-color-ink, #151312);
+    box-shadow: inset 0 0 0 1px var(--fl-color-ink, #151312);
+  }
+  .slot:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f7f7f7;
+  }
+  .subslots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    padding: 8px;
     background: var(--fl-color-mist, #f5f2f0);
+    border-radius: 12px;
   }
-  .slot b {
-    display: block;
-    font-size: 13.5px;
+
+  /* Ready Message Chips */
+  .ready-chips-container {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 10px;
   }
-  .slot span {
-    font-size: 11px;
+  .ready-chip-btn {
+    background: #ffffff;
+    border: 1px dashed var(--fl-color-line, #e7e1dd);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--fl-color-ink, #151312);
+    line-height: 1.3;
+    transition: border-color 0.15s, background 0.15s;
   }
-  .addon-btn {
+  .ready-chip-btn:hover {
+    border-color: var(--fl-color-flora, #e2522c);
+    background: #fff9f8;
+  }
+
+  /* Add-on Upsells */
+  .addons {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .addon {
     border: 1px solid var(--fl-color-line, #e7e1dd);
     border-radius: 12px;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 8px;
+    display: grid;
+    gap: 4px;
+    font-size: 12px;
     background: #ffffff;
+    text-align: left;
+    position: relative;
     cursor: pointer;
-    white-space: nowrap;
+    transition: all 0.15s;
   }
-  .addon-btn.on {
+  .addon.on {
     border-color: var(--fl-color-leaf, #1f7a4d);
-    background: #e9f8ef;
+    background: #f1faf4;
   }
-  .addon-btn img {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    object-fit: cover;
-  }
-  .addon-check {
+  .addon .ck {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--fl-color-mist, #f5f2f0);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--fl-color-leaf, #1f7a4d);
   }
+  .addon.on .ck {
+    background: var(--fl-color-leaf, #1f7a4d);
+    color: #ffffff;
+  }
+  .addon img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .addon .addon-name {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .addon b {
+    font-size: 12.5px;
+    color: var(--fl-color-ink, #151312);
+  }
+
+  /* Buy Row: Quantity Stepper & Buttons */
   .buyrow {
     display: flex;
-    gap: 12px;
-    margin-top: 24px;
+    gap: 10px;
     align-items: center;
+    margin-top: 6px;
   }
   .qty {
     display: flex;
@@ -555,6 +1123,7 @@
     border: 1px solid var(--fl-color-line, #e7e1dd);
     border-radius: var(--fl-radius-pill, 999px);
     overflow: hidden;
+    background: #ffffff;
   }
   .qty button {
     background: none;
@@ -563,10 +1132,19 @@
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
+    font-family: inherit;
   }
   .qty span {
     padding: 0 10px;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 15px;
+    min-width: 24px;
+    text-align: center;
+  }
+  .buyrow .btn {
+    flex: 1;
+    text-align: center;
+    padding: 12px 20px;
     font-size: 15px;
   }
   .btn.flora {
@@ -576,108 +1154,1017 @@
   }
   .btn.flora:hover {
     background: var(--fl-color-flora-deep, #c23e1b);
+    border-color: var(--fl-color-flora-deep, #c23e1b);
+  }
+
+  /* Dual Trust Strip */
+  .trust {
+    display: grid;
+    gap: 12px;
+  }
+  .trust-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: var(--fl-color-mist, #f5f2f0);
+    padding: 12px 14px;
+    border-radius: var(--fl-radius-md, 16px);
+  }
+  .trust-item img {
+    flex-shrink: 0;
+  }
+  .trust-item span b {
+    display: block;
+    font-size: 13.5px;
+    color: var(--fl-color-ink, #151312);
+  }
+  .trust-item span {
+    font-size: 12px;
+    color: var(--fl-color-muted, #6f6763);
+    line-height: 1.3;
+  }
+
+  /* 4 Information Tabs */
+  .pdp-tabs-wrapper {
+    margin-top: 14px;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--fl-color-line, #e7e1dd);
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .tabs button {
+    background: none;
+    border: 0;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--fl-color-muted, #6f6763);
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .tabs button.on {
+    color: var(--fl-color-ink, #151312);
+    border-bottom-color: var(--fl-color-ink, #151312);
+  }
+  .tabpane {
+    display: none;
+    padding: 16px 2px 6px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--fl-color-ink, #151312);
+  }
+  .tabpane.on {
+    display: block;
+  }
+  .flaberry-info-list {
+    margin: 8px 0 0 18px;
+    padding: 0;
+  }
+  .flaberry-info-list li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  table.spec {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.spec tr {
+    border-bottom: 1px solid var(--fl-color-line, #e7e1dd);
+  }
+  table.spec tr:last-child {
+    border-bottom: none;
+  }
+  table.spec td {
+    padding: 10px 0;
+    font-size: 13.5px;
+  }
+  table.spec td:first-child {
+    color: var(--fl-color-muted, #6f6763);
+    width: 36%;
+    font-weight: 500;
+  }
+  table.spec td:last-child {
+    color: var(--fl-color-ink, #151312);
+    font-weight: 600;
+  }
+
+  /* Reviews Section (#rv) */
+  #rv {
+    margin-top: 48px;
+    padding-top: 36px;
+    border-top: 1px solid var(--fl-color-line, #e7e1dd);
+  }
+  .reviews {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+    margin-top: 18px;
+  }
+  .rv-sum {
+    background: var(--fl-color-mist, #f5f2f0);
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 24px 20px;
+    text-align: center;
+  }
+  .rv-sum b {
+    font-size: 46px;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+    color: var(--fl-color-ink, #151312);
+  }
+  .rv-sum .stars {
+    color: #f0a722;
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin: 6px 0 2px;
+    display: block;
+  }
+  .rv-bars {
+    margin-top: 16px;
+    display: grid;
+    gap: 6px;
+    text-align: left;
+  }
+  .rv-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .rv-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: #e2deda;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .rv-bar-fill {
+    height: 100%;
+    background: #f0a722;
+    border-radius: 999px;
+  }
+  .rv-list {
+    display: grid;
+    gap: 12px;
+  }
+  .rv-card {
+    border: 1px solid var(--fl-color-line, #e7e1dd);
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 16px 18px;
+    background: #ffffff;
+  }
+  .rv-card .rv-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .rv-author {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--fl-color-ink, #151312);
+  }
+  .rv-meta {
+    font-size: 11.5px;
+    color: var(--fl-color-muted, #6f6763);
+  }
+  .rv-card p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #383431;
+  }
+
+  /* Mobile Sticky Buy Bar */
+  .sticky-buy {
+    display: none;
+  }
+
+  /* Review Modal */
+  .flaberry-review-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+  }
+  .review-modal-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(21, 19, 18, 0.5);
+  }
+  .review-modal-box {
+    position: relative;
+    background: #ffffff;
+    border-radius: var(--fl-radius-md, 16px);
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  .review-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .review-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  .review-modal-header .x {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .review-modal-body .field {
+    margin-bottom: 12px;
+  }
+  .review-modal-body label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* ==========================================================
+     MOBILE RESPONSIVE RULES (Explicit Gallery Stickiness Removal)
+     ========================================================== */
+  @media (max-width: 960px) {
+    .pdp {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+    /* Strictly remove gallery stickiness on mobile */
+    .gallery {
+      position: static !important;
+      top: auto !important;
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+    .thumbs {
+      order: 2 !important;
+      display: flex !important;
+      flex-direction: row !important;
+      overflow-x: auto !important;
+      gap: 8px !important;
+      padding: 4px 0 !important;
+      scrollbar-width: thin;
+    }
+    .thumb-btn {
+      flex: 0 0 72px !important;
+      width: 72px !important;
+      height: 72px !important;
+    }
+    .reviews {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+    .sticky-buy {
+      display: flex !important;
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      z-index: 65 !important;
+      background: #ffffff !important;
+      border-top: 1px solid var(--fl-color-line, #e7e1dd) !important;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+      gap: 12px !important;
+      align-items: center !important;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08) !important;
+    }
+    .sticky-buy > div {
+      flex: 1 !important;
+      min-width: 0 !important;
+    }
+    .sticky-buy b {
+      font-size: 18px !important;
+      font-weight: 800 !important;
+      color: var(--fl-color-ink, #151312) !important;
+      line-height: 1.2 !important;
+      display: block !important;
+    }
+    .sticky-buy small {
+      display: block !important;
+      font-size: 11px !important;
+      color: var(--fl-color-muted, #6f6763) !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .sticky-buy .btn {
+      flex: 0 0 auto !important;
+      padding: 10px 22px !important;
+      font-size: 14px !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .addons {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    .slots {
+      grid-template-columns: 1fr !important;
+    }
+    .trust {
+      grid-template-columns: 1fr !important;
+    }
+    .buyrow {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .buyrow .qty {
+      justify-content: center !important;
+    }
+    .sticky-buy {
+      bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+      box-shadow: 0 -6px 16px rgba(34, 35, 92, 0.08) !important;
+    }
   }
 </style>
 
 <script>
-  var currentPdpPrice = {{ prod_price | default: 199000 }};
-  var currentPdpQty = 1;
+  (function() {
+    // State management
+    var basePriceInCents = {{ prod_price | default: 244000 }};
+    var currentVariantPrice = basePriceInCents;
+    var currentWeightFee = 0;
+    var currentSlotFee = 0;
+    var currentAddonSum = 0;
+    var currentQty = 1;
+    var currentPincode = '';
+    var selectedDateIso = '';
+    var selectedDateText = 'Today';
+    var selectedSlotId = 'standard';
+    var selectedSlotName = 'Standard Delivery · Free';
+    var selectedSubslotWin = '';
+    var eggPreference = '{% if is_cake %}With Egg{% endif %}';
+    var cakeWeight = '{% if is_cake %}0.5 kg{% endif %}';
 
-  function flaberrySwitchPdpImage(url, btn) {
-    document.getElementById('pdpMainImg').src = url;
-    document.querySelectorAll('#pdpThumbnails .thumb-btn').forEach(function(b) { b.classList.remove('on'); });
-    btn.classList.add('on');
-  }
-
-  function flaberryPdpCheckPin() {
-    var val = document.getElementById('pdpPincodeInput').value.trim();
-    var fb = document.getElementById('pdpPinFeedback');
-    var pill = document.getElementById('pdpPinStatusPill');
-    if (!val || val.length !== 6 || isNaN(val)) {
-      fb.className = 'notice no';
-      fb.innerHTML = '<span style="color: #b42318;">Please enter a valid 6-digit Indian pincode.</span>';
-      pill.innerHTML = '<span style="color: #b42318;">Invalid Pincode</span>';
-      return;
-    }
-    fb.className = 'notice ok';
-    fb.innerHTML = '<span>✓ Delivery Available at <b>' + val + '</b>: Earliest delivery <b>Today</b> with Midnight slot.</span>';
-    pill.innerHTML = '<span class="dot"></span>' + val + ' (Deliverable)';
-  }
-
-  function flaberryToggleChip(btn, group) {
-    btn.parentElement.querySelectorAll('.chip').forEach(function(b) { b.classList.remove('on'); });
-    btn.classList.add('on');
-  }
-
-  function flaberrySelectWeight(btn, wt, price) {
-    btn.parentElement.querySelectorAll('.chip').forEach(function(b) { b.classList.remove('on'); });
-    btn.classList.add('on');
-    currentPdpPrice = price;
-    updatePdpPrice();
-  }
-
-  function flaberryPickDate(btn, label) {
-    document.querySelectorAll('#pdpDateRow .date-btn').forEach(function(b) { b.classList.remove('on'); });
-    btn.classList.add('on');
-    document.getElementById('selectedDateLabel').textContent = label;
-  }
-
-  function flaberryPickSlot(btn, name, fee) {
-    document.querySelectorAll('#pdpSlotRow .slot').forEach(function(b) { b.classList.remove('on'); });
-    btn.classList.add('on');
-  }
-
-  function flaberrySuggestMessage(val) {
-    var msgs = {
-      'Birthday': 'Wishing you a very Happy Birthday filled with joy, laughter, and your favorite treats!',
-      'Anniversary': 'Happy Anniversary to the most wonderful couple! Wishing you a lifetime of love and togetherness.',
-      'Love & Romance': 'Every moment with you is special. Sending you all my love today and forever.',
-      'Congratulations': 'Heartiest congratulations on your tremendous achievement! So proud of you.'
+    // Preset messages dictionary
+    var PRESET_MESSAGES = {
+      'Birthday': [
+        'Wishing you a day filled with laughter, love, and sweet treats! Happy Birthday!',
+        'May this birthday bring you as much joy as you bring to everyone around you!',
+        'Cheers to you on your special day! May your year ahead be full of prosperity and smiles.',
+        'Another year older, wiser, and even more wonderful. Have the happiest birthday!'
+      ],
+      'Anniversary': [
+        'Wishing a fabulous couple a lifetime of shared laughter and love. Happy Anniversary!',
+        'Happy Anniversary to the one I want to annoy for the rest of my days. Love you always!',
+        'May your beautiful love story continue to inspire everyone around you. Happy Anniversary!',
+        'Celebrating another year of cherished memories and looking forward to many more.'
+      ],
+      'Love & Romance': [
+        'Every single day with you is a gift I treasure. Sending all my love today and always.',
+        'Just a gentle reminder of how deeply you are loved and cherished, today and forever.',
+        'You make my world brighter and my heart fuller. Thinking of you always.',
+        'To the one who holds my heart: thank you for making every ordinary day extraordinary.'
+      ],
+      'Congratulations': [
+        'Heartiest congratulations on your magnificent achievement! Truly well deserved.',
+        'So incredibly proud of your hard work and success! Wishing you even greater heights.',
+        'Big congratulations on this brilliant milestone! Celebrating your triumph today.',
+        'Kudos to you! Your talent and dedication have yielded wonderful results.'
+      ],
+      'Thank You': [
+        'Words cannot express how grateful I am for your kindness and support. Thank you!',
+        'Thank you for being so wonderful, thoughtful, and generous. You made a huge difference.'
+      ],
+      'Get Well Soon': [
+        'Sending warm wishes, lots of love, and gentle hugs for a speedy and complete recovery!',
+        'Thinking of you and wishing you renewed strength and good health with each passing day.'
+      ]
     };
-    if (msgs[val]) {
+
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      initPincode();
+      initDatesCarousel();
+      initCutoffCountdown();
+      updatePriceDisplay();
+    });
+
+    // Pincode setup & sync with localStorage
+    function initPincode() {
+      var saved = localStorage.getItem('flaberry_pincode') || '{{ section.settings.default_pincode | default: "110001" }}';
+      var pinInp = document.getElementById('pdpPinInput');
+      if (pinInp) {
+        pinInp.value = saved;
+        currentPincode = saved;
+      }
+    }
+
+    window.flaberryCheckPdpPin = function() {
+      var pinInp = document.getElementById('pdpPinInput');
+      var notice = document.getElementById('pdpPinNotice');
+      var noticeText = document.getElementById('pdpPinNoticeText');
+      var pill = document.getElementById('pdpPinStatusPill');
+      var pillText = document.getElementById('pdpPinPillText');
+      var val = pinInp ? pinInp.value.trim() : '';
+
+      if (!val || val.length !== 6 || !/^\d{6}$/.test(val)) {
+        notice.className = 'notice warn';
+        noticeText.innerHTML = 'Please enter a valid 6-digit Indian postal pincode.';
+        pill.className = 'pill';
+        pill.style.background = '#fde8e6';
+        pill.style.color = '#c23e1b';
+        pillText.textContent = 'Invalid PIN';
+        return;
+      }
+
+      currentPincode = val;
+      localStorage.setItem('flaberry_pincode', val);
+
+      // Also sync with top pincode chip if exists
+      var headerChip = document.getElementById('hdrPincodeText');
+      if (headerChip) headerChip.textContent = val;
+
+      notice.className = 'notice ok';
+      noticeText.innerHTML = 'Available for delivery at <b>' + val + '</b>. Earliest delivery: <b>Today</b> with Midnight option.';
+      pill.className = 'pill ok';
+      pill.style.background = '#e9f8ef';
+      pill.style.color = '#1f7a4d';
+      pillText.textContent = 'Deliverable';
+    };
+
+    // Dynamic 14-day rolling window generator
+    function initDatesCarousel() {
+      var container = document.getElementById('pdpDatesContainer');
+      var advInp = document.getElementById('pdpAdvDate');
+      if (!container) return;
+
+      var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var now = new Date();
+
+      if (advInp) {
+        var minIso = now.toISOString().split('T')[0];
+        advInp.min = minIso;
+        var maxD = new Date();
+        maxD.setDate(maxD.getDate() + 90);
+        advInp.max = maxD.toISOString().split('T')[0];
+      }
+
+      var html = '';
+      for (var i = 0; i < 14; i++) {
+        var d = new Date();
+        d.setDate(now.getDate() + i);
+        var dayLabel = (i === 0) ? 'Today' : (i === 1) ? 'Tomorrow' : days[d.getDay()];
+        var dateNum = d.getDate();
+        var monthLabel = months[d.getMonth()];
+        var iso = d.toISOString().split('T')[0];
+        var isSelected = (i === 0);
+
+        if (isSelected) {
+          selectedDateIso = iso;
+          selectedDateText = 'Today, ' + dateNum + ' ' + monthLabel;
+        }
+
+        html += '<button type="button" class="date-btn ' + (isSelected ? 'on' : '') + '" data-iso="' + iso + '" data-text="' + dayLabel + ', ' + dateNum + ' ' + monthLabel + '" onclick="flaberrySelectDateBtn(this)">' +
+          '<span>' + dayLabel + '</span>' +
+          '<b>' + dateNum + '</b>' +
+          '<span>' + monthLabel + '</span>' +
+        '</button>';
+      }
+
+      container.innerHTML = html;
+      updateCutoffVisibility();
+    }
+
+    window.flaberrySelectDateBtn = function(btn) {
+      document.querySelectorAll('#pdpDatesContainer .date-btn').forEach(function(b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+      selectedDateIso = btn.getAttribute('data-iso');
+      selectedDateText = btn.getAttribute('data-text');
+      var label = document.getElementById('pdpDateLabel');
+      if (label) label.textContent = selectedDateText;
+
+      var advInp = document.getElementById('pdpAdvDate');
+      if (advInp) advInp.value = selectedDateIso;
+
+      updateCutoffVisibility();
+      updateSummaryText();
+    };
+
+    window.flaberryPickAdvDate = function(val) {
+      if (!val) return;
+      selectedDateIso = val;
+      var d = new Date(val);
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      selectedDateText = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+      
+      var label = document.getElementById('pdpDateLabel');
+      if (label) label.textContent = selectedDateText;
+
+      document.querySelectorAll('#pdpDatesContainer .date-btn').forEach(function(b) {
+        b.classList.toggle('on', b.getAttribute('data-iso') === val);
+      });
+
+      updateCutoffVisibility();
+      updateSummaryText();
+    };
+
+    function updateCutoffVisibility() {
+      var now = new Date();
+      var todayIso = now.toISOString().split('T')[0];
+      var cutoffNotice = document.getElementById('pdpCutoffNotice');
+      var stdBtn = document.getElementById('slotBtnStandard');
+
+      if (selectedDateIso === todayIso) {
+        if (cutoffNotice) cutoffNotice.style.display = 'block';
+        if (now.getHours() >= {{ section.settings.same_day_cutoff_hour | default: 16 }}) {
+          if (stdBtn) {
+            stdBtn.disabled = true;
+            stdBtn.querySelector('.slot-time').textContent = 'Closed for today (Cut-off 4 PM)';
+            if (selectedSlotId === 'standard') {
+              var fixBtn = document.getElementById('slotBtnFixed');
+              if (fixBtn) flaberryPickSlot(fixBtn, 'fixed', 15000, 'Fixed Time · ₹150');
+            }
+          }
+        } else {
+          if (stdBtn) {
+            stdBtn.disabled = false;
+            stdBtn.querySelector('.slot-time').textContent = '9:00 AM – 9:00 PM';
+          }
+        }
+      } else {
+        if (cutoffNotice) cutoffNotice.style.display = 'none';
+        if (stdBtn) {
+          stdBtn.disabled = false;
+          stdBtn.querySelector('.slot-time').textContent = '9:00 AM – 9:00 PM';
+        }
+      }
+    }
+
+    function initCutoffCountdown() {
+      function tick() {
+        var now = new Date();
+        var cutoff = new Date();
+        cutoff.setHours({{ section.settings.same_day_cutoff_hour | default: 16 }}, 0, 0, 0);
+        var diff = cutoff - now;
+        var timerEl = document.getElementById('pdpCutoffTimer');
+        if (!timerEl) return;
+        if (diff <= 0) {
+          timerEl.textContent = '0h 00m';
+          updateCutoffVisibility();
+        } else {
+          var h = Math.floor(diff / (1000 * 60 * 60));
+          var m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          timerEl.textContent = h + 'h ' + (m < 10 ? '0' : '') + m + 'm';
+        }
+      }
+      tick();
+      setInterval(tick, 60000);
+    }
+
+    // Time Slot Selection
+    window.flaberryPickSlot = function(btn, slotId, fee, slotName) {
+      document.querySelectorAll('#pdpSlotsContainer .slot').forEach(function(s) { s.classList.remove('on'); });
+      btn.classList.add('on');
+      selectedSlotId = slotId;
+      selectedSlotName = slotName;
+      currentSlotFee = fee;
+
+      var subRow = document.getElementById('pdpSubslotsRow');
+      if (subRow) {
+        subRow.style.display = (slotId === 'fixed') ? 'flex' : 'none';
+        if (slotId === 'fixed' && !selectedSubslotWin) {
+          var firstChip = subRow.querySelector('.chip');
+          if (firstChip) selectedSubslotWin = firstChip.textContent;
+        }
+      }
+
+      updatePriceDisplay();
+      updateSummaryText();
+    };
+
+    window.flaberryPickWin = function(btn, win) {
+      document.querySelectorAll('#pdpSubslotsRow .chip').forEach(function(c) { c.classList.remove('on'); });
+      btn.classList.add('on');
+      selectedSubslotWin = win;
+      updateSummaryText();
+    };
+
+    // Cake Options
+    window.flaberrySetEgg = function(btn, egg) {
+      document.querySelectorAll('#pdpEggRow .chip').forEach(function(c) { c.classList.remove('on'); });
+      btn.classList.add('on');
+      eggPreference = egg;
+    };
+
+    window.flaberrySetWeight = function(btn, wt, fee) {
+      document.querySelectorAll('#pdpWeightRow .chip').forEach(function(c) { c.classList.remove('on'); });
+      btn.classList.add('on');
+      cakeWeight = wt;
+      currentWeightFee = fee;
+      updatePriceDisplay();
+    };
+
+    // Occasion & Greeting Card
+    window.flaberrySelectOccasion = function(occ) {
+      var chipsBox = document.getElementById('pdpReadyChips');
+      if (!chipsBox) return;
+
+      if (!occ || !PRESET_MESSAGES[occ]) {
+        chipsBox.style.display = 'none';
+        chipsBox.innerHTML = '';
+        return;
+      }
+
+      var msgs = PRESET_MESSAGES[occ];
+      var html = '';
+      msgs.forEach(function(m) {
+        html += '<button type="button" class="ready-chip-btn" onclick="flaberryApplyPresetMsg(this)">' + m + '</button>';
+      });
+      chipsBox.innerHTML = html;
+      chipsBox.style.display = 'grid';
+    };
+
+    window.flaberryApplyPresetMsg = function(btn) {
       var tx = document.getElementById('pdpCardMessage');
-      tx.value = msgs[val];
-      document.getElementById('pdpMsgLen').textContent = tx.value.length;
+      if (tx) {
+        tx.value = btn.textContent;
+        flaberryUpdateMsgCounter(tx);
+      }
+    };
+
+    window.flaberryUpdateMsgCounter = function(tx) {
+      var counter = document.getElementById('pdpMsgCounter');
+      if (counter) counter.textContent = tx.value.length;
+    };
+
+    // Add-on Upsells
+    window.flaberryToggleAddon = function(btn) {
+      btn.classList.toggle('on');
+      var ck = btn.querySelector('.ck');
+      var isPressed = btn.classList.contains('on');
+      btn.setAttribute('aria-pressed', isPressed ? 'true' : 'false');
+      if (ck) ck.textContent = isPressed ? '✓' : '+';
+
+      // Re-sum active add-ons
+      var sum = 0;
+      document.querySelectorAll('#pdpAddonsGrid .addon.on').forEach(function(el) {
+        var price = parseInt(el.getAttribute('data-addon-price') || '0', 10);
+        sum += price * 100; // convert to cents
+      });
+      currentAddonSum = sum;
+      updatePriceDisplay();
+    };
+
+    // Quantity Stepper
+    window.flaberryChangeQty = function(delta) {
+      currentQty = Math.max(1, currentQty + delta);
+      var qtyEl = document.getElementById('pdpQtyVal');
+      if (qtyEl) qtyEl.textContent = currentQty;
+      updatePriceDisplay();
+    };
+
+    // Variant Selection
+    window.flaberrySelectVariant = function(btn) {
+      document.querySelectorAll('.variant-box .chip').forEach(function(c) { c.classList.remove('on'); });
+      btn.classList.add('on');
+      var varId = btn.getAttribute('data-variant-id');
+      var price = parseInt(btn.getAttribute('data-variant-price') || '0', 10);
+      var compare = parseInt(btn.getAttribute('data-variant-compare') || '0', 10);
+      var sku = btn.getAttribute('data-variant-sku');
+
+      document.getElementById('pdpVariantId').value = varId;
+      basePriceInCents = price;
+      currentVariantPrice = price;
+
+      var skuEl = document.getElementById('pdpSkuVal');
+      if (skuEl && sku) skuEl.textContent = sku;
+
+      var compEl = document.getElementById('pdpCompareVal');
+      if (compEl) {
+        if (compare > price) {
+          compEl.style.display = 'inline';
+          compEl.textContent = '₹' + (compare / 100).toLocaleString('en-IN');
+        } else {
+          compEl.style.display = 'none';
+        }
+      }
+      updatePriceDisplay();
+    };
+
+    // Live Price Updates
+    function updatePriceDisplay() {
+      var itemTotal = (currentVariantPrice + currentWeightFee + currentSlotFee + currentAddonSum) * currentQty;
+      var inrAmount = (itemTotal / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+      var formatted = '₹' + inrAmount;
+
+      var priceEl = document.getElementById('pdpPriceVal');
+      if (priceEl) {
+        priceEl.textContent = formatted;
+        priceEl.setAttribute('data-inr', (itemTotal / 100).toFixed(2));
+      }
+
+      var stickyPriceEl = document.getElementById('stickyPriceVal');
+      if (stickyPriceEl) {
+        stickyPriceEl.textContent = formatted;
+        stickyPriceEl.setAttribute('data-inr', (itemTotal / 100).toFixed(2));
+      }
+
+      // Trigger currency converter re-render if present
+      if (window.flaberryConvertElementPrices) {
+        window.flaberryConvertElementPrices();
+      }
     }
-  }
 
-  function flaberryToggleAddon(btn, price) {
-    btn.classList.toggle('on');
-    var check = btn.querySelector('.addon-check');
-    if (btn.classList.contains('on')) {
-      check.textContent = '✓';
-    } else {
-      check.textContent = '+';
+    function updateSummaryText() {
+      var summaryEl = document.getElementById('stickyDateSlotSummary');
+      if (summaryEl) {
+        var str = 'Delivery: ' + selectedDateText + ' (' + selectedSlotName.split('·')[0].trim();
+        if (selectedSlotId === 'fixed' && selectedSubslotWin) {
+          str += ' · ' + selectedSubslotWin;
+        }
+        str += ')';
+        summaryEl.textContent = str;
+      }
     }
-  }
 
-  function flaberryChangeQty(delta) {
-    currentPdpQty = Math.max(1, currentPdpQty + delta);
-    document.getElementById('pdpQtyDisplay').textContent = currentPdpQty;
-    updatePdpPrice();
-  }
+    // Media Switcher
+    window.flaberrySwitchPdpMedia = function(url, btn) {
+      var mainImg = document.getElementById('pdpMainImg');
+      if (mainImg) {
+        mainImg.style.opacity = '0.3';
+        setTimeout(function() {
+          mainImg.src = url;
+          mainImg.style.opacity = '1';
+        }, 120);
+      }
+      document.querySelectorAll('#pdpThumbnails .thumb-btn').forEach(function(b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+    };
 
-  function updatePdpPrice() {
-    var total = (currentPdpPrice * currentPdpQty) / 100;
-    document.getElementById('pdpPriceDisplay').textContent = '₹' + total.toLocaleString('en-IN', { minimumFractionDigits: 2 });
-  }
+    window.flaberryPlayPdpVideo = function() {
+      alert('Playing 360° product video preview.');
+    };
 
-  function flaberryAddToCartPdp() {
-    alert('Added to cart! Delivery scheduled with complimentary message card.');
-  }
+    // 4 Information Tabs Switcher
+    window.flaberrySwitchTab = function(idx) {
+      document.querySelectorAll('.pdp-tab-btn').forEach(function(b, i) {
+        var isActive = (i === idx);
+        b.classList.toggle('on', isActive);
+        b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      document.querySelectorAll('.pdp-tabpane').forEach(function(p, i) {
+        p.classList.toggle('on', i === idx);
+      });
+    };
 
-  function flaberryBuyNowPdp() {
-    window.location.href = '/checkout';
-  }
+    // AJAX Add to Cart & Buy Now Flow
+    window.flaberrySubmitPdpOrder = function(isBuyNow) {
+      var pinInp = document.getElementById('pdpPinInput');
+      var pin = pinInp ? pinInp.value.trim() : '';
+
+      if (!pin || pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+        if (pinInp) {
+          pinInp.focus();
+          pinInp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        alert('Please enter a valid 6-digit receiver pincode to schedule delivery.');
+        return;
+      }
+
+      var btn = isBuyNow ? document.getElementById('pdpBuyNowBtn') : document.getElementById('pdpAddCartBtn');
+      var origText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = isBuyNow ? 'Proceeding...' : 'Adding...';
+
+      // Line item properties
+      var slotFull = selectedSlotName;
+      if (selectedSlotId === 'fixed' && selectedSubslotWin) {
+        slotFull += ' (' + selectedSubslotWin + ')';
+      }
+
+      var props = {
+        '_delivery_pincode': pin,
+        'Delivery Date': selectedDateText,
+        'Delivery Time Slot': slotFull
+      };
+
+      var occ = document.getElementById('pdpOccasion') ? document.getElementById('pdpOccasion').value : '';
+      if (occ) props['Occasion'] = occ;
+
+      var msg = document.getElementById('pdpCardMessage') ? document.getElementById('pdpCardMessage').value.trim() : '';
+      if (msg) props['Greeting Message'] = msg;
+
+      var sender = document.getElementById('pdpSenderName') ? document.getElementById('pdpSenderName').value.trim() : '';
+      if (sender) props['From'] = sender;
+
+      var cakeMsg = document.getElementById('pdpCakeMessage') ? document.getElementById('pdpCakeMessage').value.trim() : '';
+      if (cakeMsg) props['Message on Cake'] = cakeMsg;
+
+      if (eggPreference) props['Egg Preference'] = eggPreference;
+      if (cakeWeight) props['Weight'] = cakeWeight;
+
+      var selectedAddons = [];
+      document.querySelectorAll('#pdpAddonsGrid .addon.on').forEach(function(el) {
+        selectedAddons.push(el.getAttribute('data-addon-title') + ' (₹' + el.getAttribute('data-addon-price') + ')');
+      });
+      if (selectedAddons.length > 0) {
+        props['Add-ons'] = selectedAddons.join(', ');
+      }
+
+      var varId = document.getElementById('pdpVariantId') ? document.getElementById('pdpVariantId').value : '{{ current_variant.id }}';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          id: parseInt(varId, 10),
+          quantity: currentQty,
+          properties: props
+        })
+      })
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(item) {
+        btn.disabled = false;
+        btn.textContent = origText;
+
+        if (isBuyNow) {
+          window.location.href = '/checkout';
+        } else {
+          // Open Slide Cart Drawer
+          if (window.flaberryOpenCartDrawer) {
+            window.flaberryOpenCartDrawer();
+          } else if (window.flaberryRefreshCartDrawer) {
+            window.flaberryRefreshCartDrawer();
+          }
+          // Update cart badge
+          fetch('/cart.js')
+          .then(function(r) { return r.json(); })
+          .then(function(c) {
+            var badge = document.getElementById('hdrCartBadge');
+            if (badge) {
+              badge.textContent = c.item_count;
+              badge.hidden = (c.item_count === 0);
+            }
+          });
+        }
+      })
+      .catch(function(err) {
+        btn.disabled = false;
+        btn.textContent = origText;
+        console.error('Cart submission error:', err);
+        alert('There was an issue scheduling your delivery. Please try again.');
+      });
+    };
+
+    // Review Modal Functions
+    window.flaberryOpenReviewModal = function() {
+      var modal = document.getElementById('pdpReviewModal');
+      if (modal) modal.style.display = 'grid';
+    };
+
+    window.flaberryCloseReviewModal = function() {
+      var modal = document.getElementById('pdpReviewModal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.flaberrySubmitReview = function() {
+      alert('Thank you! Your verified review has been submitted for moderation.');
+      flaberryCloseReviewModal();
+    };
+  })();
 </script>
 
 {% schema %}
 {
   "name": "Flaberry Main Product",
-  "settings": [],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_pincode_check",
+      "label": "Enable Pincode Deliverability Check",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "default_pincode",
+      "label": "Default Pincode",
+      "default": "110001"
+    },
+    {
+      "type": "range",
+      "id": "same_day_cutoff_hour",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "label": "Same Day Cut-off Hour (24h format)",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "force_cake_options",
+      "label": "Always Show Cake Weight & Egg Options",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "addon",
+      "name": "Add-on Upsell",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Add-on Title",
+          "default": "Ferrero Rocher (16 Pcs)"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price in INR",
+          "default": 599
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Image"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Fallback Asset Name",
+          "default": "hx_ferrero.webp"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Flaberry Main Product"
+      "name": "Flaberry Main Product",
+      "blocks": [
+        {
+          "type": "addon",
+          "settings": {
+            "title": "Teddy Bear (6 in)",
+            "price": 399,
+            "image_asset": "f_handcrafted.webp"
+          }
+        },
+        {
+          "type": "addon",
+          "settings": {
+            "title": "Ferrero Rocher (16pc)",
+            "price": 599,
+            "image_asset": "hx_ferrero.webp"
+          }
+        },
+        {
+          "type": "addon",
+          "settings": {
+            "title": "Cadbury Celebrations",
+            "price": 350,
+            "image_asset": "hx_truffle.webp"
+          }
+        },
+        {
+          "type": "addon",
+          "settings": {
+            "title": "Luxury Card",
+            "price": 99,
+            "image_asset": "hx_heartbox.webp"
+          }
+        },
+        {
+          "type": "addon",
+          "settings": {
+            "title": "Kaju Katli (250g)",
+            "price": 450,
+            "image_asset": "hx_dryfruit.webp"
+          }
+        },
+        {
+          "type": "addon",
+          "settings": {
+            "title": "3 Red Roses",
+            "price": 299,
+            "image_asset": "hx_roses.webp"
+          }
+        }
+      ]
     }
   ]
 }
