@@ -2,7 +2,12 @@
   "sections": {
     "flaberry_main_collection": {
       "type": "flaberry-main-collection",
-      "settings": {}
+      "settings": {
+        "products_per_page": 24,
+        "enable_subcats": true,
+        "enable_pincode_bar": true,
+        "enable_seo_faq": true
+      }
     }
   },
   "order": [

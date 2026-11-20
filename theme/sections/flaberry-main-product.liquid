@@ -174,6 +174,7 @@
               id="pdpPinInput" 
               inputmode="numeric" 
               maxlength="6" 
+              value="110001"
               placeholder="Receiver's 6-digit pincode" 
               aria-label="Delivery pincode"
             >
@@ -1550,13 +1551,18 @@
       ]
     };
 
-    // Initialize on DOM load
-    document.addEventListener('DOMContentLoaded', function() {
+    // Initialize immediately or on DOM load
+    function initPdp() {
       initPincode();
       initDatesCarousel();
       initCutoffCountdown();
       updatePriceDisplay();
-    });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPdp);
+    } else {
+      initPdp();
+    }
 
     // Pincode setup & sync with localStorage
     function initPincode() {
@@ -1981,7 +1987,11 @@
         props['Add-ons'] = selectedAddons.join(', ');
       }
 
-      var varId = document.getElementById('pdpVariantId') ? document.getElementById('pdpVariantId').value : '{{ current_variant.id }}';
+      var varIdEl = document.getElementById('pdpVariantId');
+      var varId = (varIdEl && varIdEl.value) ? varIdEl.value : '{{ current_variant.id }}';
+      if (!varId || isNaN(parseInt(varId, 10))) {
+        varId = '{{ current_variant.id }}';
+      }
 
       fetch('/cart/add.js', {
         method: 'POST',
@@ -1991,27 +2001,46 @@
         },
         body: JSON.stringify({
           id: parseInt(varId, 10),
-          quantity: currentQty,
+          quantity: currentQty || 1,
           properties: props
         })
       })
       .then(function(res) {
-        return res.json();
+        return res.json().then(function(data) {
+          if (!res.ok) {
+            throw new Error(data.description || data.message || 'Error adding to cart');
+          }
+          return data;
+        });
       })
       .then(function(item) {
-        btn.disabled = false;
-        btn.textContent = origText;
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = origText;
+        }
 
         if (isBuyNow) {
           window.location.href = '/checkout';
         } else {
-          // Open Slide Cart Drawer
-          if (window.flaberryOpenCartDrawer) {
+          // Open Slide Cart Drawer via custom Ajax Engine
+          if (window.flaberryRefreshCartDrawer) {
+            window.flaberryRefreshCartDrawer(true);
+          } else if (window.flaberryOpenCartDrawer) {
             window.flaberryOpenCartDrawer();
-          } else if (window.flaberryRefreshCartDrawer) {
-            window.flaberryRefreshCartDrawer();
           }
-          // Update cart badge
+
+          // Direct DOM activation guarantee
+          var cd = document.getElementById('cartdrawer');
+          var sc = document.getElementById('scrim');
+          if (cd) {
+            cd.classList.add('on');
+            cd.setAttribute('aria-hidden', 'false');
+          }
+          if (sc) {
+            sc.classList.add('on');
+          }
+
+          // Update header & dock cart badges
           fetch('/cart.js')
           .then(function(r) { return r.json(); })
           .then(function(c) {
@@ -2020,14 +2049,21 @@
               badge.textContent = c.item_count;
               badge.hidden = (c.item_count === 0);
             }
+            var dockBadge = document.getElementById('dockbadge');
+            if (dockBadge) {
+              dockBadge.textContent = c.item_count;
+              dockBadge.hidden = (c.item_count === 0);
+            }
           });
         }
       })
       .catch(function(err) {
-        btn.disabled = false;
-        btn.textContent = origText;
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = origText;
+        }
         console.error('Cart submission error:', err);
-        alert('There was an issue scheduling your delivery. Please try again.');
+        alert('Could not add to cart: ' + err.message);
       });
     };
 

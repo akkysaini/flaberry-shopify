@@ -112,7 +112,7 @@
   endif
 -%}
 
-<a class="pcard" href="{{ card_url }}">
+<a class="pcard" href="{{ card_url }}" data-price="{{ card_price_raw }}" data-rating="{{ card_rating }}" data-tag="{{ card_tag | downcase }}" data-title="{{ card_title | downcase }}">
   <div class="pim">
     {%- if image_src != blank -%}
       <img loading="lazy" src="{{ image_src }}" alt="{{ card_title | escape }}" width="300" height="300">
@@ -132,10 +132,10 @@
   <h4>{{ card_title }}</h4>
 
   <div class="meta">
-    <span class="pr tab-nums flaberry-curr-target" data-inr="{{ card_price_raw }}">
-      {{ card_price_display }}
+    <span class="pr tab-nums">
+      <span class="flaberry-curr-target" data-inr="{{ card_price_raw }}">{{ card_price_display }}</span>
       {%- if card_compare_raw > card_price_raw -%}
-        <s>₹{{ card_compare_raw }}</s>
+        <s class="flaberry-curr-target" data-inr="{{ card_compare_raw }}">₹{{ card_compare_raw }}</s>
       {%- endif -%}
     </span>
     <span class="rate">{{ card_rating }} ★</span>

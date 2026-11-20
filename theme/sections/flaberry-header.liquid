@@ -1424,6 +1424,8 @@
     var val = num * rate;
     return sym + (val >= 100 ? Math.round(val).toLocaleString('en-US') : val.toFixed(2));
   }
+  window.flaberryFormatMoney = flaberryFormatMoney;
+  window.flaberryGetActiveCurrency = flaberryGetActiveCurrency;
 
   function flaberryApplyCurrencySitewide(newCurrency) {
     if (newCurrency) {
@@ -1435,34 +1437,85 @@
     var selects = document.querySelectorAll('.cur-sel, #cursel');
     selects.forEach(function(s) { s.value = cur; });
 
-    // 1. Elements with data-raw-inr
-    document.querySelectorAll('[data-raw-inr]').forEach(function(el) {
-      var inrVal = parseFloat(el.getAttribute('data-raw-inr'));
-      if (!isNaN(inrVal)) {
-        var prefix = (el.textContent || '').toLowerCase().includes('from') ? 'From ' : '';
-        el.textContent = prefix + flaberryFormatMoney(inrVal);
-      }
-    });
-
-    // 2. Scan storefront price elements that don't have data-raw-inr yet
-    document.querySelectorAll('.pp, .price, .flaberry-card-price, .pr, .meta .tab-nums, .cart-price').forEach(function(el) {
-      if (!el.getAttribute('data-raw-inr')) {
-        var txt = el.textContent || '';
+    // 1. Elements with data-inr or data-raw-inr or .flaberry-curr-target
+    document.querySelectorAll('[data-inr], [data-raw-inr], .flaberry-curr-target').forEach(function(el) {
+      var raw = el.getAttribute('data-inr') || el.getAttribute('data-raw-inr');
+      var inrVal = parseFloat(raw);
+      if (isNaN(inrVal)) {
+        var txt = (el.querySelector('bdi') || el).textContent || '';
         var match = txt.match(/[\d,]+(\.\d+)?/);
         if (match) {
-          var num = parseFloat(match[0].replace(/,/g, ''));
-          if (!isNaN(num) && num > 0) {
-            el.setAttribute('data-raw-inr', num);
+          inrVal = parseFloat(match[0].replace(/,/g, ''));
+          if (!isNaN(inrVal) && inrVal > 0) {
+            el.setAttribute('data-inr', inrVal);
           }
         }
       }
-      var inrVal = parseFloat(el.getAttribute('data-raw-inr'));
       if (!isNaN(inrVal)) {
         var prefix = (el.textContent || '').toLowerCase().includes('from') ? 'From ' : '';
-        el.textContent = prefix + flaberryFormatMoney(inrVal);
+        var targetBdi = el.matches('bdi') ? el : el.querySelector('bdi');
+        if (targetBdi) {
+          targetBdi.textContent = prefix + flaberryFormatMoney(inrVal);
+        } else {
+          el.textContent = prefix + flaberryFormatMoney(inrVal);
+        }
+      }
+    });
+
+    // 2. Scan storefront price elements (Cart page, product lists, compare prices)
+    document.querySelectorAll('.pp, .price, .flaberry-card-price, .pr, .meta .tab-nums, .cart-price, .cart-items__price, .cart-totals__total-value, .cart-totals__original-value, .cart-discounts__value, .compare-at-price, .cart-items__unit-price-wrapper span, .cart-items__unit-price-wrapper s').forEach(function(el) {
+      var target = el.matches('bdi') ? el : (el.querySelector('bdi') || el);
+      var raw = target.getAttribute('data-inr') || target.getAttribute('data-raw-inr') || el.getAttribute('data-inr') || el.getAttribute('data-raw-inr');
+      var num = parseFloat(raw);
+      if (isNaN(num)) {
+        var txt = target.textContent || '';
+        var match = txt.match(/[\d,]+(\.\d+)?/);
+        if (match) {
+          num = parseFloat(match[0].replace(/,/g, ''));
+          if (!isNaN(num) && num > 0) {
+            target.setAttribute('data-inr', num);
+          }
+        }
+      }
+      if (!isNaN(num)) {
+        var prefix = (target.textContent || '').toLowerCase().includes('from') ? 'From ' : '';
+        target.textContent = prefix + flaberryFormatMoney(num);
+      }
+    });
+
+    // 3. Line item properties with INR symbols (e.g. ₹150 slot, ₹350 add-on)
+    document.querySelectorAll('.cart-items__property dd').forEach(function(el) {
+      if (!el.getAttribute('data-orig-text')) {
+        el.setAttribute('data-orig-text', el.innerHTML);
+      }
+      var orig = el.getAttribute('data-orig-text');
+      if (cur === 'INR') {
+        el.innerHTML = orig;
+      } else {
+        el.innerHTML = orig.replace(/₹\s*([0-9]+(\.[0-9]+)?)/g, function(m, p1) {
+          return flaberryFormatMoney(parseFloat(p1));
+        });
       }
     });
   }
+  window.flaberryApplyCurrencySitewide = flaberryApplyCurrencySitewide;
+
+  // Real-time MutationObserver on Cart page & drawers to handle Shopify AJAX re-renders
+  var flaberryCartObserver = null;
+  function flaberryInitCartCurrencyObserver() {
+    var cartHost = document.querySelector('cart-items-component, .cart-page, #cart-items, .cart-items');
+    if (!cartHost) return;
+    if (flaberryCartObserver) flaberryCartObserver.disconnect();
+    var debounceTimer = null;
+    flaberryCartObserver = new MutationObserver(function() {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function() {
+        flaberryApplyCurrencySitewide();
+      }, 60);
+    });
+    flaberryCartObserver.observe(cartHost, { childList: true, subtree: true });
+  }
+  window.flaberryInitCartCurrencyObserver = flaberryInitCartCurrencyObserver;
 
   // Mobile Menu Data Definition for Progressive Drill-Down
   var FLABERRY_MOB_MENUS = [
@@ -1682,6 +1735,7 @@
 
   // 100% Ajax Cart Drawer Engine
   window.flaberryRefreshCartDrawer = function(openAfter) {
+    if (openAfter === undefined) openAfter = true;
     fetch('/cart.js')
       .then(function(r) { return r.json(); })
       .then(function(cart) {
@@ -1757,13 +1811,20 @@
         if (openAfter) {
           var cd = document.getElementById('cartdrawer');
           var sc = document.getElementById('scrim');
-          if (cd) cd.classList.add('on');
+          if (cd) {
+            cd.classList.add('on');
+            cd.setAttribute('aria-hidden', 'false');
+          }
           if (sc) sc.classList.add('on');
         }
       })
       .catch(function(err) {
         console.error('Failed to refresh cart', err);
       });
+  };
+
+  window.flaberryOpenCartDrawer = function() {
+    window.flaberryRefreshCartDrawer(true);
   };
 
   window.flaberryUpdateCartQty = function(key, newQty) {
@@ -1832,8 +1893,14 @@
     var defBox = document.getElementById('flaberrySuggestContent');
     if (defBox) flaberryDefaultSuggestHTML = defBox.innerHTML;
 
-    // Apply currency sitewide
+    // Apply currency sitewide and observe cart DOM updates
     flaberryApplyCurrencySitewide();
+    flaberryInitCartCurrencyObserver();
+
+    // Listen to cart update events
+    window.addEventListener('cart:updated', function() { flaberryApplyCurrencySitewide(); });
+    document.addEventListener('cart:updated', function() { flaberryApplyCurrencySitewide(); });
+    document.addEventListener('CartLinesUpdateEvent', function() { setTimeout(flaberryApplyCurrencySitewide, 50); });
 
     // Desktop hover & click handling for Nav items
     var navItems = document.querySelectorAll('.nav > div.has');

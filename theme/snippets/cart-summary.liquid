@@ -18,7 +18,7 @@
           class="cart-totals__original-value cart-secondary-typography"
           data-testid="cart-subtotal-value"
         >
-          <bdi>{{- cart.items_subtotal_price | money -}}</bdi>
+          <bdi class="flaberry-curr-target" data-inr="{{ cart.items_subtotal_price | divided_by: 100.0 }}">{{- cart.items_subtotal_price | money -}}</bdi>
         </span>
       </span>
       <ul
@@ -33,7 +33,7 @@
               <bdi>{{ discount.title | escape }}</bdi>
             </span>
             <span class="cart-discounts__value cart-secondary-typography"
-              ><bdi>-{{ discount.total_allocated_amount | money }}</bdi>
+              ><bdi class="flaberry-curr-target" data-inr="{{ discount.total_allocated_amount | divided_by: 100.0 }}">-{{ discount.total_allocated_amount | money }}</bdi>
             </span>
           </li>
         {%- endfor -%}
@@ -236,7 +236,7 @@
         data-testid="cart-total-value"
         data-cart-subtotal
       >
-        <bdi>{{ total_price }}</bdi>
+        <bdi class="flaberry-curr-target" data-inr="{{ cart.total_price | divided_by: 100.0 }}">{{ total_price }}</bdi>
       </text-component>
     </span>
     {% if settings.show_installments %}

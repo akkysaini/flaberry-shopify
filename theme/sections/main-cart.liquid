@@ -61,6 +61,15 @@
 {% endcapture %}
 {% render 'cart-items-component', children: cart_items_children, section_id: section.id %}
 
+<script>
+  if (typeof flaberryApplyCurrencySitewide === 'function') {
+    flaberryApplyCurrencySitewide();
+  }
+  if (typeof flaberryInitCartCurrencyObserver === 'function') {
+    flaberryInitCartCurrencyObserver();
+  }
+</script>
+
 {% stylesheet %}
   .cart-page {
     display: grid;
