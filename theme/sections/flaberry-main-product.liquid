@@ -324,6 +324,17 @@
               </div>
             {% endif %}
           </div>
+
+          <div class="row2" style="margin-top: 10px;">
+            <div class="field">
+              <label for="pdpRecipientName" style="font-size: 13px; font-weight: 600;">To (Recipient's name)</label>
+              <input type="text" class="inp" id="pdpRecipientName" placeholder="Receiver / Recipient's name">
+            </div>
+            <div class="field">
+              <label for="pdpRecipientPhone" style="font-size: 13px; font-weight: 600;">Recipient's Mobile (Optional)</label>
+              <input type="tel" class="inp" id="pdpRecipientPhone" placeholder="For doorstep delivery coordination">
+            </div>
+          </div>
         </div>
 
         <!-- 5. Add-on Upsells -->
@@ -339,11 +350,17 @@
                 {% if block.settings.custom_image != blank %}
                   {% assign add_img = block.settings.custom_image | image_url: width: 200, height: 200 %}
                 {% endif %}
+                {% assign addon_prod = block.settings.product %}
+                {% assign addon_var_id = '' %}
+                {% if addon_prod != blank and addon_prod.available %}
+                  {% assign addon_var_id = addon_prod.selected_or_first_available_variant.id %}
+                {% endif %}
                 <button 
                   type="button" 
                   class="addon" 
                   data-addon-title="{{ block.settings.title }}"
                   data-addon-price="{{ block.settings.price }}"
+                  {% if addon_var_id != blank %}data-addon-variant-id="{{ addon_var_id }}"{% endif %}
                   onclick="flaberryToggleAddon(this)"
                   aria-pressed="false"
                 >
@@ -1983,10 +2000,16 @@
       }
 
       var props = {
-        '_delivery_pincode': pin,
+        'Delivery Pincode': pin,
         'Delivery Date': selectedDateText,
         'Delivery Time Slot': slotFull
       };
+
+      var recName = document.getElementById('pdpRecipientName') ? document.getElementById('pdpRecipientName').value.trim() : '';
+      if (recName) props['Recipient Name'] = recName;
+
+      var recPhone = document.getElementById('pdpRecipientPhone') ? document.getElementById('pdpRecipientPhone').value.trim() : '';
+      if (recPhone) props['Recipient Phone'] = recPhone;
 
       var occ = document.getElementById('pdpOccasion') ? document.getElementById('pdpOccasion').value : '';
       if (occ) props['Occasion'] = occ;
@@ -2011,11 +2034,69 @@
         props['Add-ons'] = selectedAddons.join(', ');
       }
 
+      // Prepare order-level note and note_attributes so they display prominently in Shopify Admin
+      var noteParts = [
+        'Delivery Date: ' + selectedDateText,
+        'Time Slot: ' + slotFull,
+        'Pincode: ' + pin
+      ];
+      if (recName) noteParts.push('Recipient: ' + recName + (recPhone ? ' (' + recPhone + ')' : ''));
+      if (sender) noteParts.push('From: ' + sender);
+      if (occ) noteParts.push('Occasion: ' + occ);
+      if (msg) noteParts.push('Message: ' + msg);
+      if (cakeMsg) noteParts.push('Cake Message: ' + cakeMsg);
+      if (eggPreference) noteParts.push('Egg: ' + eggPreference);
+      if (cakeWeight) noteParts.push('Weight: ' + cakeWeight);
+      if (selectedAddons.length > 0) noteParts.push('Add-ons: ' + selectedAddons.join(', '));
+
+      var noteString = noteParts.join(' | ');
+
+      var orderAttributes = {
+        'Delivery Date': selectedDateText,
+        'Delivery Time Slot': slotFull,
+        'Delivery Pincode': pin
+      };
+      if (recName) orderAttributes['Recipient Name'] = recName;
+      if (recPhone) orderAttributes['Recipient Phone'] = recPhone;
+      if (sender) orderAttributes['From'] = sender;
+      if (occ) orderAttributes['Occasion'] = occ;
+      if (msg) orderAttributes['Greeting Message'] = msg;
+      if (cakeMsg) orderAttributes['Message on Cake'] = cakeMsg;
+      if (eggPreference) orderAttributes['Egg Preference'] = eggPreference;
+      if (cakeWeight) orderAttributes['Weight'] = cakeWeight;
+      if (selectedAddons.length > 0) orderAttributes['Add-ons'] = selectedAddons.join(', ');
+
       var varIdEl = document.getElementById('pdpVariantId');
       var varId = (varIdEl && varIdEl.value) ? varIdEl.value : '{{ current_variant.id }}';
       if (!varId || isNaN(parseInt(varId, 10))) {
         varId = '{{ current_variant.id }}';
       }
+
+      var cartItems = [
+        {
+          id: parseInt(varId, 10),
+          quantity: currentQty || 1,
+          properties: props
+        }
+      ];
+
+      // Add linked addon products to the cart items payload if available
+      document.querySelectorAll('#pdpAddonsGrid .addon.on').forEach(function(el) {
+        var aVarId = el.getAttribute('data-addon-variant-id');
+        if (aVarId && parseInt(aVarId, 10) > 0) {
+          cartItems.push({
+            id: parseInt(aVarId, 10),
+            quantity: 1,
+            properties: {
+              '_addon_for': '{{ prod_title | escape }}'
+            }
+          });
+        }
+      });
+
+      var addPayload = (cartItems.length > 1)
+        ? { items: cartItems }
+        : { id: parseInt(varId, 10), quantity: currentQty || 1, properties: props };
 
       fetch('/cart/add.js', {
         method: 'POST',
@@ -2023,11 +2104,7 @@
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          id: parseInt(varId, 10),
-          quantity: currentQty || 1,
-          properties: props
-        })
+        body: JSON.stringify(addPayload)
       })
       .then(function(res) {
         return res.json().then(function(data) {
@@ -2036,6 +2113,20 @@
           }
           return data;
         });
+      })
+      .then(function(item) {
+        // Sync Order Note and Note Attributes so they show in Shopify Admin sidebar & notifications
+        return fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            note: noteString,
+            attributes: orderAttributes
+          })
+        }).then(function() { return item; }).catch(function() { return item; });
       })
       .then(function(item) {
         if (btn) {
@@ -2153,6 +2244,11 @@
       "type": "addon",
       "name": "Add-on Upsell",
       "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Link to Shopify Product (Optional)"
+        },
         {
           "type": "text",
           "id": "title",
