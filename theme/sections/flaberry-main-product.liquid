@@ -119,10 +119,31 @@
           <span class="muted" style="font-size: 13px;">Item code: <b id="pdpSkuVal">{{ prod_sku }}</b></span>
           <h1 class="pdp-title">{{ prod_title }}</h1>
           <div class="pdp-meta-row">
-            <span class="rate">{{ rating_val }} ★</span>
-            <a href="#rv" class="muted" style="font-size: 13.5px; text-decoration: underline;">{{ reviews_count }} reviews</a>
+            <!-- Judge.me Preview Badge -->
+            <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}'>
+              {{ product.metafields.judgeme.badge }}
+            </div>
+            {%- assign has_jdgm_revs = false -%}
+            {%- if product.metafields.judgeme.badge != blank and product.metafields.judgeme.badge contains 'jdgm-prev-badge__text' -%}
+              {%- unless product.metafields.judgeme.badge contains '0 reviews' -%}
+                {%- assign has_jdgm_revs = true -%}
+              {%- endunless -%}
+            {%- endif -%}
+            {%- unless has_jdgm_revs -%}
+              <span class="rate">{{ rating_val }} ★</span>
+              <a href="#rv" class="muted" style="font-size: 13.5px; text-decoration: underline;">{{ reviews_count }} reviews</a>
+            {%- endunless -%}
             <span class="pill info">{{ badge_tag }}</span>
           </div>
+
+          <!-- Webkul MultiVendor Partner Seller Attribution -->
+          {% if product.vendor != blank and product.vendor != shop.name %}
+            <div class="pdp-vendor-info" style="margin-top: 8px; font-size: 13px; color: var(--ink, #1e1b4b); display: flex; align-items: center; gap: 6px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Sold &amp; handcrafted by: <a href="{{ routes.collections_url }}/vendors?q={{ product.vendor | url_param_escape }}" style="font-weight: 600; text-decoration: underline; color: var(--flora-deep, #ad1f2b);">{{ product.vendor }}</a></span>
+              <span class="pill info" style="font-size: 11px; padding: 2px 7px;">Verified Florist</span>
+            </div>
+          {% endif %}
         </div>
 
         <!-- Big Price Display with Currency Support -->
@@ -231,16 +252,16 @@
               <b>Standard · Free</b>
               <span class="slot-time">9:00 AM – 9:00 PM</span>
             </button>
-            <button type="button" class="slot" id="slotBtnFixed" onclick="flaberryPickSlot(this, 'fixed', 15000, 'Fixed Time · ₹150')">
-              <b>Fixed Time · ₹150</b>
+            <button type="button" class="slot" id="slotBtnFixed" onclick="flaberryPickSlot(this, 'fixed', 15000, 'Fixed Time · {{ 15000 | money }}')">
+              <b>Fixed Time · {{ 15000 | money }}</b>
               <span class="slot-time">Choose 1-hour window</span>
             </button>
-            <button type="button" class="slot" id="slotBtnMidnight" onclick="flaberryPickSlot(this, 'midnight', 25000, 'Midnight · ₹250')">
-              <b>Midnight · ₹250</b>
+            <button type="button" class="slot" id="slotBtnMidnight" onclick="flaberryPickSlot(this, 'midnight', 25000, 'Midnight · {{ 25000 | money }}')">
+              <b>Midnight · {{ 25000 | money }}</b>
               <span class="slot-time">11:00 PM – 12:30 AM</span>
             </button>
-            <button type="button" class="slot" id="slotBtnEarly" onclick="flaberryPickSlot(this, 'early', 20000, 'Early Morning · ₹200')">
-              <b>Early Morning · ₹200</b>
+            <button type="button" class="slot" id="slotBtnEarly" onclick="flaberryPickSlot(this, 'early', 20000, 'Early Morning · {{ 20000 | money }}')">
+              <b>Early Morning · {{ 20000 | money }}</b>
               <span class="slot-time">6:00 AM – 8:00 AM</span>
             </button>
           </div>
@@ -329,7 +350,8 @@
                   <span class="ck">+</span>
                   <img src="{{ add_img }}" alt="{{ block.settings.title }}" width="64" height="64" loading="lazy">
                   <span class="addon-name">{{ block.settings.title }}</span>
-                  <b class="tab-nums">₹{{ block.settings.price }}</b>
+                  {% assign addon_cents = block.settings.price | times: 100 %}
+                  <b class="tab-nums">{{ addon_cents | money }}</b>
                 </button>
               {% endfor %}
             {% else %}
@@ -338,37 +360,37 @@
                 <span class="ck">+</span>
                 <img src="{{ 'f_handcrafted.webp' | file_url }}" alt="Teddy" width="64" height="64" loading="lazy">
                 <span class="addon-name">Teddy Bear (6 in)</span>
-                <b class="tab-nums">₹399</b>
+                <b class="tab-nums">{{ 39900 | money }}</b>
               </button>
               <button type="button" class="addon" data-addon-title="Ferrero Rocher (16 Pcs)" data-addon-price="599" onclick="flaberryToggleAddon(this)">
                 <span class="ck">+</span>
                 <img src="{{ 'hx_ferrero.webp' | file_url }}" alt="Ferrero" width="64" height="64" loading="lazy">
                 <span class="addon-name">Ferrero Rocher (16pc)</span>
-                <b class="tab-nums">₹599</b>
+                <b class="tab-nums">{{ 59900 | money }}</b>
               </button>
               <button type="button" class="addon" data-addon-title="Cadbury Celebrations Box" data-addon-price="350" onclick="flaberryToggleAddon(this)">
                 <span class="ck">+</span>
                 <img src="{{ 'hx_truffle.webp' | file_url }}" alt="Celebrations" width="64" height="64" loading="lazy">
                 <span class="addon-name">Cadbury Celebrations</span>
-                <b class="tab-nums">₹350</b>
+                <b class="tab-nums">{{ 35000 | money }}</b>
               </button>
               <button type="button" class="addon" data-addon-title="Luxury Greeting Card" data-addon-price="99" onclick="flaberryToggleAddon(this)">
                 <span class="ck">+</span>
                 <img src="{{ 'hx_heartbox.webp' | file_url }}" alt="Card" width="64" height="64" loading="lazy">
                 <span class="addon-name">Luxury Card</span>
-                <b class="tab-nums">₹99</b>
+                <b class="tab-nums">{{ 9900 | money }}</b>
               </button>
               <button type="button" class="addon" data-addon-title="Kaju Katli (250g)" data-addon-price="450" onclick="flaberryToggleAddon(this)">
                 <span class="ck">+</span>
                 <img src="{{ 'hx_dryfruit.webp' | file_url }}" alt="Sweets" width="64" height="64" loading="lazy">
                 <span class="addon-name">Kaju Katli (250g)</span>
-                <b class="tab-nums">₹450</b>
+                <b class="tab-nums">{{ 45000 | money }}</b>
               </button>
               <button type="button" class="addon" data-addon-title="3 Red Roses Bouquet" data-addon-price="299" onclick="flaberryToggleAddon(this)">
                 <span class="ck">+</span>
                 <img src="{{ 'hx_roses.webp' | file_url }}" alt="Roses" width="64" height="64" loading="lazy">
                 <span class="addon-name">3 Red Roses</span>
-                <b class="tab-nums">₹299</b>
+                <b class="tab-nums">{{ 29900 | money }}</b>
               </button>
             {% endif %}
           </div>
@@ -525,7 +547,12 @@
         <button type="button" class="btn ghost sm" onclick="flaberryOpenReviewModal()">Write a review</button>
       </div>
 
-      <div class="reviews">
+      <!-- Official Judge.me Product Review Widget -->
+      <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-product-title="{{ product.title | escape }}" data-id="{{ product.id }}">
+        {{ product.metafields.judgeme.widget }}
+      </div>
+
+      <div class="reviews" id="flaberryReviewsFallback">
         <!-- Left Column: Rating Score & Breakdown Bars -->
         <div class="rv-sum">
           <b>{{ rating_val }}</b>
@@ -1859,7 +1886,8 @@
       if (compEl) {
         if (compare > price) {
           compEl.style.display = 'inline';
-          compEl.textContent = '₹' + (compare / 100).toLocaleString('en-IN');
+          var sym = (window.FlaberryShop && window.FlaberryShop.currencySymbol) || '{{ cart.currency.symbol | default: "₹" }}';
+          compEl.textContent = sym + ((compare / 100) >= 100 ? Math.round(compare / 100).toLocaleString() : (compare / 100).toFixed(2));
         } else {
           compEl.style.display = 'none';
         }
@@ -1870,8 +1898,9 @@
     // Live Price Updates
     function updatePriceDisplay() {
       var itemTotal = (currentVariantPrice + currentWeightFee + currentSlotFee + currentAddonSum) * currentQty;
-      var inrAmount = (itemTotal / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-      var formatted = '₹' + inrAmount;
+      var sym = (window.FlaberryShop && window.FlaberryShop.currencySymbol) || '{{ cart.currency.symbol | default: "₹" }}';
+      var val = (itemTotal / 100);
+      var formatted = sym + (val >= 100 ? Math.round(val).toLocaleString() : val.toFixed(2));
 
       var priceEl = document.getElementById('pdpPriceVal');
       if (priceEl) {
@@ -1883,11 +1912,6 @@
       if (stickyPriceEl) {
         stickyPriceEl.textContent = formatted;
         stickyPriceEl.setAttribute('data-inr', (itemTotal / 100).toFixed(2));
-      }
-
-      // Trigger currency converter re-render if present
-      if (window.flaberryConvertElementPrices) {
-        window.flaberryConvertElementPrices();
       }
     }
 
@@ -2067,8 +2091,15 @@
       });
     };
 
-    // Review Modal Functions
+    // Review Modal Functions (Integrated with Judge.me)
     window.flaberryOpenReviewModal = function() {
+      var jmWriteLink = document.querySelector('.jdgm-write-rev-link, .jdgm-widget .jdgm-rev__icon-write');
+      if (jmWriteLink) {
+        jmWriteLink.click();
+        var jmWidget = document.getElementById('judgeme_product_reviews');
+        if (jmWidget) jmWidget.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
       var modal = document.getElementById('pdpReviewModal');
       if (modal) modal.style.display = 'grid';
     };

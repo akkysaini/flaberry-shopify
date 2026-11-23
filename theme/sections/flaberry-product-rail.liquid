@@ -54,10 +54,18 @@
     {%- liquid
       assign coll_handle = section.settings.collection.handle | default: section.settings.collection
       assign target_coll = collections[coll_handle]
+      assign is_rec = false
+      if section.settings.use_recommendations and recommendations.performed and recommendations.products_count > 0
+        assign is_rec = true
+      endif
     -%}
 
-    <div class="rail" id="flaberry-rail-{{ section.id }}">
-      {% if target_coll != blank and target_coll.products.size > 0 %}
+    <div class="rail" id="flaberry-rail-{{ section.id }}" data-use-recommendations="{{ section.settings.use_recommendations }}" data-product-id="{{ product.id }}">
+      {% if is_rec %}
+        {% for prod in recommendations.products limit: section.settings.products_to_show %}
+          {% render 'flaberry-product-card', product: prod %}
+        {% endfor %}
+      {% elsif target_coll != blank and target_coll.products.size > 0 %}
         {% for prod in target_coll.products limit: section.settings.products_to_show %}
           {% render 'flaberry-product-card', product: prod %}
         {% endfor %}
@@ -297,6 +305,28 @@
       "type": "collection",
       "id": "collection",
       "label": "Source Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_recommendations",
+      "label": "Use Search & Discovery Recommendations (PDP)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "recommendations_intent",
+      "label": "Recommendations Intent",
+      "options": [
+        {
+          "value": "related",
+          "label": "Related products"
+        },
+        {
+          "value": "complementary",
+          "label": "Complementary products"
+        }
+      ],
+      "default": "related"
     },
     {
       "type": "range",

@@ -23,9 +23,11 @@
       <img src="{{ 'logo.png' | asset_url }}" alt="Flaberry" width="160" height="40" style="height: 40px; width: auto; display: block;">
     </a>
 
-    <!-- Predictive Search Bar with Ajax real-time letter-by-letter results -->
+    <!-- Predictive Search Bar with Ajax real-time letter-by-letter results (Shopify Search & Discovery enabled) -->
     <form class="search" id="flaberrySearchForm" action="{{ routes.search_url }}" method="get" role="search" onsubmit="flaberryOnSearchSubmit(event)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
       <input
         type="search"
         name="q"
@@ -80,21 +82,37 @@
       </div>
     </button>
 
-    <!-- Country & Currency Selector (Placed in Header Row per prototype) -->
-    <div class="mk">
-      <label class="sr" for="cursel">Country and currency</label>
-      <select id="cursel" class="cur-sel" title="Country / currency" onchange="flaberryApplyCurrencySitewide(this.value)">
-        <option value="INR" selected>India · ₹ INR</option>
-        <option value="USD">United States · $ USD</option>
-        <option value="AED">UAE · AED</option>
-        <option value="GBP">United Kingdom · £ GBP</option>
-        <option value="EUR">Europe · € EUR</option>
-        <option value="CAD">Canada · $ CAD</option>
-        <option value="AUD">Australia · $ AUD</option>
-        <option value="SGD">Singapore · $ SGD</option>
-        <option value="SAR">Saudi Arabia · SAR</option>
-      </select>
-    </div>
+    <!-- Country & Currency Selector: Shopify Markets Native Localization -->
+    {% if localization.available_countries.size > 1 %}
+      <div class="mk">
+        <label class="sr" for="HeaderCountrySelect">{{ 'actions.select_country' | t | default: 'Country and currency' }}</label>
+        {%- form 'localization', id: 'HeaderCountryForm', class: 'header__localization-form' -%}
+          <select id="HeaderCountrySelect" name="country_code" class="cur-sel" title="Country / currency" onchange="this.form.submit()">
+            {% for country in localization.available_countries %}
+              <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+                {{ country.name }} · {{ country.currency.symbol }} {{ country.currency.iso_code }}
+              </option>
+            {% endfor %}
+          </select>
+        {%- endform -%}
+      </div>
+    {% endif %}
+
+    <!-- Language Selector: Shopify Translate & Adapt Localization -->
+    {% if localization.available_languages.size > 1 %}
+      <div class="mk lang-select">
+        <label class="sr" for="HeaderLanguageSelect">{{ 'actions.select_language' | t | default: 'Language' }}</label>
+        {%- form 'localization', id: 'HeaderLanguageForm', class: 'header__localization-form' -%}
+          <select id="HeaderLanguageSelect" name="language_code" class="cur-sel" title="Language" onchange="this.form.submit()">
+            {% for language in localization.available_languages %}
+              <option value="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}selected{% endif %}>
+                {{ language.endonym_name | capitalize }}
+              </option>
+            {% endfor %}
+          </select>
+        {%- endform -%}
+      </div>
+    {% endif %}
 
     <!-- Header Action Icons -->
     <nav class="hicons">
@@ -1038,10 +1056,12 @@
     background: #ffffff;
     z-index: 999;
     transform: translateX(100%);
-    transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1);
+    transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.28s cubic-bezier(0.2, 0, 0, 1), visibility 0.28s;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 50px rgba(34, 35, 92, 0.25);
+    box-shadow: none;
+    visibility: hidden;
+    pointer-events: none;
     box-sizing: border-box;
   }
   .drawer.left {
@@ -1056,11 +1076,17 @@
     width: 100%;
     max-height: 85vh;
     transform: translateY(-100%);
-    box-shadow: 0 16px 40px rgba(34, 35, 92, 0.18);
+    box-shadow: none;
     border-radius: 0 0 18px 18px;
   }
   .drawer.on {
     transform: none !important;
+    box-shadow: 0 0 50px rgba(34, 35, 92, 0.25);
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .drawer.search-drawer.on {
+    box-shadow: 0 16px 40px rgba(34, 35, 92, 0.18);
   }
   .drawer header {
     display: flex;
@@ -1391,129 +1417,32 @@
 </style>
 
 <script>
-  // Real-time Sitewide Currency Conversion Engine
-  var FLABERRY_CUR = {
-    INR: ["₹", 1],
-    USD: ["$", 0.01192],
-    AED: ["AED ", 0.04377],
-    GBP: ["£", 0.00905],
-    EUR: ["€", 0.01103],
-    CAD: ["C$", 0.01664],
-    AUD: ["A$", 0.01818],
-    SGD: ["S$", 0.01594],
-    SAR: ["SAR ", 0.04473]
+  // Shopify Markets Native Localization Settings
+  window.FlaberryShop = {
+    currencySymbol: {{ cart.currency.symbol | json }},
+    currencyIso: {{ cart.currency.iso_code | json }},
+    moneyFormat: {{ shop.money_format | json }},
+    activeCountry: {{ localization.country.name | json }},
+    activeCountryCode: {{ localization.country.iso_code | json }}
   };
 
-  function flaberryGetActiveCurrency() {
-    try {
-      return localStorage.getItem('flaberry_currency') || 'INR';
-    } catch(e) {
-      return 'INR';
-    }
-  }
-
-  function flaberryFormatMoney(inrAmount) {
-    var cur = flaberryGetActiveCurrency();
-    var conf = FLABERRY_CUR[cur] || FLABERRY_CUR.INR;
-    var sym = conf[0];
-    var rate = conf[1];
-    var num = parseFloat(inrAmount) || 0;
-    if (cur === 'INR') {
-      return '₹' + Math.round(num).toLocaleString('en-IN');
-    }
-    var val = num * rate;
-    return sym + (val >= 100 ? Math.round(val).toLocaleString('en-US') : val.toFixed(2));
+  function flaberryFormatMoney(amount) {
+    if (amount === null || amount === undefined) return '';
+    var num = parseFloat(amount);
+    if (isNaN(num)) return '';
+    var sym = (window.FlaberryShop && window.FlaberryShop.currencySymbol) || '{{ cart.currency.symbol | default: "₹" }}';
+    var val = num >= 1000 ? (num / 100) : num;
+    return sym + (val >= 100 ? Math.round(val).toLocaleString() : val.toFixed(2));
   }
   window.flaberryFormatMoney = flaberryFormatMoney;
-  window.flaberryGetActiveCurrency = flaberryGetActiveCurrency;
 
-  function flaberryApplyCurrencySitewide(newCurrency) {
-    if (newCurrency) {
-      try { localStorage.setItem('flaberry_currency', newCurrency); } catch(e){}
-    }
-    var cur = flaberryGetActiveCurrency();
-
-    // Sync all dropdowns
-    var selects = document.querySelectorAll('.cur-sel, #cursel');
-    selects.forEach(function(s) { s.value = cur; });
-
-    // 1. Elements with data-inr or data-raw-inr or .flaberry-curr-target
-    document.querySelectorAll('[data-inr], [data-raw-inr], .flaberry-curr-target').forEach(function(el) {
-      var raw = el.getAttribute('data-inr') || el.getAttribute('data-raw-inr');
-      var inrVal = parseFloat(raw);
-      if (isNaN(inrVal)) {
-        var txt = (el.querySelector('bdi') || el).textContent || '';
-        var match = txt.match(/[\d,]+(\.\d+)?/);
-        if (match) {
-          inrVal = parseFloat(match[0].replace(/,/g, ''));
-          if (!isNaN(inrVal) && inrVal > 0) {
-            el.setAttribute('data-inr', inrVal);
-          }
-        }
-      }
-      if (!isNaN(inrVal)) {
-        var prefix = (el.textContent || '').toLowerCase().includes('from') ? 'From ' : '';
-        var targetBdi = el.matches('bdi') ? el : el.querySelector('bdi');
-        if (targetBdi) {
-          targetBdi.textContent = prefix + flaberryFormatMoney(inrVal);
-        } else {
-          el.textContent = prefix + flaberryFormatMoney(inrVal);
-        }
-      }
-    });
-
-    // 2. Scan storefront price elements (Cart page, product lists, compare prices)
-    document.querySelectorAll('.pp, .price, .flaberry-card-price, .pr, .meta .tab-nums, .cart-price, .cart-items__price, .cart-totals__total-value, .cart-totals__original-value, .cart-discounts__value, .compare-at-price, .cart-items__unit-price-wrapper span, .cart-items__unit-price-wrapper s').forEach(function(el) {
-      var target = el.matches('bdi') ? el : (el.querySelector('bdi') || el);
-      var raw = target.getAttribute('data-inr') || target.getAttribute('data-raw-inr') || el.getAttribute('data-inr') || el.getAttribute('data-raw-inr');
-      var num = parseFloat(raw);
-      if (isNaN(num)) {
-        var txt = target.textContent || '';
-        var match = txt.match(/[\d,]+(\.\d+)?/);
-        if (match) {
-          num = parseFloat(match[0].replace(/,/g, ''));
-          if (!isNaN(num) && num > 0) {
-            target.setAttribute('data-inr', num);
-          }
-        }
-      }
-      if (!isNaN(num)) {
-        var prefix = (target.textContent || '').toLowerCase().includes('from') ? 'From ' : '';
-        target.textContent = prefix + flaberryFormatMoney(num);
-      }
-    });
-
-    // 3. Line item properties with INR symbols (e.g. ₹150 slot, ₹350 add-on)
-    document.querySelectorAll('.cart-items__property dd').forEach(function(el) {
-      if (!el.getAttribute('data-orig-text')) {
-        el.setAttribute('data-orig-text', el.innerHTML);
-      }
-      var orig = el.getAttribute('data-orig-text');
-      if (cur === 'INR') {
-        el.innerHTML = orig;
-      } else {
-        el.innerHTML = orig.replace(/₹\s*([0-9]+(\.[0-9]+)?)/g, function(m, p1) {
-          return flaberryFormatMoney(parseFloat(p1));
-        });
-      }
-    });
+  function flaberryApplyCurrencySitewide() {
+    // Shopify Markets natively handles multi-currency rates & localization server-side across Liquid, Cart and Checkout.
   }
   window.flaberryApplyCurrencySitewide = flaberryApplyCurrencySitewide;
 
-  // Real-time MutationObserver on Cart page & drawers to handle Shopify AJAX re-renders
-  var flaberryCartObserver = null;
   function flaberryInitCartCurrencyObserver() {
-    var cartHost = document.querySelector('cart-items-component, .cart-page, #cart-items, .cart-items');
-    if (!cartHost) return;
-    if (flaberryCartObserver) flaberryCartObserver.disconnect();
-    var debounceTimer = null;
-    flaberryCartObserver = new MutationObserver(function() {
-      if (debounceTimer) clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(function() {
-        flaberryApplyCurrencySitewide();
-      }, 60);
-    });
-    flaberryCartObserver.observe(cartHost, { childList: true, subtree: true });
+    // Kept for backward compatibility
   }
   window.flaberryInitCartCurrencyObserver = flaberryInitCartCurrencyObserver;
 

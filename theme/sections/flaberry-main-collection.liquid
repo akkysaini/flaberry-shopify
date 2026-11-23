@@ -171,10 +171,10 @@
           <!-- Filter 2: Price Ranges -->
           <div class="filter-group">
             <h6>Price</h6>
-            <label><input type="checkbox" data-f="pu999" onchange="flaberryFilterChange()"> Under ₹999</label>
-            <label><input type="checkbox" data-f="p999" onchange="flaberryFilterChange()"> ₹999 – ₹1,999</label>
-            <label><input type="checkbox" data-f="p2000" onchange="flaberryFilterChange()"> ₹2,000 – ₹3,999</label>
-            <label><input type="checkbox" data-f="p4000" onchange="flaberryFilterChange()"> ₹4,000 and above</label>
+            <label><input type="checkbox" data-f="pu999" onchange="flaberryFilterChange()"> Under {{ 99900 | money }}</label>
+            <label><input type="checkbox" data-f="p999" onchange="flaberryFilterChange()"> {{ 99900 | money }} – {{ 199900 | money }}</label>
+            <label><input type="checkbox" data-f="p2000" onchange="flaberryFilterChange()"> {{ 200000 | money }} – {{ 399900 | money }}</label>
+            <label><input type="checkbox" data-f="p4000" onchange="flaberryFilterChange()"> {{ 400000 | money }} and above</label>
           </div>
 
           <!-- Filter 3: Delivery Speed -->

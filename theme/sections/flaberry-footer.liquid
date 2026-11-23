@@ -113,6 +113,8 @@
             <li><a href="/pages/care">Care Tips</a></li>
             <li><a href="/pages/corporate">Corporate</a></li>
             <li><a href="/pages/partner">Become a Partner</a></li>
+            <li><a href="/pages/our-florists">Our Partner Florists</a></li>
+            <li><a href="/pages/seller-login">Vendor / Seller Login</a></li>
           {% endif %}
         </ul>
       </div>
@@ -171,9 +173,39 @@
 
     <!-- Divider Line & Bottom Base Bar -->
     <div class="base">
-      <span class="copyright">
-        {{ section.settings.copyright_text | default: '© 2026 Flaberry. All rights reserved.' }}
-      </span>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span class="copyright">
+          {{ section.settings.copyright_text | default: '© 2026 Flaberry. All rights reserved.' }}
+        </span>
+
+        {% if localization.available_countries.size > 1 or localization.available_languages.size > 1 %}
+          <div class="footer-localization" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px;">
+            {% if localization.available_countries.size > 1 %}
+              {%- form 'localization', id: 'FooterCountryForm', class: 'footer__localization-form' -%}
+                <select id="FooterCountrySelect" name="country_code" class="cur-sel" onchange="this.form.submit()" style="background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 4px 10px; font-size: 12px; cursor: pointer;">
+                  {% for country in localization.available_countries %}
+                    <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %} style="color: #000;">
+                      {{ country.name }} · {{ country.currency.symbol }} {{ country.currency.iso_code }}
+                    </option>
+                  {% endfor %}
+                </select>
+              {%- endform -%}
+            {% endif %}
+
+            {% if localization.available_languages.size > 1 %}
+              {%- form 'localization', id: 'FooterLanguageForm', class: 'footer__localization-form' -%}
+                <select id="FooterLanguageSelect" name="language_code" class="cur-sel" onchange="this.form.submit()" style="background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 4px 10px; font-size: 12px; cursor: pointer;">
+                  {% for language in localization.available_languages %}
+                    <option value="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}selected{% endif %} style="color: #000;">
+                      {{ language.endonym_name | capitalize }}
+                    </option>
+                  {% endfor %}
+                </select>
+              {%- endform -%}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
 
       {% if section.settings.show_payment_badge %}
         <div class="paywrap">

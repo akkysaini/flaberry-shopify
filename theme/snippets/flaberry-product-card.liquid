@@ -110,6 +110,9 @@
       assign image_src = image_asset | asset_url
     endif
   endif
+
+  assign card_price_num = card_price_raw | replace: '₹', '' | replace: ',', '' | strip | plus: 0
+  assign card_compare_num = card_compare_raw | replace: '₹', '' | replace: ',', '' | strip | plus: 0
 -%}
 
 <a class="pcard" href="{{ card_url }}" data-price="{{ card_price_raw }}" data-rating="{{ card_rating }}" data-tag="{{ card_tag | downcase }}" data-title="{{ card_title | downcase }}">
@@ -133,17 +136,31 @@
 
   <div class="meta">
     <span class="pr tab-nums">
-      <span class="flaberry-curr-target" data-inr="{{ card_price_raw }}">{{ card_price_display }}</span>
-      {%- if card_compare_raw > card_price_raw -%}
-        <s class="flaberry-curr-target" data-inr="{{ card_compare_raw }}">₹{{ card_compare_raw }}</s>
+      <span>{{ card_price_display }}</span>
+      {%- if card_compare_num > card_price_num -%}
+        {%- if product != blank and product.compare_at_price > product.price -%}
+          <s>{{ product.compare_at_price | money_without_trailing_zeros }}</s>
+        {%- else -%}
+          <s>{{ card_compare_num | times: 100 | money_without_trailing_zeros }}</s>
+        {%- endif -%}
       {%- endif -%}
     </span>
-    <span class="rate">{{ card_rating }} ★</span>
+    {% if product != blank and product.metafields.judgeme.badge != blank %}
+      <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-template='index'>
+        {{ product.metafields.judgeme.badge }}
+      </div>
+    {% else %}
+      <span class="rate">{{ card_rating }} ★</span>
+    {% endif %}
   </div>
 
   <div class="meta">
     <span class="earliest-text">{{ card_earliest }}</span>
-    <span class="reviews-count-text">{{ card_reviews }} reviews</span>
+    {% if product != blank and product.vendor != blank and product.vendor != shop.name %}
+      <span class="vendor-name-badge" style="font-size: 11.5px; color: var(--muted, #5f6178); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ product.vendor }}</span>
+    {% else %}
+      <span class="reviews-count-text">{{ card_reviews }} reviews</span>
+    {% endif %}
   </div>
 </a>
 

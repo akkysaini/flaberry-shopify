@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main_vendors": {
+      "type": "flaberry-vendors-list",
+      "settings": {
+        "heading": "Our Verified Partner Florists & Bakers",
+        "subheading": "Locally hand-crafted arrangements, baked fresh daily, and delivered with love across 500+ cities in India."
+      }
+    }
+  },
+  "order": [
+    "main_vendors"
+  ]
+}

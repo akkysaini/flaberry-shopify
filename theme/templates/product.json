@@ -15,6 +15,8 @@
         "title": "Similar gifts deliverable to your pincode",
         "subtitle": "Fresh flowers, handcrafted cakes, and curated combos deliverable across India",
         "collection": "all",
+        "use_recommendations": true,
+        "recommendations_intent": "related",
         "products_to_show": 8,
         "show_view_all": true,
         "view_all_text": "View all",
