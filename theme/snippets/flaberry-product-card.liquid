@@ -145,10 +145,14 @@
         {%- endif -%}
       {%- endif -%}
     </span>
-    {% if product != blank and product.metafields.judgeme.badge != blank %}
-      <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-template='index'>
+    {% if product != blank %}
+      <div class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-template='index'>
         {{ product.metafields.judgeme.badge }}
       </div>
+      {%- assign jm_badge = product.metafields.judgeme.badge -%}
+      {%- if jm_badge == blank or jm_badge contains '0 reviews' or jm_badge contains 'jdgm--empty' -%}
+        <span class="rate jm-fallback-rate">{{ card_rating }} ★</span>
+      {%- endif -%}
     {% else %}
       <span class="rate">{{ card_rating }} ★</span>
     {% endif %}
@@ -297,6 +301,24 @@
     border-radius: 6px;
     padding: 2px 7px;
     line-height: 1.2;
+  }
+  .pcard .jdgm-widget.jdgm-preview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+  }
+  .pcard .jdgm-prev-badge__stars {
+    color: #e59819;
+    font-size: 13px;
+  }
+  .pcard .jdgm-prev-badge__text {
+    font-size: 11.5px;
+    color: var(--muted, #5f6178);
+    margin-left: 2px;
+  }
+  .pcard:has(.jdgm-prev-badge[data-number-of-reviews]:not([data-number-of-reviews="0"])) .jm-fallback-rate {
+    display: none !important;
   }
 
   @media (max-width: 768px) {

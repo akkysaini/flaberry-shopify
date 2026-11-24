@@ -33,6 +33,15 @@
       {%- render 'theme-editor' -%}
     {% endif %}
 
+    <!-- Judge.me Product Reviews Core Setup -->
+    <script>
+      window.jdgm = window.jdgm || {};
+      window.jdgm.SHOP_DOMAIN = '{{ shop.permanent_domain }}';
+      window.jdgm.PLATFORM = 'shopify';
+    </script>
+    <link rel="stylesheet" href="https://cdn.judge.me/shopify_v2.css" type="text/css">
+    <script src="https://cdn.judge.me/shopify_v2.js" async></script>
+
     {{ content_for_header }}
   </head>
 

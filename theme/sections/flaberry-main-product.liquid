@@ -130,8 +130,8 @@
               {%- endunless -%}
             {%- endif -%}
             {%- unless has_jdgm_revs -%}
-              <span class="rate">{{ rating_val }} ★</span>
-              <a href="#rv" class="muted" style="font-size: 13.5px; text-decoration: underline;">{{ reviews_count }} reviews</a>
+              <span class="rate pdp-fallback-rate">{{ rating_val }} ★</span>
+              <a href="#rv" class="muted pdp-fallback-revs" style="font-size: 13.5px; text-decoration: underline;">{{ reviews_count }} reviews</a>
             {%- endunless -%}
             <span class="pill info">{{ badge_tag }}</span>
           </div>
@@ -554,92 +554,11 @@
       </div>
     </div>
 
-    <!-- Ratings & Customer Reviews Master Section (#rv) -->
-    <section class="sec" id="rv">
-      <div class="sec-h">
-        <div>
-          <h2>Ratings & reviews</h2>
-          <p>{{ reviews_count }} verified reviews from customers who ordered this gift.</p>
-        </div>
-        <button type="button" class="btn ghost sm" onclick="flaberryOpenReviewModal()">Write a review</button>
-      </div>
-
+    <!-- Ratings & Customer Reviews Master Section (#rv) - Official Judge.me Reviews Module -->
+    <section class="sec pdp-reviews-sec" id="rv" style="padding-top: 36px; border-top: 1px solid var(--fl-color-line, #ece7e3); margin-top: 40px;">
       <!-- Official Judge.me Product Review Widget -->
       <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-product-title="{{ product.title | escape }}" data-id="{{ product.id }}">
         {{ product.metafields.judgeme.widget }}
-      </div>
-
-      <div class="reviews" id="flaberryReviewsFallback">
-        <!-- Left Column: Rating Score & Breakdown Bars -->
-        <div class="rv-sum">
-          <b>{{ rating_val }}</b>
-          <span class="stars">★★★★★</span>
-          <span class="muted" style="font-size: 13px;">Based on {{ reviews_count }} verified reviews</span>
-          
-          <div class="rv-bars">
-            <div class="rv-bar-row">
-              <span style="width: 24px;">5★</span>
-              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 78%;"></div></div>
-              <span style="width: 30px; text-align: right;">78%</span>
-            </div>
-            <div class="rv-bar-row">
-              <span style="width: 24px;">4★</span>
-              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 15%;"></div></div>
-              <span style="width: 30px; text-align: right;">15%</span>
-            </div>
-            <div class="rv-bar-row">
-              <span style="width: 24px;">3★</span>
-              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 5%;"></div></div>
-              <span style="width: 30px; text-align: right;">5%</span>
-            </div>
-            <div class="rv-bar-row">
-              <span style="width: 24px;">2★</span>
-              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 1%;"></div></div>
-              <span style="width: 30px; text-align: right;">1%</span>
-            </div>
-            <div class="rv-bar-row">
-              <span style="width: 24px;">1★</span>
-              <div class="rv-bar-bg"><div class="rv-bar-fill" style="width: 1%;"></div></div>
-              <span style="width: 30px; text-align: right;">1%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Customer Review Cards -->
-        <div class="rv-list">
-          <div class="rv-card">
-            <div class="rv-head">
-              <div>
-                <div class="rv-author">Ananya R.</div>
-                <div class="rv-meta">Houston, USA · Anniversary · Delivery to Pune</div>
-              </div>
-              <span class="stars" style="color: #f0a722; font-size: 14px;">★★★★★</span>
-            </div>
-            <p>“Sent roses and a truffle cake to my parents in Pune for their 30th anniversary. Delivered on the exact date requested, flowers looked just like the photograph and stayed fresh for nearly a week.”</p>
-          </div>
-
-          <div class="rv-card">
-            <div class="rv-head">
-              <div>
-                <div class="rv-author">Rahul M.</div>
-                <div class="rv-meta">Gurugram · Birthday · Delivery to Delhi</div>
-              </div>
-              <span class="stars" style="color: #f0a722; font-size: 14px;">★★★★★</span>
-            </div>
-            <p>“Midnight delivery reached at 11:45 PM sharp. My wife was completely surprised! The greeting card was printed clearly and the packaging was top notch.”</p>
-          </div>
-
-          <div class="rv-card">
-            <div class="rv-head">
-              <div>
-                <div class="rv-author">Sandeep T.</div>
-                <div class="rv-meta">Noida · Corporate Gifting · Noida</div>
-              </div>
-              <span class="stars" style="color: #f0a722; font-size: 14px;">★★★★★</span>
-            </div>
-            <p>“Our company frequently uses Flaberry for client and employee appreciation gifts. Smooth process, GST invoices are delivered promptly, and the quality is consistently dependable.”</p>
-          </div>
-        </div>
       </div>
     </section>
   </div>
@@ -651,42 +570,6 @@
       <small id="stickyDateSlotSummary">Delivery: Today (Standard)</small>
     </div>
     <button type="button" class="btn flora" onclick="flaberrySubmitPdpOrder(true)">Buy now</button>
-  </div>
-</div>
-
-<!-- Modal: Write a Review -->
-<div class="flaberry-review-modal" id="pdpReviewModal" style="display: none;">
-  <div class="review-modal-scrim" onclick="flaberryCloseReviewModal()"></div>
-  <div class="review-modal-box">
-    <div class="review-modal-header">
-      <h3>Write a customer review</h3>
-      <button type="button" class="x" onclick="flaberryCloseReviewModal()">×</button>
-    </div>
-    <form class="review-modal-body" onsubmit="event.preventDefault(); flaberrySubmitReview();">
-      <div class="field">
-        <label for="revName">Your Name</label>
-        <input type="text" class="inp" id="revName" required placeholder="e.g. Priya Sharma">
-      </div>
-      <div class="field">
-        <label for="revCity">City / Location</label>
-        <input type="text" class="inp" id="revCity" required placeholder="e.g. Bengaluru">
-      </div>
-      <div class="field">
-        <label for="revRating">Rating</label>
-        <select class="inp" id="revRating">
-          <option value="5">★★★★★ 5 Stars (Exceptional)</option>
-          <option value="4">★★★★☆ 4 Stars (Very Good)</option>
-          <option value="3">★★★☆☆ 3 Stars (Average)</option>
-          <option value="2">★★☆☆☆ 2 Stars (Below Expectation)</option>
-          <option value="1">★☆☆☆☆ 1 Star (Poor)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="revComment">Your Review</label>
-        <textarea class="inp" id="revComment" required rows="4" placeholder="Share your experience regarding bloom freshness, delivery punctuality, and overall presentation..."></textarea>
-      </div>
-      <button type="submit" class="btn flora block" style="width: 100%; margin-top: 14px;">Submit Review</button>
-    </form>
   </div>
 </div>
 
@@ -823,6 +706,29 @@
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
+  }
+  .pdp-meta-row .jdgm-widget.jdgm-preview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+  }
+  .pdp-meta-row .jdgm-prev-badge__stars {
+    color: #e59819;
+    font-size: 15px;
+  }
+  .pdp-meta-row .jdgm-prev-badge__text {
+    font-size: 13.5px;
+    color: var(--muted, #5f6178);
+    text-decoration: underline;
+  }
+  .pdp-meta-row:has(.jdgm-prev-badge[data-number-of-reviews]:not([data-number-of-reviews="0"])) .pdp-fallback-rate,
+  .pdp-meta-row:has(.jdgm-prev-badge[data-number-of-reviews]:not([data-number-of-reviews="0"])) .pdp-fallback-revs {
+    display: none !important;
+  }
+  #judgeme_product_reviews {
+    margin-top: 10px;
+    margin-bottom: 24px;
   }
   .rate {
     background: #f0a722;
@@ -2182,28 +2088,22 @@
       });
     };
 
-    // Review Modal Functions (Integrated with Judge.me)
-    window.flaberryOpenReviewModal = function() {
-      var jmWriteLink = document.querySelector('.jdgm-write-rev-link, .jdgm-widget .jdgm-rev__icon-write');
+    // Review Handlers (Integrated directly with Official Judge.me Widget)
+    window.flaberryTriggerJudgeMeWriteReview = function() {
+      var jmWriteLink = document.querySelector('.jdgm-write-rev-link, .jdgm-write-review-btn, .jdgm-widget.jdgm-review-widget .jdgm-btn');
       if (jmWriteLink) {
         jmWriteLink.click();
-        var jmWidget = document.getElementById('judgeme_product_reviews');
-        if (jmWidget) jmWidget.scrollIntoView({ behavior: 'smooth' });
+        jmWriteLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
-      var modal = document.getElementById('pdpReviewModal');
-      if (modal) modal.style.display = 'grid';
+      var jmWidget = document.getElementById('judgeme_product_reviews');
+      if (jmWidget) {
+        jmWidget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        var btn = jmWidget.querySelector('.jdgm-btn, a, button');
+        if (btn) btn.click();
+      }
     };
-
-    window.flaberryCloseReviewModal = function() {
-      var modal = document.getElementById('pdpReviewModal');
-      if (modal) modal.style.display = 'none';
-    };
-
-    window.flaberrySubmitReview = function() {
-      alert('Thank you! Your verified review has been submitted for moderation.');
-      flaberryCloseReviewModal();
-    };
+    window.flaberryOpenReviewModal = window.flaberryTriggerJudgeMeWriteReview;
   })();
 </script>
 
